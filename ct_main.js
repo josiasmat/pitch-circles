@@ -90,7 +90,7 @@ const options_names_switches = [
     "SwitchNamesEnharmony1", "SwitchNamesEnharmony2",
     "SwitchNamesSharps1", "SwitchNamesSharps2",
     "SwitchNamesFlats1", "SwitchNamesFlats2",
-    "SwitchNamesPitchClasses", "SwitchNamesDynamic"
+    "SwitchNamesPitchClasses" /*, "SwitchNamesDynamic"*/
 ];
 
 const options_clickables = options_names_switches.concat(["ChkBlackKeys", "ChkDarkBackground"]);
@@ -273,9 +273,7 @@ function rotateMasks(steps) {
 
 function switchShowBlackKeys() {
     black_keys_visible = (! black_keys_visible);
-    if (storageAvailable("localStorage")) {
-        localStorage.setItem("black_keys_visible", black_keys_visible.toString());
-    }
+    writeStringToLocalStorage("black_keys_visible", black_keys_visible.toString());
     updateShowBlackKeys();
 }
 
@@ -297,9 +295,7 @@ function updateShowBlackKeys() {
 
 function switchDarkBackground() {
     dark_background = (! dark_background);
-    if (storageAvailable("localStorage")) {
-        localStorage.setItem("dark_background", dark_background.toString());
-    }
+    writeStringToLocalStorage("dark_background", dark_background.toString());
     updateBackground();
 }
 
@@ -371,6 +367,7 @@ function checkNamesSwitch(switch_id) {
             document.getElementById(elm_id + "Mark").style.display = "none";
         }
     }
+    writeStringToLocalStorage("checked_names_switch", switch_id);
 }
 
 function setNamesVisibility(elm_id_postfix) {
@@ -394,6 +391,7 @@ function setNamesVisibility(elm_id_postfix) {
                 elm.style.display = "none";
         }
     }
+    writeStringToLocalStorage("names_element_id_postfix", elm_id_postfix);
 }
 
 function hover(elm_id) {
@@ -440,15 +438,17 @@ function initializeThisSvg() {
             elm.style.cursor = "pointer";
     }
 
-    // Read stored preferences if available
-    dark_background = readBoolLocalStorage("dark_background", false);
-    black_keys_visible = readBoolLocalStorage("black_keys_visible", true);
+    // Read stored preferences
+    dark_background = readBoolFromLocalStorage("dark_background", false);
+    black_keys_visible = readBoolFromLocalStorage("black_keys_visible", true);
     updateBackground();
     updateShowBlackKeys();
+    checkNamesSwitch(readStringFromLocalStorage("checked_names_switch", "SwitchNamesEnharmony1"));
+    setNamesVisibility(readStringFromLocalStorage("names_element_id_postfix", "NamesEnharmonics1"));
 
 }
 
-function readLocalStorage(key, default_value) {
+function readStringFromLocalStorage(key, default_value) {
     if ( storageAvailable("localStorage") ) {
         const val = localStorage.getItem(key);
         if (val == null)
@@ -458,8 +458,14 @@ function readLocalStorage(key, default_value) {
     return default_value;
 }
 
-function readBoolLocalStorage(key, default_bool_value) {
-    return (readLocalStorage(key, default_bool_value.toString()) === true.toString());
+function readBoolFromLocalStorage(key, default_bool_value) {
+    return (readStringFromLocalStorage(key, default_bool_value.toString()) === true.toString());
+}
+
+function writeStringToLocalStorage(key, value) {
+    if ( storageAvailable("localStorage") ) {
+        localStorage.setItem(key, value);
+    }
 }
 
 function storageAvailable(type) {

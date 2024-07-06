@@ -28,10 +28,10 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="0.82"
-     inkscape:cx="829.87805"
-     inkscape:cy="490.85366"
-     inkscape:current-layer="layer1"
+     inkscape:zoom="0.57982756"
+     inkscape:cx="438.9236"
+     inkscape:cy="699.34585"
+     inkscape:current-layer="layer2"
      showgrid="false"
      showguides="true">
     <inkscape:page
@@ -6598,8 +6598,8 @@
            id="tspan107">por Josias Matschulat</tspan></text>
       <g
          id="SwitchNamesDynamic"
-         transform="translate(121.01885,-6.3610147)"
-         style="display:inline"
+         transform="translate(121.01885,2.9704849)"
+         style="display:none"
          onclick="setNamesDynamic();"
          onmouseover="hover(&quot;SwitchNamesDynamicBox&quot;);"
          onmouseout="unhover(&quot;SwitchNamesDynamicBox&quot;);">
@@ -6629,7 +6629,7 @@
       </g>
       <g
          id="SwitchNamesPitchClasses"
-         transform="translate(121.01885,2.9704849)"
+         transform="translate(121.01885,-6.3610147)"
          style="display:inline"
          onclick="setNamesPitchClasses();"
          onmouseover="hover(&quot;SwitchNamesPitchClassesBox&quot;);"
@@ -7304,7 +7304,7 @@
          onclick="showMaskProgrammable();"
          onmouseover="hover('BtnMaskProgrammableBk');"
          onmouseout="unhover('BtnMaskProgrammableBk');"
-         style="stroke-width:1.03251">
+         style="display:none;stroke-width:1.03251">
         <rect
            style="fill:#ffffcc;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
            id="BtnMaskProgrammableBk"
