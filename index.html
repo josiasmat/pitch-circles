@@ -1,25 +1,19 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Circle Transposer</title>
+        <title>Círculos Musicais</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
-    <body style="margin: 0px; overflow: hidden; position: absolute; width: 100%; height: 100%;">
-        <script>var topBody = this;</script>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <object data="ct.svg" type="image/svg+xml" 
-                style="box-sizing: border-box; width: 100%; height: 100%; object-fit: contain;"
-                archive="https://fonts.googleapis.com/css?family=Droid Sans"
-        ></object>
+    <body style="margin: 0px; overflow: clip; position: absolute; width: 100%; height: 100%;">
+        <object
+            id="svg_object"
+            data="ct.svg"
+            type="image/svg+xml" 
+            style="box-sizing: border-box; width: 100%; height: 100%; object-fit: contain;"
+            standby
+        >Loading...</object>
     </body>
-
 </html>

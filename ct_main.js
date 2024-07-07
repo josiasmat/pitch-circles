@@ -1,6 +1,8 @@
 
 const svg_root = document.getElementById("svg1");
 
+var vertical_screen = false;
+
 var chromatic_mask_rotation = 0;
 var fifths_mask_rotation = 0;
 var black_keys_visible = true;
@@ -303,21 +305,21 @@ function updateBackground() {
     let elm_mark = document.getElementById("ChkDarkBackgroundMark");
     /* Text element has a 'tspan' inside, that's
         why .firstChild is needed to change its color. */
-    let elm_label_chr = document.getElementById("LabelChromaticCircle").firstChild;
-    let elm_label_fth = document.getElementById("LabelFifthsCircle").firstChild;
+    //let elm_label_chr = document.getElementById("LabelChromaticCircle").firstChild;
+    //let elm_label_fth = document.getElementById("LabelFifthsCircle").firstChild;
     let white_key_markers = document.getElementsByClassName("whiteKeyMarker");
     let black_key_markers = document.getElementsByClassName("blackKeyMarker");
     if (dark_background) {
         elm_mark.style.display = "inline";
-        elm_label_chr.style.fill = "white";
-        elm_label_fth.style.fill = "white";
+        //elm_label_chr.style.fill = "white";
+        //elm_label_fth.style.fill = "white";
         svg_root.style.backgroundColor = "black";
         for ( let elm of white_key_markers ) elm.style.stroke = "black";
         for ( let elm of black_key_markers ) elm.style.stroke = "#666666";
     } else {
         elm_mark.style.display = "none";
-        elm_label_chr.style.fill = "black";
-        elm_label_fth.style.fill = "black";
+        //elm_label_chr.style.fill = "black";
+        //elm_label_fth.style.fill = "black";
         svg_root.style.backgroundColor = "white";
         for ( let elm of white_key_markers ) elm.style.stroke = "#666666";
         for ( let elm of black_key_markers ) elm.style.stroke = "white";
@@ -446,6 +448,10 @@ function initializeThisSvg() {
     checkNamesSwitch(readStringFromLocalStorage("checked_names_switch", "SwitchNamesEnharmony1"));
     setNamesVisibility(readStringFromLocalStorage("names_element_id_postfix", "NamesEnharmonics1"));
 
+    // Respond to window resizing
+    window.addEventListener("resize", resizeEventHandler);
+    resizeEventHandler();
+
 }
 
 function readStringFromLocalStorage(key, default_value) {
@@ -471,19 +477,37 @@ function writeStringToLocalStorage(key, value) {
 function storageAvailable(type) {
     let storage;
     try {
-      storage = window[type];
-      const x = "__storage_test__";
-      storage.setItem(x, x);
-      storage.removeItem(x);
-      return true;
+        storage = window[type];
+        const x = "__storage_test__";
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
     } catch (e) {
-      return (
-        e instanceof DOMException &&
-        e.name === "QuotaExceededError" &&
-        // acknowledge QuotaExceededError only if there's something already stored
-        storage &&
-        storage.length !== 0
-      );
+        return (
+            e instanceof DOMException &&
+            e.name === "QuotaExceededError" &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage &&
+            storage.length !== 0
+        );
     }
-  }
-  
+}
+
+function resizeEventHandler() {
+    const w = window.parent.innerWidth;
+    const h = window.parent.innerHeight;
+    const ratio = w / h;
+    if ( (ratio < 1.0) && (vertical_screen == false) ) {
+        const t = 196.9;
+        document.getElementById("FthCircle").setAttribute("transform", `translate(-${t} ${t})`);
+        document.getElementById("Controls").setAttribute("transform", `translate(-3 ${t}) scale(0.51 1)`);
+        svg_root.setAttribute("viewBox", `0 0 ${t} ${241.64582 + t}`);
+        vertical_screen = true;
+    };
+    if ( (ratio >= 1.0) && (vertical_screen == true) ) {
+        document.getElementById("FthCircle").setAttribute("transform", "translate(0 0)");
+        document.getElementById("Controls").setAttribute("transform", "translate(0 0)");
+        svg_root.setAttribute("viewBox", "0 0 397.15732 241.64582");
+        vertical_screen = false;
+    };
+}
