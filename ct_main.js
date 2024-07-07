@@ -449,8 +449,12 @@ function initializeThisSvg() {
     setNamesVisibility(readStringFromLocalStorage("names_element_id_postfix", "NamesEnharmonics1"));
 
     // Respond to window resizing
-    window.addEventListener("resize", resizeEventHandler);
+    window.parent.addEventListener("resize", resizeEventHandler);
     resizeEventHandler();
+
+    // Respond to orientation change
+    //window.parent.screen.orientation.addEventListener("change", changeScreenOrientation);
+    //changeScreenOrientation();
 
 }
 
@@ -498,16 +502,35 @@ function resizeEventHandler() {
     const h = window.parent.innerHeight;
     const ratio = w / h;
     if ( (ratio < 1.0) && (vertical_screen == false) ) {
-        const t = 196.9;
-        document.getElementById("FthCircle").setAttribute("transform", `translate(-${t} ${t})`);
-        document.getElementById("Controls").setAttribute("transform", `translate(-3 ${t}) scale(0.51 1)`);
-        svg_root.setAttribute("viewBox", `0 0 ${t} ${241.64582 + t}`);
-        vertical_screen = true;
+        adaptForPortraitScreen();
     };
     if ( (ratio >= 1.0) && (vertical_screen == true) ) {
-        document.getElementById("FthCircle").setAttribute("transform", "translate(0 0)");
-        document.getElementById("Controls").setAttribute("transform", "translate(0 0)");
-        svg_root.setAttribute("viewBox", "0 0 397.15732 241.64582");
-        vertical_screen = false;
+        adaptForLandscapeScreen();
     };
+}
+
+function changeScreenOrientation() {
+    if ( window.parent.screen.orientation.type == "portrait-primary" ||
+         window.parent.screen.orientation.type == "portrait-secondary"  ) {
+        adaptForPortraitScreen();
+    } else {
+        adaptForLandscapeScreen();
+    }
+}
+
+function adaptForPortraitScreen() {
+    const t = 196.9;
+    document.getElementById("FthCircle").setAttribute("transform", `translate(-${t} ${t})`);
+    document.getElementById("Controls").setAttribute("transform", `translate(-3 ${t}) scale(0.51 1)`);
+    svg_root.setAttribute("viewBox", `0 0 ${t} ${241.64582 + t}`);
+    vertical_screen = true;
+    console.log("Changed screen orientation to portrait.");
+}
+
+function adaptForLandscapeScreen() {
+    document.getElementById("FthCircle").setAttribute("transform", "translate(0 0)");
+    document.getElementById("Controls").setAttribute("transform", "translate(0 0) scale(1 1)");
+    svg_root.setAttribute("viewBox", "0 0 397.15732 241.64582");
+    vertical_screen = false;
+    console.log("Changed screen orientation to landscape.");
 }
