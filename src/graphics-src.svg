@@ -34,8 +34,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="0.70710678"
-     inkscape:cx="692.25754"
-     inkscape:cy="470.22601"
+     inkscape:cx="748.11898"
+     inkscape:cy="468.8118"
      inkscape:current-layer="svg1"
      showgrid="false"
      showguides="true">
@@ -301,20 +301,20 @@
        transform="translate(-11.966953,218.9371)">
       <text
          xml:space="preserve"
-         style="font-size:4.23333px;line-height:1.25;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#999999;stroke-width:0.264583"
-         x="394.52597"
-         y="6.6500134"
+         style="font-size:2.93982px;line-height:1.25;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#999999;stroke-width:0.264583"
+         x="395.04395"
+         y="9.1137161"
          id="text103"><tspan
            sodipodi:role="line"
            id="tspan103"
-           style="font-size:4.23333px;text-align:end;text-anchor:end;fill:#999999;stroke-width:0.264583"
-           x="394.52597"
-           y="6.6500134">Versão 2</tspan><tspan
+           style="font-size:2.93982px;text-align:end;text-anchor:end;fill:#999999;stroke-width:0.264583"
+           x="395.04395"
+           y="9.1137161">©2024 Josias Matschulat</tspan><tspan
            sodipodi:role="line"
-           style="font-size:4.23333px;text-align:end;text-anchor:end;fill:#999999;stroke-width:0.264583"
-           x="394.52597"
-           y="11.941675"
-           id="tspan107">por Josias Matschulat</tspan></text>
+           style="font-size:2.93982px;text-align:end;text-anchor:end;fill:#999999;stroke-width:0.264583"
+           x="395.04395"
+           y="12.788491"
+           id="tspan107">josias.matschulat@unila.edu.br</tspan></text>
       <g
          id="SwitchNamesDynamic"
          transform="translate(121.01885,2.9704849)"
