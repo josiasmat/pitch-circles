@@ -8,7 +8,7 @@
    viewBox="0 0 397.15732 241.64582"
    version="1.1"
    id="svg1"
-   sodipodi:docname="graphics_src.svg"
+   sodipodi:docname="graphics-src.svg"
    inkscape:version="1.3.1 (91b66b0783, 2023-11-16)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -7006,7 +7006,7 @@
         <g
            id="g17"
            inkscape:label="modes"
-           style="display:none">
+           style="display:inline">
           <g
              id="g19"
              inkscape:label="backgrounds">
