@@ -8,6 +8,7 @@ var fifths_mask_rotation = 0;
 var black_keys_visible = true;
 var dark_background = false;
 var selected_mask_btn_id = "";
+var visible_masks_ids = null;
 
 const COLOR_BTN_MASK_ENABLED = "#00ff77";
 const COLOR_BTN_MASK_DISABLED = "#ffffdd";
@@ -136,30 +137,43 @@ function showMaskMinorThirds() {
     showMasks(["ChrMinorThirdsMask", "FthMinorThirdsMask"], "BtnMaskMinorThirds");
 }
 
+// masks_ids expects only a pair of element ids
 function showMasks(masks_ids, button_id) {
+    hideVisibleMasks();
     if ( selected_mask_btn_id == button_id ) {
-        hideAllMasks();
         setMaskButtonsColors("");
         selected_mask_btn_id = "";
     } else {
-        hideAllMasksExcept(masks_ids);
-        for (let mask_id of masks_ids) {
-            showMask(mask_id);
-        }
+        showMask(masks_ids[0], chromatic_mask_rotation);
+        showMask(masks_ids[1], fifths_mask_rotation);
         setMaskButtonsColors(button_id);
         selected_mask_btn_id = button_id;
+        visible_masks_ids = masks_ids;
     }
 }
 
-function showMask(mask_id) {
+function showMask(mask_id, rotation = 0) {
     let elm = document.getElementById(mask_id);
-    elm.style.transition = "all 0.2s ease-out";
-    if (selected_mask_btn_id == "")
-        elm.style.transitionDelay = "none";
-    else
-        elm.style.transitionDelay = "0.4s";
+    elm.style.transitionProperty = "scale, opacity";
+    elm.style.transitionDuration = "0.2s";
+    elm.style.transitionBehavior = "ease-out";
+    elm.style.transitionDelay = (selected_mask_btn_id == "") ? "none" : "0.4s";
+    elm.style.rotate = `${rotation}deg`;
     elm.style.scale = "100%";
 	elm.style.opacity = "1";
+}
+
+function hideVisibleMasks() {
+    if ( visible_masks_ids != null ) {
+        hideMasks(visible_masks_ids);
+        visible_masks_ids = null;
+    }
+}
+
+function hideMasks(masks_ids) {
+    for (let mask_id of masks_ids) {
+        hideMask(mask_id);
+    }
 }
 
 function hideMask(mask_id) {
@@ -243,12 +257,14 @@ function applyMaskRotation(mask_id, degrees, animate) {
 }
 
 function applyMasksRotation(animate = true) {
-    for (let mask_id of chromatic_masks) {
-        applyMaskRotation(mask_id, chromatic_mask_rotation, animate);
-    }
-    for (let mask_id of fifths_masks) {
-        applyMaskRotation(mask_id, fifths_mask_rotation, animate);
-    }
+    applyMaskRotation(visible_masks_ids[0], chromatic_mask_rotation, animate);
+    applyMaskRotation(visible_masks_ids[1], fifths_mask_rotation, animate);
+    //for (let mask_id of chromatic_masks) {
+    //    applyMaskRotation(mask_id, chromatic_mask_rotation, animate);
+    //}
+    //for (let mask_id of fifths_masks) {
+    //    applyMaskRotation(mask_id, fifths_mask_rotation, animate);
+    //}
 }
 
 function rotateMasks(steps) {
@@ -303,23 +319,15 @@ function switchDarkBackground() {
 
 function updateBackground() {
     let elm_mark = document.getElementById("ChkDarkBackgroundMark");
-    /* Text element has a 'tspan' inside, that's
-        why .firstChild is needed to change its color. */
-    //let elm_label_chr = document.getElementById("LabelChromaticCircle").firstChild;
-    //let elm_label_fth = document.getElementById("LabelFifthsCircle").firstChild;
     let white_key_markers = document.getElementsByClassName("whiteKeyMarker");
     let black_key_markers = document.getElementsByClassName("blackKeyMarker");
     if (dark_background) {
         elm_mark.style.display = "inline";
-        //elm_label_chr.style.fill = "white";
-        //elm_label_fth.style.fill = "white";
         svg_root.style.backgroundColor = "black";
         for ( let elm of white_key_markers ) elm.style.stroke = "black";
         for ( let elm of black_key_markers ) elm.style.stroke = "#666666";
     } else {
         elm_mark.style.display = "none";
-        //elm_label_chr.style.fill = "black";
-        //elm_label_fth.style.fill = "black";
         svg_root.style.backgroundColor = "white";
         for ( let elm of white_key_markers ) elm.style.stroke = "#666666";
         for ( let elm of black_key_markers ) elm.style.stroke = "white";
@@ -478,6 +486,7 @@ function writeStringToLocalStorage(key, value) {
     }
 }
 
+// from https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
 function storageAvailable(type) {
     let storage;
     try {
@@ -498,17 +507,14 @@ function storageAvailable(type) {
 }
 
 function resizeEventHandler() {
-    const w = window.parent.innerWidth;
-    const h = window.parent.innerHeight;
-    const ratio = w / h;
-    if ( (ratio < 1.0) && (vertical_screen == false) ) {
+    const ratio = window.parent.innerWidth / window.parent.innerHeight;
+    if ( (ratio < 1.0) && (vertical_screen == false) )
         adaptForPortraitScreen();
-    };
-    if ( (ratio >= 1.0) && (vertical_screen == true) ) {
+    if ( (ratio >= 1.0) && (vertical_screen == true) )
         adaptForLandscapeScreen();
-    };
 }
 
+/*
 function changeScreenOrientation() {
     if ( window.parent.screen.orientation.type == "portrait-primary" ||
          window.parent.screen.orientation.type == "portrait-secondary"  ) {
@@ -517,6 +523,7 @@ function changeScreenOrientation() {
         adaptForLandscapeScreen();
     }
 }
+*/
 
 function adaptForPortraitScreen() {
     const t = 196.9;
@@ -524,7 +531,6 @@ function adaptForPortraitScreen() {
     document.getElementById("Controls").setAttribute("transform", `translate(-3 ${t}) scale(0.51 1)`);
     svg_root.setAttribute("viewBox", `0 0 ${t} ${241.64582 + t}`);
     vertical_screen = true;
-    console.log("Changed screen orientation to portrait.");
 }
 
 function adaptForLandscapeScreen() {
@@ -532,5 +538,4 @@ function adaptForLandscapeScreen() {
     document.getElementById("Controls").setAttribute("transform", "translate(0 0) scale(1 1)");
     svg_root.setAttribute("viewBox", "0 0 397.15732 241.64582");
     vertical_screen = false;
-    console.log("Changed screen orientation to landscape.");
 }
