@@ -3,63 +3,215 @@ const svg_root = document.getElementById("svg1");
 
 var vertical_screen = false;
 
+var visible_mask = null;
+
+var chromatic_transposition = 0;
+var fifths_transposition = 0;
+
 var chromatic_mask_rotation = 0;
 var fifths_mask_rotation = 0;
+
 var black_keys_visible = true;
 var dark_background = false;
-var selected_mask_btn_id = "";
-var visible_masks_ids = null;
 
-const COLOR_BTN_MASK_ENABLED = "#00ff77";
-const COLOR_BTN_MASK_DISABLED = "#ffffdd";
+var note_names_key = "enharmonic1";
 
-const chromatic_masks = [
-    "ChrPentatonicMask",
-    "ChrDiatonicMask",
-    "ChrHarmonicMinorMask",
-    "ChrMelodicMinorMask",
-    "ChrWholeTonesMask",
-    "ChrOctatonicMask",
-    "ChrChromaticMask",
-    "ChrMajorThirdsMask",
-    "ChrMinorThirdsMask"
-];
+const COLOR_BTN_MASK_ON = "#00ff77";
+const COLOR_BTN_MASK_OFF = "#ffffdd";
 
-const fifths_masks = [
-    "FthPentatonicMask",
-    "FthDiatonicMask",
-    "FthHarmonicMinorMask",
-    "FthMelodicMinorMask",
-    "FthWholeTonesMask",
-    "FthChromaticMask",
-    "FthOctatonicMask",
-    "FthMajorThirdsMask",
-    "FthMinorThirdsMask"
-];
+/*
+Dynamic Names Data Structure:
+key: a data row, representing the amount of fifths transposed
+value: array, where:
+    index 0: array with 12 items, each representing a pitch class from 0 to 11
+        (n = natural, s = sharp, f = flat, ss = double sharp, 
+         ff = double flat, e = show enharmonics).
+    index 1: array with 3 items, where:
+        first : index to go when transposing up an half step (semitone);
+        second: index to go when transposing down a half step (semitone).
+    index 2: array with 3 items, where:
+        first : index to go when transposing up a whole step;
+        second: index to go when transposing down a whole step.
+    index 3: array with 3 items, where:
+        first : index to go when transposing up a perfect fifth;
+        second: index to go when transposing down a perfect fifth.
+    index 4: index of enharmonic equivalent.
+*/
 
-const all_masks = chromatic_masks.concat(fifths_masks);
+const note_names_diatonic = new Map ([
+    // C Major/Minor
+    [0, [["n","f","n","f","n","n","s","n","f","n","f","n"],  [ 7, 5], [ 2,-2], [ 1,-1], 12]],
+    // G Major/Minor
+    [1, [["n","s","n","f","n","n","s","n","f","n","f","n"],  [ 8,-6], [ 3,-1], [ 2, 0], 1]],
+    // D Major/Minor
+    [2, [["n","s","n","f","n","n","s","n","s","n","f","n"],  [ 9,-5], [ 4, 0], [ 3, 1], 2]],
+    // A Major/Minor
+    [3, [["n","s","n","s","n","n","s","n","s","n","f","n"],  [10,-4], [ 5, 1], [ 4, 2], 3]],
+    // E Major/Minor
+    [4, [["n","s","n","s","n","n","s","n","s","n","s","n"],  [-1,-3], [ 6, 2], [ 5, 3], -8]],
+    // B Major/Minor
+    [5, [["n","s","n","s","n","s","s","n","s","n","s","n"],  [ 0,-2], [ 7, 3], [ 6, 4], -7]],
+    // F# Major/Minor
+    [6, [["s","s","n","s","n","s","s","n","s","n","s","n"],  [ 1,-1], [ 8, 4], [ 7, 5], -6]],
+    // C# Major/Minor
+    [7, [["s","s","n","s","n","s","s","ss","s","n","s","n"], [ 2, 0], [ 9, 5], [ 8, 6], -5]],
+    // G# Major/Minor
+    [8, [["s","s","ss","s","n","s","s","ss","s","n","s","n"], [ 3, 1], [10, 6], [ 9, 7], -4]],
+    // D# Major/Minor
+    [9, [["s","s","ss","s","n","s","s","ss","s","ss","s","n"], [ 4, 2], [11, 7], [10, 8], -3]],
+    // A# Major/Minor
+    [10, [["s","s","ss","s","ss","s","s","ss","s","ss","s","n"], [ 5, 3], [12, 8], [11, 9], -2]],
+    // E# Major/Minor
+    [11, [["s","s","ss","s","ss","s","s","ss","s","ss","s","ss"], [ 6, 4], [ 1, 9], [12,10], -1]],
+    // B# Major/Minor
+    [12, [["s","s","ss","s","ss","s","s","ss","s","ss","s","ss"], [ 7, 5], [ 2,10], [ 1,11], 0]],
+    // F Major/Minor
+    [-1, [["n","f","n","f","n","n","s","n","f","n","f","n"],  [ 6, 4], [ 1,-3], [ 0,-2], 11]],
+    // Bb Major/Minor
+    [-2, [["n","f","n","f","n","n","f","n","f","n","f","n"],  [ 5, 3], [ 0,-4], [-1,-3], 10]],
+    // Eb Major/Minor
+    [-3, [["n","f","n","f","n","n","f","n","f","n","f","f"],  [ 4, 2], [-1,-5], [-2,-4], 9]],
+    // Ab Major/Minor
+    [-4, [["n","f","n","f","f","n","f","n","f","n","f","f"],  [ 3, 1], [-2,-6], [-3,-5], 8]],
+    // Db Major/Minor
+    [-5, [["n","f","n","f","f","n","f","n","f","ff","f","f"],  [ 2, 0], [-3,-7], [-4,-6], 7]],
+    // Gb Major/Minor
+    [-6, [["n","f","ff","f","f","n","f","n","f","ff","f","f"],  [ 1, -1], [-4,-8], [-5,-7], 6]],
+    // Cb Major/Minor
+    [-7, [["n","f","ff","f","f","n","f","ff","f","ff","f","f"],  [ 0, -1], [-5,-9], [-6,-8], 5]],
+    // Fb Major/Minor
+    [-8, [["ff","f","ff","f","f","n","f","ff","f","ff","f","f"],  [-1, -2], [-6, 2], [-7,-9], 4]],
+    // Bbb Major/Minor
+    [-9, [["ff","f","ff","f","f","ff","f","ff","f","ff","f","f"],  [-2, -3], [-7, 3], [-8, 2], 3]]
+]);
 
-const chromatic_note_names = [
-    "ChrNamesEnharmonics1",
-    "ChrNamesEnharmonics2",
-    "ChrNamesSharps1",
-    "ChrNamesSharps2",
-    "ChrNamesFlats1",
-    "ChrNamesFlats2",
-    "ChrNamesPitchClasses"
-]
+const note_names_major_thirds = new Map ([
+    // C aug
+    [0, [["n","s","n","s","n","n","s","n","s","n","f","n"],  [ 7, 5], [ 2,-2], [ 1,-1], 0]],
+    // G aug
+    [1, [["n","s","n","s","n","n","s","n","s","n","s","n"],  [ 8,-6], [ 3,-1], [ 2, 0], 1]],
+    // D aug
+    [2, [["n","s","n","s","n","s","s","n","s","n","s","n"],  [ 9,-5], [ 4, 0], [ 3, 1], 2]],
+    // A aug
+    [3, [["s","s","n","s","n","s","s","n","s","n","s","n"],  [10,-4], [ 5, 1], [ 4, 2], 3]],
+    // E aug
+    [4, [["s","s","n","s","n","s","s","ss","s","n","s","n"],  [-1,-3], [ 6, 2], [ 5, 3], -8]],
+    // B aug
+    [5, [["s","s","ss","s","n","s","s","ss","s","n","s","n"],  [ 0,-2], [ 7, 3], [ 6, 4], -7]],
+    // F# aug
+    [6, [["s","s","ss","s","n","s","s","ss","s","ss","s","n"],  [ 1,-1], [ 8, 4], [ 7, 5], -6]],
+    // C# aug
+    [7, [["s","s","ss","s","ss","s","s","ss","s","ss","s","n"], [ 2, 0], [ 9, 5], [ 8, 6], -5]],
+    // G# aug
+    [8, [["s","s","ss","s","ss","s","s","ss","s","ss","s","ss"], [ 3, 1], [10, 6], [ 9, 7], -4]],
+    // D# aug
+    [9, [["s","s","ss","s","ss","s","ss","ss","s","ss","s","ss"], [ 4, 2], [11, 7], [10, 8], -3]],
+    // A# aug
+    [10, [["s","ss","ss","s","ss","s","ss","ss","s","ss","s","ss"], [ 5, 3], [ 0, 8], [11, 9], -2]],
+    // E# aug
+    [11, [["s","ss","ss","s","ss","s","ss","ss","s","ss","s","ss"], [ 6, 4], [ 1, 9], [ 0,10], -1]],
+    // F aug
+    [-1, [["n","s","n","s","n","n","s","n","s","n","f","n"],  [ 6, 4], [ 1,-3], [ 0,-2], 11]],
+    // Bb aug
+    [-2, [["n","s","n","f","n","n","s","n","s","n","f","n"],  [ 5, 3], [ 0,-4], [-1,-3], 10]],
+    // Eb aug
+    [-3, [["n","s","n","f","n","n","s","n","f","n","f","n"],  [ 4, 2], [-1,-5], [-2,-4], 9]],
+    // Ab aug
+    [-4, [["n","f","n","f","n","n","s","n","f","n","f","n"],  [ 3, 1], [-2,-6], [-3,-5], 8]],
+    // Db aug
+    [-5, [["n","f","n","f","n","n","f","n","f","n","f","n"],  [ 2, 0], [-3,-7], [-4,-6], 7]],
+    // Gb aug
+    [-6, [["n","f","n","f","n","n","f","n","f","n","f","f"],  [ 1, -1], [-4,-8], [-5,-7], 6]],
+    // Cb aug
+    [-7, [["n","f","n","f","f","n","f","n","f","n","f","f"],  [ 0, -1], [-5,-9], [-6,-8], 5]],
+    // Fb aug
+    [-8, [["n","f","n","f","f","n","f","n","f","ff","f","f"],  [-1, -2], [-6,-10], [-7,-9], 4]],
+    // Bbb aug
+    [-9, [["n","f","ff","f","f","n","f","n","f","ff","f","f"],  [-2, -3], [-7,-11], [-8,-10], 3]],
+    // Ebb aug
+    [-10, [["n","f","ff","f","f","n","f","ff","f","ff","f","f"],  [-3, -4], [-8,-12], [-9,-11], 2]],
+    // Abb aug
+    [-11, [["ff","f","ff","f","f","n","f","ff","f","ff","f","f"],  [-4, -5], [-9,-13], [-10,-12], 1]],
+    // Dbb aug
+    [-12, [["ff","f","ff","f","f","ff","f","ff","f","ff","f","f"],  [-5, -6], [-10,-14], [-11,-13], 0]],
+    // Gbb aug
+    [-13, [["ff","f","ff","f","f","ff","f","ff","f","ff","ff","f"],  [-6, -7], [-11,-15], [-12,-14], -1]],
+    // Cbb aug
+    [-14, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-7, -8], [-12,-4], [-13,-15], -2]],
+    // Fbb aug
+    [-15, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-8, -9], [-13,-5], [-14,-4], -3]]
+]);
 
-const fifths_note_names = [
-    "FthNamesEnharmonics1",
-    "FthNamesEnharmonics2",
-    "FthNamesSharps1",
-    "FthNamesSharps2",
-    "FthNamesFlats1",
-    "FthNamesFlats2",
-    "FthNamesPitchClasses"
-]
+const note_names_minor_thirds = new Map ([
+    // C Dim
+    [0, [["n","f","n","f","f","n","f","n","f","ff","f","f"],  [ 7, 5], [ 2,-2], [ 1,-1], 12]],
+    // G Dim
+    [1, [["n","f","n","f","f","n","f","n","f","n","f","f"],  [ 8,-6], [ 3,-1], [ 2, 0], 1]],
+    // D Dim
+    [2, [["n","f","n","f","n","n","f","n","f","n","f","f"],  [ 9,-5], [ 4, 0], [ 3, 1], 2]],
+    // A Dim
+    [3, [["n","f","n","f","n","n","f","n","f","n","f","n"],  [10,-4], [ 5, 1], [ 4, 2], 3]],
+    // E Dim
+    [4, [["n","f","n","f","n","n","s","n","f","n","f","n"],  [-1,-3], [ 6, 2], [ 5, 3], -8]],
+    // B Dim
+    [5, [["n","s","n","f","n","n","s","n","f","n","f","n"],  [ 0,-2], [ 7, 3], [ 6, 4], -7]],
+    // F# Dim
+    [6, [["n","s","n","f","n","n","s","n","s","n","f","n"],  [ 1,-1], [ 8, 4], [ 7, 5], -6]],
+    // C# Dim
+    [7, [["n","s","n","s","n","n","s","n","s","n","f","n"], [ 2, 0], [ 9, 5], [ 8, 6], -5]],
+    // G# Dim
+    [8, [["n","s","n","s","n","n","s","n","s","n","s","n"], [ 3, 1], [10, 6], [ 9, 7], -4]],
+    // D# Dim
+    [9, [["n","s","n","s","n","s","s","n","s","n","s","n"], [ 4, 2], [11, 7], [10, 8], -3]],
+    // A# Dim
+    [10, [["s","s","n","s","n","s","s","n","s","n","s","n"], [ 5, 3], [12, 8], [11, 9], -2]],
+    // E# Dim
+    [11, [["s","s","n","s","n","s","s","ss","s","n","s","n"], [ 6, 4], [13, 9], [12,10], -1]],
+    // B# Dim
+    [12, [["s","s","ss","s","n","s","s","ss","s","n","s","n"], [ 7, 5], [14,10], [13,11], 0]],
+    // F## Dim
+    [13, [["s","s","ss","s","n","s","s","ss","s","ss","s","n"], [ 8, 6], [15,11], [14,12], 1]],
+    // C## Dim
+    [14, [["s","s","ss","s","ss","s","s","ss","s","ss","s","n"], [ 9, 7], [16,12], [15,13], 2]],
+    // G## Dim
+    [15, [["s","s","ss","s","ss","s","s","ss","s","ss","s","ss"], [10, 8], [17,13], [16,14], 3]],
+    // D## Dim
+    [16, [["s","s","ss","s","ss","s","ss","ss","s","ss","s","ss"], [-1, 9], [18,14], [17,15], 4]],
+    // A## Dim
+    [17, [["s","ss","ss","s","ss","s","ss","ss","s","ss","s","ss"], [ 0,10], [19,15], [18,16], 5]],
+    // E## Dim
+    [18, [["s","ss","ss","s","ss","s","ss","ss","s","ss","s","ss"], [ 1,-1], [-4,16], [19,17], 6]],
+    // B## Dim
+    [19, [["s","ss","ss","s","ss","s","ss","ss","s","ss","s","ss"], [ 2, 0], [-3,17], [-4,18], 7]],
+    // F Dim
+    [-1, [["n","f","ff","f","f","n","f","n","f","ff","f","f"],  [ 6, 4], [ 1,-3], [ 0,-2], 11]],
+    // Bb Dim
+    [-2, [["n","f","ff","f","f","n","f","ff","f","ff","f","f"],  [ 5, 3], [ 0,-4], [-1,-3], 10]],
+    // Eb Dim
+    [-3, [["ff","f","ff","f","f","n","f","ff","f","ff","f","f"],  [ 4, 2], [-1,-5], [-2,-4], 9]],
+    // Ab Dim
+    [-4, [["ff","f","ff","f","f","ff","f","ff","f","ff","f","f"],  [ 3, 1], [-2,-6], [-3,-5], 8]],
+    // Db Dim
+    [-5, [["ff","f","ff","f","f","ff","f","ff","f","ff","ff","f"],  [ 2, 0], [-3, 5], [-4,-6], 7]],
+    // Gb Dim
+    [-6, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [ 1, -1], [-4, 7], [-5, 5], 6]]
+]);
 
-const all_note_names = chromatic_note_names.concat(fifths_note_names);
+note_names_enharmonics1 = ["n","e","n","e","n","n","e","n","e","n","e","n"];
+note_names_enharmonics2 = ["e","e","n","e","e","e","e","n","e","n","e","e"];
+note_names_numbers      = ["p","p","p","p","p","p","p","p","p","p","p","p"];
+
+const masks = new Map([
+    ["Pentatonic"   , null],
+    ["Diatonic"     , null],
+    ["HarmonicMinor", null],
+    ["MelodicMinor" , null],
+    ["WholeTones"   , null],
+    ["Octatonic"    , null],
+    ["MajorThirds"  , null],
+    ["MinorThirds"  , null],
+    ["Chromatic"    , null]
+]);
 
 const control_groups = [
     "ControlsMasks",
@@ -91,9 +243,7 @@ const transpose_buttons = [
 
 const options_names_switches = [ 
     "SwitchNamesEnharmony1", "SwitchNamesEnharmony2",
-    "SwitchNamesSharps1", "SwitchNamesSharps2",
-    "SwitchNamesFlats1", "SwitchNamesFlats2",
-    "SwitchNamesPitchClasses" /*, "SwitchNamesDynamic"*/
+    "SwitchNamesPitchClasses", "SwitchNamesDynamic"
 ];
 
 const options_clickables = options_names_switches.concat(["ChkBlackKeys", "ChkDarkBackground"]);
@@ -101,110 +251,158 @@ const options_clickables = options_names_switches.concat(["ChkBlackKeys", "ChkDa
 const clickable_elements = tabs.concat(masks_buttons, transpose_buttons, options_clickables);
 
 
-function showMaskPentatonic() {
-    showMasks(["ChrPentatonicMask", "FthPentatonicMask"], "BtnMaskPentatonic");
-}
+/*****************************
+ *                           *
+ *  Initialization routines  *
+ *                           *
+ *****************************/
 
-function showMaskDiatonic() {  
-    showMasks(["ChrDiatonicMask", "FthDiatonicMask"], "BtnMaskDiatonic");
-}
-
-function showMaskHarmonicMinor() {  
-    showMasks(["ChrHarmonicMinorMask", "FthHarmonicMinorMask"], "BtnMaskHarmonicMinor");
-}
-
-function showMaskMelodicMinor() {  
-    showMasks(["ChrMelodicMinorMask", "FthMelodicMinorMask"], "BtnMaskMelodicMinor");
-}
-
-function showMaskWholeTones() {  
-    showMasks(["ChrWholeTonesMask", "FthWholeTonesMask"], "BtnMaskWholeTones");
-}
-
-function showMaskChromatic() {  
-    showMasks(["ChrChromaticMask", "FthChromaticMask"], "BtnMaskChromatic");
-}
-
-function showMaskOctatonic() {  
-    showMasks(["ChrOctatonicMask", "FthOctatonicMask"], "BtnMaskOctatonic");
-}
-
-function showMaskMajorThirds() {  
-    showMasks(["ChrMajorThirdsMask", "FthMajorThirdsMask"], "BtnMaskMajorThirds");
-}
-
-function showMaskMinorThirds() {  
-    showMasks(["ChrMinorThirdsMask", "FthMinorThirdsMask"], "BtnMaskMinorThirds");
-}
-
-// masks_ids expects only a pair of element ids
-function showMasks(masks_ids, button_id) {
-    hideVisibleMasks();
-    if ( selected_mask_btn_id == button_id ) {
-        setMaskButtonsColors("");
-        selected_mask_btn_id = "";
-    } else {
-        showMask(masks_ids[0], chromatic_mask_rotation);
-        showMask(masks_ids[1], fifths_mask_rotation);
-        setMaskButtonsColors(button_id);
-        selected_mask_btn_id = button_id;
-        visible_masks_ids = masks_ids;
+function initializeMasks() {
+    // Initialize masks with the following structure:
+    // key: [ [chr_mask_element, fth_mask_element],
+    //        [mask_btn_element, mask_btn_background_element] ]    
+    for (let mask of masks) {
+        masks.set(mask[0], [
+            [ document.getElementById(`Chr${mask[0]}Mask`),
+              document.getElementById(`Fth${mask[0]}Mask`)   ],
+            [ document.getElementById(`BtnMask${mask[0]}`),
+              document.getElementById(`BtnMask${mask[0]}Bk`) ]
+        ]);
     }
-}
-
-function showMask(mask_id, rotation = 0) {
-    let elm = document.getElementById(mask_id);
-    elm.style.transitionProperty = "scale, opacity";
-    elm.style.transitionDuration = "0.2s";
-    elm.style.transitionBehavior = "ease-out";
-    elm.style.transitionDelay = (selected_mask_btn_id == "") ? "none" : "0.4s";
-    elm.style.rotate = `${rotation}deg`;
-    elm.style.scale = "100%";
-	elm.style.opacity = "1";
-}
-
-function hideVisibleMasks() {
-    if ( visible_masks_ids != null ) {
-        hideMasks(visible_masks_ids);
-        visible_masks_ids = null;
-    }
-}
-
-function hideMasks(masks_ids) {
-    for (let mask_id of masks_ids) {
-        hideMask(mask_id);
-    }
-}
-
-function hideMask(mask_id) {
-    let elm = document.getElementById(mask_id);
-    elm.style.transition = "all 0.2s ease-in";
-    elm.style.transitionDelay = "none";
-    elm.style.scale = "120%";
-    elm.style.opacity = "0";
-}
-
-function hideAllMasksExcept(masks_ids) {
-    for (let mask_id of all_masks) {
-        if ( mask_id in masks_ids == false ) {
-            hideMask(mask_id);
+    // Set properties of masks
+    for (let mask_data of masks) {
+        for (let mask of mask_data[1][0]) {
+            mask.style.transformBox = "border-box";
+            mask.style.transformOrigin = "center center";
+            mask.style.opacity = "0";
+            mask.style.visibility = "hidden";
+            mask.style.scale = "120%";
+            mask.style.display = "inline";
         }
     }
 }
 
-function hideAllMasks() {
-    hideAllMasksExcept([]);
+
+/******************************
+ *                            *
+ *  Mask visibility routines  *
+ *                            *
+ ******************************/
+
+function changeMask(mask_key, animate = true) {
+    let delay;
+    if (visible_mask == null) {
+        delay = false;
+    } else {
+        const hiding_mask_data = masks.get(visible_mask);
+        hideMask(hiding_mask_data[0][0], animate);
+        hideMask(hiding_mask_data[0][1], animate);
+        hiding_mask_data[1][1].style.fill = COLOR_BTN_MASK_OFF;
+        delay = true;
+    }
+    if (mask_key == visible_mask || mask_key == null) {
+        visible_mask = null;
+    } else {
+        visible_mask = mask_key;
+        const showing_mask_data = masks.get(visible_mask);
+        showMask(showing_mask_data[0][0], chromatic_mask_rotation, animate, delay);
+        showMask(showing_mask_data[0][1], fifths_mask_rotation, animate, delay);
+        showing_mask_data[1][1].style.fill = COLOR_BTN_MASK_ON;
+    }
+    updateNoteNames();
 }
 
-function setMaskButtonsColors(selected_btn_id) {
-    for (let btn_id of masks_buttons) {
-        let elm = document.getElementById(btn_id + "Bk");
-        if (btn_id == selected_btn_id)
-            elm.style.fill = COLOR_BTN_MASK_ENABLED;
-        else
-            elm.style.fill = COLOR_BTN_MASK_DISABLED;
+function showMask(mask, rotation_degrees = 0, animate, delay) {
+    if (animate == true) {
+        mask.style.transitionProperty = "scale, opacity";
+        mask.style.transitionDelay = ( (delay == true) ? "0.4s" : "0s" );
+        mask.style.transitionDuration = "0.2s";
+        mask.style.transitionTimingFunction = "ease-out";
+    } else {
+        mask.style.transition = "none";
+    }
+    mask.style.scale = "100%";
+	mask.style.opacity = "1";
+	mask.style.visibility = "visible";
+    mask.style.rotate = `${rotation_degrees}deg`;
+}
+
+function hideMask(mask, animate) {
+    if (animate == true) {
+        mask.style.transitionProperty = "scale, opacity, visibility";
+        mask.style.transitionDelay = "0s";
+        mask.style.transitionDuration = "0.2s";
+        mask.style.transitionTimingFunction = "ease-in";
+    } else {
+        mask.style.transition = "none";
+    }
+    mask.style.scale = "120%";
+    mask.style.opacity = "0";
+    mask.style.visibility = "hidden";
+}
+
+
+/******************************
+ *                            *
+ *   Mask rotation routines   *
+ *                            *
+ ******************************/
+
+function rotateMasks(steps, animate = true) {
+    transpose(steps);
+    chromatic_mask_rotation = 30 * chromatic_transposition;
+    fifths_mask_rotation = 30 * fifths_transposition;
+    if (visible_mask != null) {
+        const mask_data = masks.get(visible_mask);
+        applyMaskRotation(mask_data[0][0], chromatic_mask_rotation, animate);
+        applyMaskRotation(mask_data[0][1], fifths_mask_rotation, animate);
+    }
+    updateNoteNames();
+}
+
+function applyMaskRotation(mask, degrees, animate) {
+    if (animate && mask.style.visibility == "visible") {
+        mask.style.transition = "rotate 0.75s ease-in-out";
+        mask.style.transitionDelay = "0s";
+    } else {
+        mask.style.transition = "rotate none";
+    }
+    mask.style.rotate = `${degrees}deg`;
+}
+
+function transpose(steps) {
+    chromatic_transposition += steps;
+    switch (steps) {
+        case  2: fifths_transposition +=  2; break;
+        case -2: fifths_transposition += -2; break;
+        case  7: fifths_transposition +=  1; break;
+        case -7: fifths_transposition += -1; break;
+        default: fifths_transposition += 7 * steps;
+    }
+    // handle automatic names change
+    if ( typeof(note_names_key) == "number" ) {
+        let names_map;
+        switch ( visible_mask ) {
+            case "MajorThirds": names_map = note_names_major_thirds; break;
+            case "MinorThirds": names_map = note_names_minor_thirds; break;
+            default           : names_map = note_names_diatonic; break;
+        }
+        switch (steps) {
+            case  1: note_names_key = names_map.get(note_names_key)[1][0]; break;
+            case -1: note_names_key = names_map.get(note_names_key)[1][1]; break;
+            case  2: note_names_key = names_map.get(note_names_key)[2][0]; break;
+            case -2: note_names_key = names_map.get(note_names_key)[2][1]; break;
+            case  7: note_names_key = names_map.get(note_names_key)[3][0]; break;
+            case -7: note_names_key = names_map.get(note_names_key)[3][1];
+        }
     }
 }
+
+/*****************************
+ *                           *
+ *   Tab changing routines   *
+ *                           *
+ *****************************/
 
 function showTabMasks() {
     hideTab("TabTransposeBk", "ControlsTranspose");
@@ -245,49 +443,115 @@ function hideAllTabs() {
     }
 }
 
-function applyMaskRotation(mask_id, degrees, animate) {
-    let elm = document.getElementById(mask_id);
-    if (animate && elm.style.opacity > 0) {
-        elm.style.transition = "rotate 0.75s ease-in-out";
-        elm.style.transitionDelay = "none";
+
+/****************************
+ *                          *
+ *   Note naming routines   *
+ *                          *
+ ****************************/
+
+function updateNoteNames() {
+    if ( typeof(note_names_key) == "number" ) {
+        if ( ["Pentatonic","Diatonic","HarmonicMinor","MelodicMinor"].includes(visible_mask) ) {
+            note_names_key = modularClamp(note_names_key, -9, 12, 12);
+            showNoteNames(note_names_diatonic.get(note_names_key)[0])
+        } else if ( visible_mask == "MajorThirds" ) {
+            note_names_key = modularClamp(note_names_key, -15, 11, 12);
+            showNoteNames(note_names_major_thirds.get(note_names_key)[0]);
+        } else if ( visible_mask == "MinorThirds" ) {
+            note_names_key = modularClamp(note_names_key, -6, 19, 12);
+            showNoteNames(note_names_minor_thirds.get(note_names_key)[0]);
+        } else
+            showNoteNames(note_names_enharmonics1);
     } else {
-        elm.style.transition = "rotate none";
+        switch (note_names_key) {
+            case "enharmonics1": showNoteNames(note_names_enharmonics1); break;
+            case "enharmonics2": showNoteNames(note_names_enharmonics2); break;
+            case "numbers"     : showNoteNames(note_names_numbers); break;
+        }
     }
-    elm.style.rotate = `${degrees}deg`;
 }
 
-function applyMasksRotation(animate = true) {
-    applyMaskRotation(visible_masks_ids[0], chromatic_mask_rotation, animate);
-    applyMaskRotation(visible_masks_ids[1], fifths_mask_rotation, animate);
-    //for (let mask_id of chromatic_masks) {
-    //    applyMaskRotation(mask_id, chromatic_mask_rotation, animate);
-    //}
-    //for (let mask_id of fifths_masks) {
-    //    applyMaskRotation(mask_id, fifths_mask_rotation, animate);
-    //}
-}
-
-function rotateMasks(steps) {
-    chromatic_mask_rotation += (30 * steps);
-    switch (Math.abs(steps)) {
-        case 2:
-            fifths_mask_rotation += (60 * Math.sign(steps));
-            break;
-        case 7:
-            fifths_mask_rotation += (30 * Math.sign(steps));
-            break;
-        default:
-            let x = 210 * steps;
-            while (Math.abs(x) >= 360) {
-                x -= (360 * Math.sign(x));
-            }
-            fifths_mask_rotation += x;
-
+function showNoteNames(postfix_array) {
+    const showNoteName = (elm) => {
+        if (window.getComputedStyle(elm).visibility == "hidden") {
+            elm.style.transitionProperty = "visibility, transform";
+            elm.style.transitionDelay = "0.2s";
+            elm.style.transitionDuration = "0.2s";
+            elm.style.transitionTimingFunction = "ease-in-out";
+            elm.style.visibility = "visible";
+            //elm.style.opacity = "1";
+            elm.style.transform = "scale(1, 1)";
+            //elm.style.display = "inline";
+        }
+    };
+    const hideNoteName = (elm) => {
+        if (window.getComputedStyle(elm).visibility == "visible") {
+            elm.style.transitionProperty = "visibility, transform";
+            elm.style.transitionDelay = "0s";
+            elm.style.transitionDuration = "0.2s";
+            elm.style.transitionTimingFunction = "ease-in-out";
+            elm.style.visibility = "hidden";
+            //elm.style.opacity = "0";
+            elm.style.transform = "scale(1, 0)";
+        }
+    };
+    for (let i = 0; i < 12; i++) {
+        let chr_note_group = document.getElementById(`ChrNote${i}`);
+        let fth_note_group = document.getElementById(`FthNote${i}`);
+        let id_chr_visible = `ChrNote${i}${postfix_array[i]}`;
+        let id_fth_visible = `FthNote${i}${postfix_array[i]}`;
+        for (let elm of chr_note_group.childNodes) {
+            if (elm.id == id_chr_visible)
+                showNoteName(elm);
+            else
+                hideNoteName(elm);
+        }
+        for (let elm of fth_note_group.childNodes) {
+            if (elm.id == id_fth_visible)
+                showNoteName(elm);
+            else
+                hideNoteName(elm);
+        }
     }
-    //if (mask_rotation >= 360)
-    //    mask_rotation -= 360;
-    applyMasksRotation(true);
 }
+
+function checkNamesSwitch(switch_id) {
+    for (let elm_id of options_names_switches) {
+        document.getElementById(elm_id + "Mark").style.display = 
+            (elm_id == switch_id) ? "inline" : "none";
+    }
+    writeStringToLocalStorage("checked_names_switch", switch_id);
+}
+
+function changeNoteNames(value) {
+    switch (value) {
+        case "enharmonics1" :
+            checkNamesSwitch("SwitchNamesEnharmony1");
+            note_names_key = "enharmonics1";
+            break;
+        case "enharmonics2" :
+            checkNamesSwitch("SwitchNamesEnharmony2");
+            note_names_key = "enharmonics2";
+            break;
+        case "numbers" :
+            checkNamesSwitch("SwitchNamesPitchClasses");
+            note_names_key = "numbers";
+            break;
+        default :
+            checkNamesSwitch("SwitchNamesDynamic");
+            note_names_key = modularClamp(fifths_transposition, -5, 6, 12);
+    }
+    writeStringToLocalStorage("note_names", value);
+    updateNoteNames();
+}
+
+
+/****************************
+ *                          *
+ *      Other routines      *
+ *                          *
+ ****************************/
 
 function switchShowBlackKeys() {
     black_keys_visible = (! black_keys_visible);
@@ -334,75 +598,6 @@ function updateBackground() {
     }
 }
 
-function setNamesEnharmony1() {
-    checkNamesSwitch("SwitchNamesEnharmony1");
-    setNamesVisibility("NamesEnharmonics1");
-}
-
-function setNamesEnharmony2() {
-    checkNamesSwitch("SwitchNamesEnharmony2");
-    setNamesVisibility("NamesEnharmonics2");
-}
-
-function setNamesSharps1() {
-    checkNamesSwitch("SwitchNamesSharps1");
-    setNamesVisibility("NamesSharps1");
-}
-
-function setNamesSharps2() {
-    checkNamesSwitch("SwitchNamesSharps2");
-    setNamesVisibility("NamesSharps2");
-}
-
-function setNamesFlats1() {
-    checkNamesSwitch("SwitchNamesFlats1");
-    setNamesVisibility("NamesFlats1");
-}
-
-function setNamesFlats2() {
-    checkNamesSwitch("SwitchNamesFlats2");
-    setNamesVisibility("NamesFlats2");
-}
-
-function setNamesPitchClasses() {
-    checkNamesSwitch("SwitchNamesPitchClasses");
-    setNamesVisibility("NamesPitchClasses");
-
-}
-
-function checkNamesSwitch(switch_id) {
-    document.getElementById(switch_id + "Mark").style.display = "inline";
-    for (let elm_id of options_names_switches) {
-        if (elm_id != switch_id) {
-            document.getElementById(elm_id + "Mark").style.display = "none";
-        }
-    }
-    writeStringToLocalStorage("checked_names_switch", switch_id);
-}
-
-function setNamesVisibility(elm_id_postfix) {
-    let chr_elm_id = "Chr" + elm_id_postfix;
-    for (let elm_id of chromatic_note_names) {
-        let elm = document.getElementById(elm_id);
-        if (elm != null) {
-            if (elm_id == chr_elm_id)
-                elm.style.display = "inline";
-            else
-                elm.style.display = "none";
-        }
-    }
-    let fth_elm_id = "Fth" + elm_id_postfix;
-    for (let elm_id of fifths_note_names) {
-        let elm = document.getElementById(elm_id);
-        if (elm != null) {
-            if (elm_id == fth_elm_id)
-                elm.style.display = "inline";
-            else
-                elm.style.display = "none";
-        }
-    }
-    writeStringToLocalStorage("names_element_id_postfix", elm_id_postfix);
-}
 
 function hover(elm_id) {
 	let elm = document.getElementById(elm_id);
@@ -431,15 +626,7 @@ function initializeThisSvg() {
     svg_root.removeAttribute("width");
     svg_root.style.backgroundColor = "white";
 
-    // Set properties for masks
-    for (let elm_id of all_masks) {
-        let elm = document.getElementById(elm_id);
-        elm.style.transformBox = "border-box";
-        elm.style.transformOrigin = "center center";
-        elm.style.opacity = "0";
-        elm.style.scale = "120%";
-        elm.style.display = "inline";
-    }
+    initializeMasks();
 
     // Set cursor for clickable controls
     for (let elm_id of clickable_elements) {
@@ -448,21 +635,31 @@ function initializeThisSvg() {
             elm.style.cursor = "pointer";
     }
 
+    // Set style for note names
+    for (let grandpa_id of ["ChrNames","FthNames"]) {
+        let grandpa = document.getElementById(grandpa_id);
+        for (let parent of grandpa.childNodes) {
+            for (let elm of parent.childNodes) {
+                elm.style.visibility = "hidden";
+                //elm.style.opacity = "0";
+                elm.style.display = "inline";
+                elm.style.transformBox = "border-box";
+                elm.style.transformOrigin = "center center";
+                elm.style.transform = "scale(1, 0)";
+            }
+        }
+    }
+
     // Read stored preferences
     dark_background = readBoolFromLocalStorage("dark_background", false);
     black_keys_visible = readBoolFromLocalStorage("black_keys_visible", true);
     updateBackground();
     updateShowBlackKeys();
-    checkNamesSwitch(readStringFromLocalStorage("checked_names_switch", "SwitchNamesEnharmony1"));
-    setNamesVisibility(readStringFromLocalStorage("names_element_id_postfix", "NamesEnharmonics1"));
+    changeNoteNames(readStringFromLocalStorage("note_names", "auto"));
 
     // Respond to window resizing
     window.parent.addEventListener("resize", resizeEventHandler);
     resizeEventHandler();
-
-    // Respond to orientation change
-    //window.parent.screen.orientation.addEventListener("change", changeScreenOrientation);
-    //changeScreenOrientation();
 
 }
 
@@ -538,4 +735,10 @@ function adaptForLandscapeScreen() {
     document.getElementById("Controls").setAttribute("transform", "translate(0 0) scale(1 1)");
     svg_root.setAttribute("viewBox", "0 0 397.15732 241.64582");
     vertical_screen = false;
+}
+
+function modularClamp(value, min, max, minuend) {
+    while (value > max) value -= minuend;
+    while (value < min) value += minuend;
+    return value;
 }
