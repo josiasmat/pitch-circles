@@ -14,7 +14,8 @@ var fifths_mask_rotation = 0;
 var black_keys_visible = true;
 var dark_background = false;
 
-var note_names_key = "enharmonic1";
+var note_names_key = "auto";
+var automatic_names = true;
 
 const COLOR_BTN_MASK_ON = "#00ff77";
 const COLOR_BTN_MASK_OFF = "#ffffdd";
@@ -42,11 +43,11 @@ const note_names_diatonic = new Map ([
     // C Major/Minor
     [0, [["n","f","n","f","n","n","s","n","f","n","f","n"],  [ 7, 5], [ 2,-2], [ 1,-1], 12]],
     // G Major/Minor
-    [1, [["n","s","n","f","n","n","s","n","f","n","f","n"],  [ 8,-6], [ 3,-1], [ 2, 0], 1]],
+    [1, [["n","s","n","f","n","n","s","n","f","n","f","n"],  [ 8,-6], [ 3,-1], [ 2, 0], 13]],
     // D Major/Minor
-    [2, [["n","s","n","f","n","n","s","n","s","n","f","n"],  [ 9,-5], [ 4, 0], [ 3, 1], 2]],
+    [2, [["n","s","n","f","n","n","s","n","s","n","f","n"],  [ 9,-5], [ 4, 0], [ 3, 1], 14]],
     // A Major/Minor
-    [3, [["n","s","n","s","n","n","s","n","s","n","f","n"],  [10,-4], [ 5, 1], [ 4, 2], 3]],
+    [3, [["n","s","n","s","n","n","s","n","s","n","f","n"],  [10,-4], [ 5, 1], [ 4, 2], -9]],
     // E Major/Minor
     [4, [["n","s","n","s","n","n","s","n","s","n","s","n"],  [-1,-3], [ 6, 2], [ 5, 3], -8]],
     // B Major/Minor
@@ -62,9 +63,13 @@ const note_names_diatonic = new Map ([
     // A# Major/Minor
     [10, [["s","s","ss","s","ss","s","s","ss","s","ss","s","n"], [ 5, 3], [12, 8], [11, 9], -2]],
     // E# Major/Minor
-    [11, [["s","s","ss","s","ss","s","s","ss","s","ss","s","ss"], [ 6, 4], [ 1, 9], [12,10], -1]],
+    [11, [["s","s","ss","s","ss","s","s","ss","s","ss","s","ss"], [ 6, 4], [13, 9], [12,10], -1]],
     // B# Major/Minor
-    [12, [["s","s","ss","s","ss","s","s","ss","s","ss","s","ss"], [ 7, 5], [ 2,10], [ 1,11], 0]],
+    [12, [["s","s","ss","s","ss","s","ss","ss","s","ss","s","ss"], [ 7, 5], [14,10], [13,11], -12]],
+    // F## Major/Minor
+    [13, [["s","s","ss","s","ss","s","ss","ss","s","ss","s","ss"], [ 8, 6], [ 3,11], [14,12], -11]],
+    // C## Major/Minor
+    [14, [["s","ss","ss","s","ss","s","ss","ss","s","ss","s","ss"], [ 9, 7], [ 4,12], [ 3,13], -10]],
     // F Major/Minor
     [-1, [["n","f","n","f","n","n","s","n","f","n","f","n"],  [ 6, 4], [ 1,-3], [ 0,-2], 11]],
     // Bb Major/Minor
@@ -80,20 +85,26 @@ const note_names_diatonic = new Map ([
     // Cb Major/Minor
     [-7, [["n","f","ff","f","f","n","f","ff","f","ff","f","f"],  [ 0, -1], [-5,-9], [-6,-8], 5]],
     // Fb Major/Minor
-    [-8, [["ff","f","ff","f","f","n","f","ff","f","ff","f","f"],  [-1, -2], [-6, 2], [-7,-9], 4]],
+    [-8, [["ff","f","ff","f","f","n","f","ff","f","ff","f","f"],  [-1, -2], [-6,-10], [-7,-9], 4]],
     // Bbb Major/Minor
-    [-9, [["ff","f","ff","f","f","ff","f","ff","f","ff","f","f"],  [-2, -3], [-7, 3], [-8, 2], 3]]
+    [-9, [["ff","f","ff","f","f","ff","f","ff","f","ff","f","f"],  [-2, -3], [-7,-11], [-8,-10], 3]],
+    // Ebb Major/Minor
+    [-10, [["ff","f","ff","f","f","ff","f","ff","f","ff","ff","f"],  [-3, -4], [-8,-12], [-9,-11], 2]],
+    // Abb Major/Minor
+    [-11, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-4, -5], [-9, 5], [-10,-12], 1]],
+    // Dbb Major
+    [-12, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-5, -6], [-10, 6], [-11,-1], 0]]
 ]);
 
 const note_names_major_thirds = new Map ([
     // C aug
-    [0, [["n","s","n","s","n","n","s","n","s","n","f","n"],  [ 7, 5], [ 2,-2], [ 1,-1], 0]],
+    [0, [["n","s","n","s","n","n","s","n","s","n","f","n"],  [ 7, 5], [ 2,-2], [ 1,-1], -12]],
     // G aug
-    [1, [["n","s","n","s","n","n","s","n","s","n","s","n"],  [ 8,-6], [ 3,-1], [ 2, 0], 1]],
+    [1, [["n","s","n","s","n","n","s","n","s","n","s","n"],  [ 8,-6], [ 3,-1], [ 2, 0], -11]],
     // D aug
-    [2, [["n","s","n","s","n","s","s","n","s","n","s","n"],  [ 9,-5], [ 4, 0], [ 3, 1], 2]],
+    [2, [["n","s","n","s","n","s","s","n","s","n","s","n"],  [ 9,-5], [ 4, 0], [ 3, 1], -10]],
     // A aug
-    [3, [["s","s","n","s","n","s","s","n","s","n","s","n"],  [10,-4], [ 5, 1], [ 4, 2], 3]],
+    [3, [["s","s","n","s","n","s","s","n","s","n","s","n"],  [10,-4], [ 5, 1], [ 4, 2], -9]],
     // E aug
     [4, [["s","s","n","s","n","s","s","ss","s","n","s","n"],  [-1,-3], [ 6, 2], [ 5, 3], -8]],
     // B aug
@@ -246,7 +257,8 @@ const options_names_switches = [
     "SwitchNamesPitchClasses", "SwitchNamesDynamic"
 ];
 
-const options_clickables = options_names_switches.concat(["ChkBlackKeys", "ChkDarkBackground"]);
+const options_clickables = options_names_switches.concat(
+    ["ChkBlackKeys", "ChkDarkBackground", "BtnSwapEnharmonics"]);
 
 const clickable_elements = tabs.concat(masks_buttons, transpose_buttons, options_clickables);
 
@@ -290,10 +302,8 @@ function initializeMasks() {
  ******************************/
 
 function changeMask(mask_key, animate = true) {
-    let delay;
-    if (visible_mask == null) {
-        delay = false;
-    } else {
+    let delay = false;
+    if (visible_mask != null) {
         const hiding_mask_data = masks.get(visible_mask);
         hideMask(hiding_mask_data[0][0], animate);
         hideMask(hiding_mask_data[0][1], animate);
@@ -352,16 +362,16 @@ function rotateMasks(steps, animate = true) {
     transpose(steps);
     chromatic_mask_rotation = 30 * chromatic_transposition;
     fifths_mask_rotation = 30 * fifths_transposition;
-    if (visible_mask != null) {
-        const mask_data = masks.get(visible_mask);
-        applyMaskRotation(mask_data[0][0], chromatic_mask_rotation, animate);
-        applyMaskRotation(mask_data[0][1], fifths_mask_rotation, animate);
+    if ( visible_mask != null ) {
+        const mask_data = masks.get(visible_mask)[0];
+        applyMaskRotation(mask_data[0], chromatic_mask_rotation, animate);
+        applyMaskRotation(mask_data[1], fifths_mask_rotation, animate);
     }
-    updateNoteNames();
+    updateNoteNames(0.25);
 }
 
 function applyMaskRotation(mask, degrees, animate) {
-    if (animate && mask.style.visibility == "visible") {
+    if (animate == true && mask.style.visibility == "visible") {
         mask.style.transition = "rotate 0.75s ease-in-out";
         mask.style.transitionDelay = "0s";
     } else {
@@ -385,9 +395,9 @@ function transpose(steps) {
         switch ( visible_mask ) {
             case "MajorThirds": names_map = note_names_major_thirds; break;
             case "MinorThirds": names_map = note_names_minor_thirds; break;
-            default           : names_map = note_names_diatonic; break;
+            default           : names_map = note_names_diatonic;
         }
-        switch (steps) {
+        switch ( steps ) {
             case  1: note_names_key = names_map.get(note_names_key)[1][0]; break;
             case -1: note_names_key = names_map.get(note_names_key)[1][1]; break;
             case  2: note_names_key = names_map.get(note_names_key)[2][0]; break;
@@ -450,49 +460,54 @@ function hideAllTabs() {
  *                          *
  ****************************/
 
-function updateNoteNames() {
+function updateNoteNames(delay = 0.0) {
     if ( typeof(note_names_key) == "number" ) {
-        if ( ["Pentatonic","Diatonic","HarmonicMinor","MelodicMinor"].includes(visible_mask) ) {
-            note_names_key = modularClamp(note_names_key, -9, 12, 12);
-            showNoteNames(note_names_diatonic.get(note_names_key)[0])
+        automatic_names = true;
+        if ( ["Pentatonic","Diatonic"].includes(visible_mask) ) {
+            note_names_key = modularClamp(note_names_key, -12, 14, 12);
+            showNoteNames(note_names_diatonic.get(note_names_key)[0], delay);
+        } else if ( ["HarmonicMinor","MelodicMinor"].includes(visible_mask) ) {
+            note_names_key = modularClamp(note_names_key, -11, 14, 12);
+            showNoteNames(note_names_diatonic.get(note_names_key)[0], delay);
         } else if ( visible_mask == "MajorThirds" ) {
             note_names_key = modularClamp(note_names_key, -15, 11, 12);
-            showNoteNames(note_names_major_thirds.get(note_names_key)[0]);
+            showNoteNames(note_names_major_thirds.get(note_names_key)[0], delay);
         } else if ( visible_mask == "MinorThirds" ) {
             note_names_key = modularClamp(note_names_key, -6, 19, 12);
-            showNoteNames(note_names_minor_thirds.get(note_names_key)[0]);
-        } else
-            showNoteNames(note_names_enharmonics1);
+            showNoteNames(note_names_minor_thirds.get(note_names_key)[0], delay);
+        } else {
+            showNoteNames(note_names_enharmonics1, delay);
+            automatic_names = false;
+        }
     } else {
         switch (note_names_key) {
-            case "enharmonics1": showNoteNames(note_names_enharmonics1); break;
-            case "enharmonics2": showNoteNames(note_names_enharmonics2); break;
-            case "numbers"     : showNoteNames(note_names_numbers); break;
+            case "enharmonics1": showNoteNames(note_names_enharmonics1, delay); break;
+            case "enharmonics2": showNoteNames(note_names_enharmonics2, delay); break;
+            case "numbers"     : showNoteNames(note_names_numbers, delay); break;
         }
+        automatic_names = false;
     }
+    updateSwapEnharmonicsBtn();
 }
 
-function showNoteNames(postfix_array) {
+function showNoteNames(postfix_array, delay) {
     const showNoteName = (elm) => {
         if (window.getComputedStyle(elm).visibility == "hidden") {
             elm.style.transitionProperty = "visibility, transform";
-            elm.style.transitionDelay = "0.2s";
-            elm.style.transitionDuration = "0.2s";
+            elm.style.transitionDelay = `${delay + 0.1}s`;
+            elm.style.transitionDuration = "0.1s";
             elm.style.transitionTimingFunction = "ease-in-out";
             elm.style.visibility = "visible";
-            //elm.style.opacity = "1";
             elm.style.transform = "scale(1, 1)";
-            //elm.style.display = "inline";
         }
     };
     const hideNoteName = (elm) => {
         if (window.getComputedStyle(elm).visibility == "visible") {
             elm.style.transitionProperty = "visibility, transform";
-            elm.style.transitionDelay = "0s";
-            elm.style.transitionDuration = "0.2s";
+            elm.style.transitionDelay = `${delay}s`;
+            elm.style.transitionDuration = "0.1s";
             elm.style.transitionTimingFunction = "ease-in-out";
             elm.style.visibility = "hidden";
-            //elm.style.opacity = "0";
             elm.style.transform = "scale(1, 0)";
         }
     };
@@ -544,6 +559,19 @@ function changeNoteNames(value) {
     }
     writeStringToLocalStorage("note_names", value);
     updateNoteNames();
+}
+
+function swapEnharmonics() {
+    if (automatic_names == true) {
+        if ( ["Pentatonic","Diatonic","HarmonicMinor","MelodicMinor"].includes(visible_mask) ) {
+            note_names_key = note_names_diatonic.get(note_names_key)[4];
+        } else if ( visible_mask == "MajorThirds" ) {
+            note_names_key = note_names_major_thirds.get(note_names_key)[4];
+        } else if ( visible_mask == "MinorThirds" ) {
+            note_names_key = note_names_minor_thirds.get(note_names_key)[4];
+        }
+        updateNoteNames();
+    }
 }
 
 
@@ -598,6 +626,20 @@ function updateBackground() {
     }
 }
 
+function updateSwapEnharmonicsBtn() {
+    btn_elm = document.getElementById("BtnSwapEnharmonics");
+    btnbk_elm = document.getElementById("BtnSwapEnharmonicsBk");
+    btntx_elm = document.getElementById("BtnSwapEnharmonicsTxt");
+    if (automatic_names == true) {
+        btn_elm.style.cursor = "pointer";
+        btnbk_elm.style.fill = "#66ff66";
+        btntx_elm.style.fill = "black";
+    } else {
+        btn_elm.style.cursor = "not-allowed";
+        btnbk_elm.style.fill = "#aaaaaa";
+        btntx_elm.style.fill = "#555555";
+    }
+}
 
 function hover(elm_id) {
 	let elm = document.getElementById(elm_id);
@@ -641,7 +683,6 @@ function initializeThisSvg() {
         for (let parent of grandpa.childNodes) {
             for (let elm of parent.childNodes) {
                 elm.style.visibility = "hidden";
-                //elm.style.opacity = "0";
                 elm.style.display = "inline";
                 elm.style.transformBox = "border-box";
                 elm.style.transformOrigin = "center center";
@@ -738,7 +779,8 @@ function adaptForLandscapeScreen() {
 }
 
 function modularClamp(value, min, max, minuend) {
-    while (value > max) value -= minuend;
-    while (value < min) value += minuend;
-    return value;
+    let new_val = value;
+    while (new_val > max) new_val -= minuend;
+    while (new_val < min) new_val += minuend;
+    return new_val;
 }

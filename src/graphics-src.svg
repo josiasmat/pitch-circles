@@ -29,8 +29,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="0.70710678"
-     inkscape:cx="758.72558"
-     inkscape:cy="509.82399"
+     inkscape:cx="801.85909"
+     inkscape:cy="475.88286"
      inkscape:current-layer="svg1"
      showgrid="false"
      showguides="true">
@@ -522,16 +522,20 @@
        style="display:none"
        transform="translate(-9.8244731,219.2313)">
       <path
+         style="display:inline;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+         d="M 348.82432,-14.129511 V 12.951372"
+         id="ControlsTransposeSeparator3" />
+      <path
          style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
-         d="M 287.40224,-14.129511 V 12.951372"
+         d="M 262.68838,-14.129511 V 12.951372"
          id="ControlsTransposeSeparator2" />
       <path
          style="display:inline;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
-         d="M 192.90404,-14.129511 V 12.951372"
+         d="M 176.55225,-14.129511 V 12.951372"
          id="ControlsTransposeSeparator1" />
       <g
          id="g64"
-         transform="translate(1.9817033,4.0383189)"
+         transform="translate(-10.189128,4.0383189)"
          inkscape:label="Half">
         <path
            style="font-size:8.46667px;line-height:1.25;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;stroke-width:0.264583"
@@ -573,7 +577,7 @@
       </g>
       <g
          id="g63"
-         transform="translate(0.743777,4.0383189)"
+         transform="translate(-19.788918,4.0383189)"
          inkscape:label="Whole">
         <path
            style="font-size:8.46667px;line-height:1.25;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;stroke-width:0.264583"
@@ -617,7 +621,7 @@
       </g>
       <g
          id="g62"
-         transform="translate(0.49877267,4.0362499)"
+         transform="translate(-28.395986,4.0362499)"
          inkscape:label="Fifth">
         <path
            style="font-size:8.46667px;line-height:1.25;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;stroke-width:0.264583"
@@ -658,6 +662,27 @@
              id="path135"
              aria-label="▲" />
         </g>
+      </g>
+      <g
+         id="BtnSwapEnharmonics"
+         transform="translate(13.528642,-219.2313)"
+         onmouseover="hover('BtnSwapEnharmonicsBk');"
+         onmouseout="unhover('BtnSwapEnharmonicsBk');"
+         onclick="swapEnharmonics();">
+        <rect
+           style="fill:#66ff66;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-dasharray:none"
+           id="BtnSwapEnharmonicsBk"
+           width="24.58746"
+           height="18.895956"
+           x="347.23657"
+           y="209.19426"
+           rx="2.0534122"
+           ry="2.0534122" />
+        <path
+           style="font-size:5.64444px;line-height:1.25;font-family:'ScaleDegrees Times';-inkscape-font-specification:'ScaleDegrees Times';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;stroke-width:0.264582"
+           d="m 355.36825,213.47209 h 0.54456 v 2.22367 l 0.82333,-0.23334 v 1.41327 l -0.82333,0.23988 v 2.27551 l 0.82333,-0.23988 v 1.4068 l -0.82333,0.23334 v 2.32737 h -0.54456 v -2.1653 l -1.34198,0.36954 v 2.36628 h -0.55103 v -2.20421 l -0.82333,0.2204 v -1.41976 l 0.82333,-0.22041 v -2.27551 l -0.82333,0.22041 v -1.4133 l 0.82333,-0.20746 v -2.34683 h 0.55103 v 2.17826 l 1.34198,-0.36304 z m -1.34198,6.43758 1.34198,-0.36953 v -2.26255 l -1.34198,0.36305 z m 4.25283,-5.76982 h 0.4927 v 3.37113 l 2.48297,-0.55753 v 7.38405 h -0.49919 v -3.31277 l -2.47648,0.55753 z m 2.47648,5.77629 v -1.83467 l -1.98378,0.45382 v 1.83467 z m 2.56725,-6.96916 v 5.87356 q 0.3436,-0.18159 0.58995,-0.27879 0.70663,-0.28523 1.24471,-0.28523 0.90114,0 1.1799,0.79739 0.0713,0.19453 0.0713,0.4214 0,0.70014 -0.75203,1.42626 -0.55103,0.53158 -1.29658,0.90761 -0.27876,0.14254 -1.49757,1.18637 v -10.04857 z m 0,6.26902 v 2.93028 q 0.0388,0.0259 0.53159,-0.42788 0.54456,-0.51864 0.92706,-1.05022 0.49919,-0.69368 0.49919,-1.17342 0,-0.47327 -0.46028,-0.71312 -0.14914,-0.0779 -0.32417,-0.0779 -0.49916,0 -1.17339,0.51215 z"
+           id="BtnSwapEnharmonicsTxt"
+           aria-label="#nb" />
       </g>
     </g>
     <g
