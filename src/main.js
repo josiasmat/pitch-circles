@@ -1,5 +1,14 @@
 
-const svg_root = document.getElementById("svg1");
+
+// CONSTANTS
+const AVAILABLE_TRANSLATIONS = ["en","es","pt"];
+
+const COLOR_BTN_MASK_ON = "#00ff77";
+const COLOR_BTN_MASK_OFF = "#ffffdd";
+
+
+// GLOBAL VARIABLES
+var language = "en";
 
 var vertical_screen = false;
 
@@ -17,8 +26,8 @@ var dark_background = false;
 var note_names_key = "auto";
 var automatic_names = true;
 
-const COLOR_BTN_MASK_ON = "#00ff77";
-const COLOR_BTN_MASK_OFF = "#ffffdd";
+const svg_root = document.getElementById("svg1");
+
 
 /*
 Dynamic Names Data Structure:
@@ -38,6 +47,20 @@ value: array, where:
         second: index to go when transposing down a perfect fifth.
     index 4: index of enharmonic equivalent.
 */
+//const note_names = {
+//    "diatonic": {
+//        "0": {
+//            "names": ["n","f","n","f","n","n","s","n","f","n","f","n"],
+//            "transpose": { "+1": 7, "-1": 5, "+2": 2, "-2": -2, "+7": 1, "-7": -1 },
+//            "sameas": 12
+//        },
+//        "1": {
+//            "names": ["n","s","n","f","n","n","s","n","f","n","f","n"],
+//            "transpose": { "+1": 7, "-1": 5, "+2": 2, "-2": -2, "+7": 1, "-7": -1 },
+//            "sameas": 12
+//        }
+//    }
+//}
 
 const note_names_diatonic = new Map ([
     // C Major/Minor
@@ -262,7 +285,6 @@ const options_clickables = options_names_switches.concat(
 
 const clickable_elements = tabs.concat(masks_buttons, transpose_buttons, options_clickables);
 
-
 /*****************************
  *                           *
  *  Initialization routines  *
@@ -293,7 +315,6 @@ function initializeMasks() {
         }
     }
 }
-
 
 /******************************
  *                            *
@@ -702,6 +723,10 @@ function initializeThisSvg() {
     window.parent.addEventListener("resize", resizeEventHandler);
     resizeEventHandler();
 
+    language = getPreferredTranslation(AVAILABLE_TRANSLATIONS);
+    translateSvgAsync(language);
+    //translate(svg_root);
+
 }
 
 function readStringFromLocalStorage(key, default_value) {
@@ -752,17 +777,6 @@ function resizeEventHandler() {
         adaptForLandscapeScreen();
 }
 
-/*
-function changeScreenOrientation() {
-    if ( window.parent.screen.orientation.type == "portrait-primary" ||
-         window.parent.screen.orientation.type == "portrait-secondary"  ) {
-        adaptForPortraitScreen();
-    } else {
-        adaptForLandscapeScreen();
-    }
-}
-*/
-
 function adaptForPortraitScreen() {
     const t = 196.9;
     document.getElementById("FthCircle").setAttribute("transform", `translate(-${t} ${t})`);
@@ -783,4 +797,67 @@ function modularClamp(value, min, max, minuend) {
     while (new_val > max) new_val -= minuend;
     while (new_val < min) new_val += minuend;
     return new_val;
+}
+
+/****************************
+ *                          *
+ *   Translation routines   *
+ *                          *
+ ****************************/
+
+function getPreferredTranslation(available_translations) {
+    // check url query
+    let url_param_lang = new URLSearchParams(window.parent.location.search).get("lang");
+    if ( url_param_lang != null ) {
+        url_param_lang = url_param_lang.toLowerCase();
+        for ( let translation of available_translations ) {
+            if ( url_param_lang == translation )
+                return translation;
+        }
+    }
+    // check browser languages
+    for ( let lang of navigator.languages ) {
+        lang = lang.toLowerCase();
+        for ( let translation of available_translations ) {
+            if ( lang.startsWith(translation) )
+                return translation;
+        }
+    }
+    // return default
+    return "en";
+}
+
+function getTranslatedStr(key, i18n_data) {
+    if ( i18n_data.hasOwnProperty(key) ) {
+        return i18n_data[key];
+    } else
+        return null;
+}
+
+function translate(element, i18n_data) {
+    // translate element if it has i18n attribute
+    if ( element.hasAttribute("i18n") ) {
+        const str = getTranslatedStr(element.getAttribute("i18n"), i18n_data);
+        if ( str != null )
+            element.innerHTML = str;
+    }
+    // recurse into child nodes
+    if ( element.hasChildNodes() ) {
+        for ( let child of element.children ) {
+            translate(child, i18n_data);
+        }
+    }
+}
+
+async function translateSvgAsync() {
+    try {
+        const file_name = `locale/${language}.json`;
+        const response = await fetch(file_name);
+        if ( ! response.ok )
+            throw new Error(`Response status: ${response.status}`);
+        const data = await response.json();
+        translate(svg_root, data);
+    } catch (error) {
+        console.log(`translateSvgAsync(${language}) error: ${error}.`);
+    }
 }
