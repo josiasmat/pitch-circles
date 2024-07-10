@@ -24,19 +24,19 @@ if not os.path.exists(publish_folder):
 shutil.copy2("./src/favicon.png", publish_folder)
 
 # minify html file
-with open('./src/index.html', 'r') as htmlrfile:
+with open('./src/index.html', 'r', encoding="utf-8") as htmlrfile:
     htmldata = htmlrfile.read()
     htmlrfile.close()
-    with open(publish_folder + '/index.html', 'w') as htmlwfile:
+    with open(publish_folder + '/index.html', 'w', encoding="utf-8") as htmlwfile:
         htmlwfile.write(minify_html.minify(htmldata, \
             minify_js=True, remove_processing_instructions=True))
         htmlwfile.close()
 
 # minify javascript file
-with open('./src/main.js', 'r') as jsrfile:
+with open('./src/main.js', 'r', encoding="utf-8") as jsrfile:
     jsdata = jsrfile.read()
     jsrfile.close()
-    with open(publish_folder + '/main.js', 'w') as jswfile:
+    with open(publish_folder + '/main.js', 'w', encoding="utf-8") as jswfile:
         jswfile.write(jsmin(jsdata))
         jswfile.close()
 
