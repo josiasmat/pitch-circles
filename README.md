@@ -9,8 +9,8 @@ Visit https://josiasmat.github.io/PitchCircles/
 ## Offline usage
 
 1. Download and install [Python](https://www.python.org/) (if you don't have it installed yet).
-2. Download the files from the repository.
-3. On Windows: double-click the `run-local-server.cmd` file; on other systems, run `python3 -m http.server 80` from the downloaded files directory in a terminal.
+2. [Download the files](../../archive/refs/heads/main.zip) from the repository, and unzip them.
+3. On Windows: go to the folder where the files were downloaded/unzipped, and double-click the `run-local-server.cmd` file; on other systems, run `python3 -m http.server 80` from the downloaded files directory in a terminal.
 4. Visit `localhost/` using your internet browser.
 
 ## Translations
