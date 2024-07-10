@@ -17,7 +17,7 @@ Visit https://josiasmat.github.io/PitchCircles/
 
 Currently available in english (`en`), spanish (`es`) and portuguese (`pt`).
 
-It tries to automatically detect the user's preferred language. If you want to use a specific language, append `/?lang=` followed by the desired language's code to the URL.
+It tries to automatically detect the user's preferred language. If you want to use a specific language, append `?lang=` followed by the language code to the URL.
 
 If you want to contribute with another translation, copy one of the files inside the `locale` folder and change the strings accordingly. After that, send me an e-mail (see below) with your translation file.
 
