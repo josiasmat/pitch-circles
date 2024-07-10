@@ -130,9 +130,9 @@ const note_names_diatonic = new Map ([
     // Ebb Major/Minor
     [-10, [["ff","f","ff","f","f","ff","f","ff","f","ff","ff","f"],  [-3, -4], [-8,-12], [-9,-11], 2]],
     // Abb Major/Minor
-    [-11, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-4, -5], [-9, 5], [-10,-12], 1]],
+    [-11, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-4, -5], [-9, 0], [-10,-12], 1]],
     // Dbb Major
-    [-12, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-5, -6], [-10, 6], [-11,-1], 0]]
+    [-12, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-5, -6], [-10,-2], [-11,-1], 0]]
 ]);
 
 const note_names_major_thirds = new Map ([
