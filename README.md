@@ -23,7 +23,7 @@ If you want to contribute with a new translation, copy one of the files inside t
 
 ## Bugs
 
-If you find any bug in this software, please open an [issue ticket](/PitchCircles/issues).
+If you find any bug in this software, please open an [issue ticket](../../issues).
 
 ## More info
 
