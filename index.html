@@ -1,6 +1,10 @@
 <!doctype html>
 <html>
   <head>
-  <script>window.location.replace(`${window.location}/www/index.html${window.location.search}`)</script>>
+    <script>
+      new_url = new URL("www/index.html", window.location.pathname);
+      new_url.search = window.location.search;
+      window.location.replace(new_url);
+    </script>>
   </head>
 </html>
