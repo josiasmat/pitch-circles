@@ -63,20 +63,6 @@ value: array, where:
         second: index to go when transposing down a perfect fifth.
     index 4: index of enharmonic equivalent.
 */
-//const note_names = {
-//    "diatonic": {
-//        "0": {
-//            "names": ["n","f","n","f","n","n","s","n","f","n","f","n"],
-//            "transpose": { "+1": 7, "-1": 5, "+2": 2, "-2": -2, "+7": 1, "-7": -1 },
-//            "sameas": 12
-//        },
-//        "1": {
-//            "names": ["n","s","n","f","n","n","s","n","f","n","f","n"],
-//            "transpose": { "+1": 7, "-1": 5, "+2": 2, "-2": -2, "+7": 1, "-7": -1 },
-//            "sameas": 12
-//        }
-//    }
-//}
 
 const note_names_diatonic = new Map ([
     // C Major/Minor
