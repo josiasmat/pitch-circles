@@ -399,7 +399,7 @@ function rotateMasks(steps, animate = true) {
         applyMaskRotation(mask_data[0], chromatic_mask_rotation, animate);
         applyMaskRotation(mask_data[1], fifths_mask_rotation, animate);
     }
-    updateNoteNames(0.25);
+    updateNoteNames(250);
 }
 
 function applyMaskRotation(mask, degrees, animate) {

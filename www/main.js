@@ -9,7 +9,7 @@ mask.style.scale="100%";mask.style.opacity="1";mask.style.visibility="visible";m
 function hideMask(mask,animate){if(animate==true){mask.style.transitionProperty="scale, opacity, visibility";mask.style.transitionDelay="0s";mask.style.transitionDuration="200ms";mask.style.transitionTimingFunction="ease-in";}else{mask.style.transition="none";}
 mask.style.scale="120%";mask.style.opacity="0";mask.style.visibility="hidden";}
 function rotateMasks(steps,animate=true){transpose(steps);chromatic_mask_rotation=clampAngle(chromatic_transposition*ANGLE_SEMITONE,chromatic_mask_rotation,ANGLE_FIFTH);fifths_mask_rotation=clampAngle(fifths_transposition*ANGLE_SEMITONE,fifths_mask_rotation,ANGLE_FIFTH);if(visible_mask!=null){const mask_data=masks.get(visible_mask)[0];applyMaskRotation(mask_data[0],chromatic_mask_rotation,animate);applyMaskRotation(mask_data[1],fifths_mask_rotation,animate);}
-updateNoteNames(0.25);}
+updateNoteNames(250);}
 function applyMaskRotation(mask,degrees,animate){if(animate==true&&mask.style.visibility=="visible")
 doMaskRotation(mask,degrees,750);else
 doMaskRotation(mask,degrees,0);}
