@@ -1,26 +1,33 @@
 /*
-    Pitch Circles
-    Copyright (C) 2024 Josias Matschulat
+Pitch Circles
+Copyright (C) 2024 Josias Matschulat
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
 
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+"use strict";
 
 // CONSTANTS
 const AVAILABLE_TRANSLATIONS = ["en","es","pt"];
 
 const COLOR_BTN_MASK_ON = "#00ff77";
 const COLOR_BTN_MASK_OFF = "#ffffdd";
+
+
+// FIXED CONSTANTS
+
+const ANGLE_SEMITONE = 30;
+const ANGLE_FIFTH = ANGLE_SEMITONE * 7;
 
 
 // GLOBAL VARIABLES
@@ -233,9 +240,9 @@ const note_names_minor_thirds = new Map ([
     [-6, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"], [ 1, -1], [-4, 7], [-5, 5], 6]]
 ]);
 
-note_names_enharmonics1 = ["n","e","n","e","n","n","e","n","e","n","e","n"];
-note_names_enharmonics2 = ["e","e","n","e","e","e","e","n","e","n","e","e"];
-note_names_numbers      = ["p","p","p","p","p","p","p","p","p","p","p","p"];
+const note_names_enharmonics1 = ["n","e","n","e","n","n","e","n","e","n","e","n"];
+const note_names_enharmonics2 = ["e","e","n","e","e","e","e","n","e","n","e","e"];
+const note_names_numbers      = ["p","p","p","p","p","p","p","p","p","p","p","p"];
 
 const masks = new Map([
     ["Pentatonic"   , null],
@@ -314,6 +321,8 @@ function initializeMasks() {
             mask.style.visibility = "hidden";
             mask.style.scale = "120%";
             mask.style.display = "inline";
+            mask.style.cursor = "grab";
+            mask.style.touchAction = "pinch-zoom";
         }
     }
 }
@@ -348,8 +357,8 @@ function changeMask(mask_key, animate = true) {
 function showMask(mask, rotation_degrees = 0, animate, delay) {
     if (animate == true) {
         mask.style.transitionProperty = "scale, opacity";
-        mask.style.transitionDelay = ( (delay == true) ? "0.4s" : "0s" );
-        mask.style.transitionDuration = "0.2s";
+        mask.style.transitionDelay = ( (delay == true) ? "400ms" : "0s" );
+        mask.style.transitionDuration = "200ms";
         mask.style.transitionTimingFunction = "ease-out";
     } else {
         mask.style.transition = "none";
@@ -364,7 +373,7 @@ function hideMask(mask, animate) {
     if (animate == true) {
         mask.style.transitionProperty = "scale, opacity, visibility";
         mask.style.transitionDelay = "0s";
-        mask.style.transitionDuration = "0.2s";
+        mask.style.transitionDuration = "200ms";
         mask.style.transitionTimingFunction = "ease-in";
     } else {
         mask.style.transition = "none";
@@ -383,8 +392,8 @@ function hideMask(mask, animate) {
 
 function rotateMasks(steps, animate = true) {
     transpose(steps);
-    chromatic_mask_rotation = 30 * chromatic_transposition;
-    fifths_mask_rotation = 30 * fifths_transposition;
+    chromatic_mask_rotation = clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation, ANGLE_FIFTH);
+    fifths_mask_rotation = clampAngle(fifths_transposition*ANGLE_SEMITONE, fifths_mask_rotation, ANGLE_FIFTH);
     if ( visible_mask != null ) {
         const mask_data = masks.get(visible_mask)[0];
         applyMaskRotation(mask_data[0], chromatic_mask_rotation, animate);
@@ -394,13 +403,17 @@ function rotateMasks(steps, animate = true) {
 }
 
 function applyMaskRotation(mask, degrees, animate) {
-    if (animate == true && mask.style.visibility == "visible") {
-        mask.style.transition = "rotate 0.75s ease-in-out";
-        mask.style.transitionDelay = "0s";
-    } else {
-        mask.style.transition = "rotate none";
-    }
-    mask.style.rotate = `${degrees}deg`;
+    if (animate == true && mask.style.visibility == "visible")
+        doMaskRotation(mask, degrees, 750);
+    else
+        doMaskRotation(mask, degrees, 0);
+}
+
+function doMaskRotation(elm, angle_deg, animation_ms = 0) {
+    elm.style.transition = ( animation_ms == 0 ) 
+        ? "none" 
+        : `rotate ${animation_ms}ms ease-in-out`;
+    elm.style.rotate = `${angle_deg}deg`;
 }
 
 function transpose(steps) {
@@ -430,6 +443,192 @@ function transpose(steps) {
         }
     }
 }
+
+
+/*************************************
+ *                                   *
+ * Mask rotation with mouse or touch *
+ *                                   *
+ *************************************/
+
+function enableDragRotationOnMasks() {
+    for ( let mask_data of masks ) {
+        for ( let mask of mask_data[1][0] ) {
+            mask.addEventListener("wheel", handleWheelEvent);
+            mask.addEventListener("pointerdown",   handleMaskDragPointerBegin);
+            mask.addEventListener("pointerup",     handleMaskDragPointerEnd);
+            mask.addEventListener("pointercancel", handleMaskDragPointerEnd);
+            mask.addEventListener("touchstart",    handleMaskDragTouchBegin);
+            mask.addEventListener("touchend",      handleMaskDragTouchEnd);
+            mask.addEventListener("touchcancel",   handleMaskDragTouchEnd);
+        }
+    }
+}
+
+function handleWheelEvent(ev) {
+    if ( document.getElementById("ChrMasks").matches(":hover") ) {
+        rotateMasks(Math.sign(ev.deltaY+ev.deltaX)*(-1));
+    } else if ( document.getElementById("FthMasks").matches(":hover") ) {
+        rotateMasks(Math.sign(ev.deltaY+ev.deltaX)*(-7));
+    }
+}
+
+var mask_dragging_device = {
+    type: null,
+    id: null
+};
+var mask_being_dragged = null;
+var mask_drag_rotation = {
+    amount: 0,
+    offset: 0,
+    rad() { return this.amount + this.offset; },
+    deg() { return radToDeg(this.amount + this.offset); },
+    set(angle_rad) {
+        this.amount = angle_rad;
+        this.begun_rotating = true;
+    },
+    reset(mask_angle_rad, pointer_angle_rad) { 
+        this.amount_rad = 0; 
+        this.offset = mask_angle_rad - pointer_angle_rad;
+        this.begun_rotating = false;
+    },
+    begun_rotating: false
+};
+
+function handleMaskDragPointerBegin(ev) {
+    if ( mask_dragging_device.type != null ) return;
+    mask_dragging_device.type = "pointer";
+    mask_dragging_device.id = ev.pointerId;
+    maskDragBegin(ev.clientX, ev.clientY);
+    mask_being_dragged.setPointerCapture(ev.pointerId);
+    mask_being_dragged.addEventListener("pointermove", handleMaskDragPointerMove);
+}
+
+function handleMaskDragTouchBegin(ev) {
+    if ( mask_dragging_device.type != null ) return;
+    ev.preventDefault();
+    mask_dragging_device.type = "touch";
+    const touchObj = ev.changedTouches.at(-1);
+    mask_dragging_device.id = touchObj.identifier;
+    maskDragBegin(touchObj.clientX, touchObj.clientY);
+    mask_being_dragged.addEventListener("touchmove", handleMaskDragTouchMove);
+    
+}
+
+function handleMaskDragPointerEnd(ev) {
+    if ( mask_dragging_device.type != "pointer" ) return;
+    mask_being_dragged.releasePointerCapture(ev.pointerId);
+    mask_being_dragged.removeEventListener("pointermove", handleMaskDragPointerMove);
+    maskDragEnd();
+    mask_dragging_device.type = null;
+    mask_dragging_device.id = null;
+}
+
+function handleMaskDragTouchEnd(ev) {
+    if ( mask_dragging_device.type != "touch" ) return;
+    ev.preventDefault();
+    for ( let touchObj of ev.changedTouches ) {
+        if ( touchObj.identifier == mask_dragging_device.id ) {
+            mask_being_dragged.removeEventListener("touchmove", handleMaskDragTouchMove);
+            maskDragEnd();
+            mask_dragging_device.type = null;
+            mask_dragging_device.id = null;
+            return;
+        }
+    }
+}
+
+function handleMaskDragPointerMove(ev) {
+    if ( mask_dragging_device.type == "pointer" )
+        maskDragMove(ev.clientX, ev.clientY);
+}
+
+function handleMaskDragTouchMove(ev) {
+    if ( mask_dragging_device.type == "touch" ) {
+        ev.preventDefault();
+        for ( let touchObj of ev.changedTouches ) {
+            if ( touchObj.identifier == mask_dragging_device.id ) {
+                maskDragMove(touchObj.clientX, touchObj.clientY);
+                return;
+            }
+        }
+    }
+}
+
+function maskDragBegin(px, py) {
+    const chr_mask = masks.get(visible_mask)[0][0];
+    const fth_mask = masks.get(visible_mask)[0][1];
+    if ( pointInRect(chr_mask.getBoundingClientRect(), px, py) ) {
+        mask_being_dragged = masks.get(visible_mask)[0][0];
+        mask_drag_rotation.reset(
+            degToRad(clampAngle(chromatic_mask_rotation)),
+            computePointerAngle(mask_being_dragged.getBoundingClientRect(), px, py)
+        );
+    } else if ( pointInRect(fth_mask.getBoundingClientRect(), px, py) ) {
+        mask_being_dragged = masks.get(visible_mask)[0][1];
+        mask_drag_rotation.reset(
+            degToRad(clampAngle(fifths_mask_rotation)),
+            computePointerAngle(mask_being_dragged.getBoundingClientRect(), px, py)
+        );
+    }
+    mask_being_dragged.style.cursor = "grabbing";
+}
+
+function maskDragEnd() {
+    if ( mask_drag_rotation.begun_rotating == true ) {
+        const chr_mask = masks.get(visible_mask)[0][0];
+        const fth_mask = masks.get(visible_mask)[0][1];
+        if ( mask_being_dragged.id.startsWith("Chr") ) {
+
+            const steps = clampPitch(Math.round(mask_drag_rotation.deg() / ANGLE_SEMITONE), -5, 6);
+
+            // set transpositions
+            chromatic_transposition = steps;
+            fifths_transposition = clampPitch(steps * 7, -5, 6);
+            if ( typeof(note_names_key) == "number" )
+                note_names_key = fifths_transposition;
+
+            // set rotations
+            chromatic_mask_rotation = clampAngle(chromatic_transposition*ANGLE_SEMITONE, mask_drag_rotation.deg());
+            fifths_mask_rotation = clampAngle(fifths_transposition*ANGLE_SEMITONE, fifths_mask_rotation);
+
+        } else {
+
+            const steps = clampPitch(Math.round(mask_drag_rotation.deg() / ANGLE_SEMITONE), -5, 6);
+
+            // set transpositions
+            fifths_transposition = steps;
+            chromatic_transposition = clampPitch(steps * 7, -5, 6);
+            if ( typeof(note_names_key) == "number" )
+                note_names_key = fifths_transposition;
+
+            // set rotations
+            fifths_mask_rotation = clampAngle(fifths_transposition*ANGLE_SEMITONE, mask_drag_rotation.deg());
+            chromatic_mask_rotation = clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation);
+        }
+
+        updateNoteNames(0);
+        applyMaskRotation(chr_mask, chromatic_mask_rotation, true);
+        applyMaskRotation(fth_mask, fifths_mask_rotation, true);
+    }
+    mask_being_dragged.style.cursor = "grab";
+    mask_being_dragged = null;
+}
+
+function maskDragMove(px, py) {
+    if ( mask_drag_rotation.begun_rotating == false && typeof(note_names_key) == "number" )
+        updateNoteNames(0, "enharmonics1");
+    const rect = mask_being_dragged.getBoundingClientRect();
+    mask_drag_rotation.set(computePointerAngle(rect, px, py));
+    doMaskRotation(mask_being_dragged, mask_drag_rotation.deg(), 0);
+}
+
+function computePointerAngle(rect, px, py) {
+    const cx = (rect.width / 2.0) + rect.left;
+    const cy = (rect.height / 2.0) + rect.top;
+    return Math.atan2(py-cy, px-cx);
+}
+
 
 /*****************************
  *                           *
@@ -483,56 +682,54 @@ function hideAllTabs() {
  *                          *
  ****************************/
 
-function updateNoteNames(delay = 0.0) {
-    if ( typeof(note_names_key) == "number" ) {
+function updateNoteNames(delay_ms = 0, override_names_type = null) {
+    if ( override_names_type == null ) 
+        override_names_type = note_names_key;
+    if ( typeof(override_names_type) == "number" ) {
         automatic_names = true;
         if ( ["Pentatonic","Diatonic"].includes(visible_mask) ) {
-            note_names_key = modularClamp(note_names_key, -12, 14, 12);
-            showNoteNames(note_names_diatonic.get(note_names_key)[0], delay);
+            override_names_type = clampPitch(override_names_type, -12, 14);
+            showNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
         } else if ( ["HarmonicMinor","MelodicMinor"].includes(visible_mask) ) {
-            note_names_key = modularClamp(note_names_key, -11, 14, 12);
-            showNoteNames(note_names_diatonic.get(note_names_key)[0], delay);
+            override_names_type = clampPitch(override_names_type, -11, 14);
+            showNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
         } else if ( visible_mask == "MajorThirds" ) {
-            note_names_key = modularClamp(note_names_key, -15, 11, 12);
-            showNoteNames(note_names_major_thirds.get(note_names_key)[0], delay);
+            override_names_type = clampPitch(override_names_type, -15, 11);
+            showNoteNames(note_names_major_thirds.get(override_names_type)[0], delay_ms);
         } else if ( visible_mask == "MinorThirds" ) {
-            note_names_key = modularClamp(note_names_key, -6, 19, 12);
-            showNoteNames(note_names_minor_thirds.get(note_names_key)[0], delay);
+            override_names_type = clampPitch(override_names_type, -6, 19);
+            showNoteNames(note_names_minor_thirds.get(override_names_type)[0], delay_ms);
         } else {
-            showNoteNames(note_names_enharmonics1, delay);
+            showNoteNames(note_names_enharmonics1, delay_ms);
             automatic_names = false;
         }
     } else {
-        switch (note_names_key) {
-            case "enharmonics1": showNoteNames(note_names_enharmonics1, delay); break;
-            case "enharmonics2": showNoteNames(note_names_enharmonics2, delay); break;
-            case "numbers"     : showNoteNames(note_names_numbers, delay); break;
+        switch (override_names_type) {
+            case "enharmonics1": showNoteNames(note_names_enharmonics1, delay_ms); break;
+            case "enharmonics2": showNoteNames(note_names_enharmonics2, delay_ms); break;
+            case "numbers"     : showNoteNames(note_names_numbers, delay_ms); break;
         }
         automatic_names = false;
     }
     updateSwapEnharmonicsBtn();
 }
 
-function showNoteNames(postfix_array, delay) {
+function showNoteNames(postfix_array, delay_ms) {
     const showNoteName = (elm) => {
-        if (window.getComputedStyle(elm).visibility == "hidden") {
-            elm.style.transitionProperty = "visibility, transform";
-            elm.style.transitionDelay = `${delay + 0.1}s`;
-            elm.style.transitionDuration = "0.1s";
-            elm.style.transitionTimingFunction = "ease-in-out";
-            elm.style.visibility = "visible";
-            elm.style.transform = "scale(1, 1)";
-        }
+        elm.style.transitionProperty = "visibility, transform";
+        elm.style.transitionDelay = `${delay_ms + 100}ms`;
+        elm.style.transitionDuration = "100ms";
+        elm.style.transitionTimingFunction = "ease-out";
+        elm.style.visibility = "visible";
+        elm.style.transform = "scale(1, 1)";
     };
     const hideNoteName = (elm) => {
-        if (window.getComputedStyle(elm).visibility == "visible") {
-            elm.style.transitionProperty = "visibility, transform";
-            elm.style.transitionDelay = `${delay}s`;
-            elm.style.transitionDuration = "0.1s";
-            elm.style.transitionTimingFunction = "ease-in-out";
-            elm.style.visibility = "hidden";
-            elm.style.transform = "scale(1, 0)";
-        }
+        elm.style.transitionProperty = "visibility, transform";
+        elm.style.transitionDelay = `${delay_ms}ms`;
+        elm.style.transitionDuration = "100ms";
+        elm.style.transitionTimingFunction = "ease-out";
+        elm.style.visibility = "hidden";
+        elm.style.transform = "scale(1, 0)";
     };
     for (let i = 0; i < 12; i++) {
         let chr_note_group = document.getElementById(`ChrNote${i}`);
@@ -578,7 +775,7 @@ function changeNoteNames(value) {
             break;
         default :
             checkNamesSwitch("SwitchNamesDynamic");
-            note_names_key = modularClamp(fifths_transposition, -5, 6, 12);
+            note_names_key = clampPitch(fifths_transposition, -5, 6);
     }
     writeStringToLocalStorage("note_names", value);
     updateNoteNames();
@@ -650,9 +847,9 @@ function updateBackground() {
 }
 
 function updateSwapEnharmonicsBtn() {
-    btn_elm = document.getElementById("BtnSwapEnharmonics");
-    btnbk_elm = document.getElementById("BtnSwapEnharmonicsBk");
-    btntx_elm = document.getElementById("BtnSwapEnharmonicsTxt");
+    const btn_elm = document.getElementById("BtnSwapEnharmonics");
+    const btnbk_elm = document.getElementById("BtnSwapEnharmonicsBk");
+    const btntx_elm = document.getElementById("BtnSwapEnharmonicsTxt");
     if (automatic_names == true) {
         btn_elm.style.cursor = "pointer";
         btnbk_elm.style.fill = "#66ff66";
@@ -691,13 +888,18 @@ function initializeThisSvg() {
     svg_root.removeAttribute("width");
     svg_root.style.backgroundColor = "white";
 
+    language = getPreferredTranslation(AVAILABLE_TRANSLATIONS);
+    translateSvgAsync(language);
+
     initializeMasks();
 
     // Set cursor for clickable controls
     for (let elm_id of clickable_elements) {
         let elm = document.getElementById(elm_id);
-        if (elm != null)
+        if (elm != null) {
             elm.style.cursor = "pointer";
+            elm.style.overscrollBehavior = "none";
+        }
     }
 
     // Set style for note names
@@ -707,7 +909,7 @@ function initializeThisSvg() {
             for (let elm of parent.childNodes) {
                 elm.style.visibility = "hidden";
                 elm.style.display = "inline";
-                elm.style.transformBox = "border-box";
+                elm.style.transformBox = "content-box";
                 elm.style.transformOrigin = "center center";
                 elm.style.transform = "scale(1, 0)";
             }
@@ -725,9 +927,11 @@ function initializeThisSvg() {
     window.parent.addEventListener("resize", resizeEventHandler);
     resizeEventHandler();
 
-    language = getPreferredTranslation(AVAILABLE_TRANSLATIONS);
-    translateSvgAsync(language);
-    //translate(svg_root);
+    // Make all text non-selectable
+    for ( let elm of document.querySelectorAll("text") )
+        elm.style.userSelect = "none";
+
+    enableDragRotationOnMasks();
 
 }
 
@@ -794,11 +998,34 @@ function adaptForLandscapeScreen() {
     vertical_screen = false;
 }
 
-function modularClamp(value, min, max, minuend) {
-    let new_val = value;
-    while (new_val > max) new_val -= minuend;
-    while (new_val < min) new_val += minuend;
-    return new_val;
+function clampPitch(value, min, max) {
+    while (value > max) value -= 12;
+    while (value < min) value += 12;
+    return value;
+}
+
+function clampAngle(deg, center = 0, half_window = 180, min_inclusive = true) {
+    const min = center - half_window;
+    const max = center + half_window;
+    while (deg > max) deg -= 360;
+    if ( min_inclusive == true ) {
+        while (deg < min) deg += 360;
+    } else {
+        while (deg <= min) deg += 360;
+    }
+    return deg;
+}
+
+function radToDeg(rad) {
+    return rad*(180/Math.PI);
+}
+
+function degToRad(deg) {
+    return deg*(Math.PI/180);
+}
+
+function pointInRect(rect, px, py) {
+    return ( px >= rect.left && px <= rect.right && py >= rect.top && py <= rect.bottom );
 }
 
 /****************************
