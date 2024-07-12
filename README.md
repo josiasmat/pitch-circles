@@ -17,16 +17,18 @@ Visit https://josiasmat.github.io/PitchCircles/
 
 |Keys|Function||Keys|Function|
 |-|-|-|-|-|
-|`P`|show pentatonic mask||`↑` `↓`|Transpose by semitones|
-|`D`|show diatonic mask||`Shift`+`↑` `↓`|Transpose by whole steps|
-|`H`|show harmonic minor mask||`←` `→`|Transpose by fifths|
+|`P`|show pentatonic mask||`1`-`9`|transpose up _n_ fifths|
+|`D`|show diatonic mask||`ctrl`+`1`-`9`|transpose down _n_ fifths|
+|`H`|show harmonic minor mask||`0`|go back to C|
 |`M`|show melodic minor mask||`Tab`|change enharmonic spelling|
-|`W`|show whole-tones mask||`Ctrl`+`1`|use enharmonic naming|
-|`O`|show octatonic mask||`Ctrl`+`2`|use enharmonic+B#/Cb/E#/Fb naming|
-|`J`|show major thirds mask||`Ctrl`+`3`|use pitch classes naming|
-|`I`|show minor thirds mask||`Ctrl`+`4`|use automatic naming|
-|`C`|show chromatic mask||`Ctrl`+`b`|switch dark black keys|
-||||`Ctrl`+`d`|switch dark background|
+|`W`|show whole-tones mask||`F1`|use enharmonic naming|
+|`O`|show octatonic mask||`F2`|use enharmonic+B#/Cb/E#/Fb naming|
+|`J`|show major thirds mask||`F3`|use pitch classes naming|
+|`I`|show minor thirds mask||`F4`|use automatic naming|
+|`C`|show chromatic mask||`F7`|switch dark black keys|
+|`↑` `↓`|transpose by semitones||`F8`|switch dark background|
+|`←` `→`|transpose by fifths||`F9`|show/hide controls|
+|`Shift`+`↑` `↓`|transpose by whole steps|||
 
 ## Translations
 

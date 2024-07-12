@@ -51,6 +51,8 @@ var dark_background = false;
 var note_names_key = "auto";
 var automatic_names = true;
 
+var control_panel_visible = true;
+
 const svg_root = document.getElementById("svg1");
 
 
@@ -393,9 +395,34 @@ function hideMask(mask, animate) {
  ******************************/
 
 function rotateMasks(steps, animate = true) {
-    transpose(steps);
-    chromatic_mask_rotation = clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation, ANGLE_FIFTH);
-    fifths_mask_rotation = clampAngle(fifths_transposition*ANGLE_SEMITONE, fifths_mask_rotation, ANGLE_FIFTH);
+    transposeSemitones(steps);
+    chromatic_mask_rotation = Math.round(clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation, ANGLE_FIFTH));
+    fifths_mask_rotation = Math.round(clampAngle(fifths_transposition*ANGLE_SEMITONE, fifths_mask_rotation, ANGLE_FIFTH));
+    if ( visible_mask != null ) {
+        applyMaskRotation(getVisibleChrMask(), chromatic_mask_rotation, animate);
+        applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation, animate);
+    }
+    updateNoteNames(250);
+}
+
+function rotateMasksByFifths(fifths, animate = true) {
+    transposeFifths(fifths);
+    chromatic_mask_rotation = Math.round(clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation, ANGLE_FIFTH));
+    fifths_mask_rotation = Math.round(clampAngle(fifths_transposition*ANGLE_SEMITONE, fifths_mask_rotation, ANGLE_FIFTH));
+    if ( visible_mask != null ) {
+        applyMaskRotation(getVisibleChrMask(), chromatic_mask_rotation, animate);
+        applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation, animate);
+    }
+    updateNoteNames(250);
+}
+
+function returnMasksToC(animate = true) {
+    chromatic_transposition = 0;
+    fifths_transposition = 0;
+    if ( typeof(note_names_key) == "number" )
+        note_names_key = 0;
+    chromatic_mask_rotation = Math.round(clampAngle(0, chromatic_mask_rotation, ANGLE_FIFTH));
+    fifths_mask_rotation = Math.round(clampAngle(0, fifths_mask_rotation, ANGLE_FIFTH));
     if ( visible_mask != null ) {
         applyMaskRotation(getVisibleChrMask(), chromatic_mask_rotation, animate);
         applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation, animate);
@@ -417,16 +444,7 @@ function doMaskRotation(elm, angle_deg, animation_ms = 0) {
     elm.style.rotate = `${angle_deg}deg`;
 }
 
-function transpose(steps) {
-    chromatic_transposition += steps;
-    switch (steps) {
-        case  2: fifths_transposition +=  2; break;
-        case -2: fifths_transposition += -2; break;
-        case  7: fifths_transposition +=  1; break;
-        case -7: fifths_transposition += -1; break;
-        default: fifths_transposition += 7 * steps;
-    }
-    // handle automatic names change
+function transposeNoteNamesKey(fifths) {
     if ( typeof(note_names_key) == "number" ) {
         let names_map;
         switch ( visible_mask ) {
@@ -434,15 +452,33 @@ function transpose(steps) {
             case "MinorThirds": names_map = note_names_minor_thirds; break;
             default           : names_map = note_names_diatonic;
         }
-        switch ( steps ) {
-            case  1: note_names_key = names_map.get(note_names_key)[1][0]; break;
-            case -1: note_names_key = names_map.get(note_names_key)[1][1]; break;
+        switch ( fifths ) {
+            case  1: note_names_key = names_map.get(note_names_key)[3][0]; break;
+            case -1: note_names_key = names_map.get(note_names_key)[3][1]; break;
             case  2: note_names_key = names_map.get(note_names_key)[2][0]; break;
             case -2: note_names_key = names_map.get(note_names_key)[2][1]; break;
-            case  7: note_names_key = names_map.get(note_names_key)[3][0]; break;
-            case -7: note_names_key = names_map.get(note_names_key)[3][1];
+            case  7: note_names_key = names_map.get(note_names_key)[1][0]; break;
+            case -7: note_names_key = names_map.get(note_names_key)[1][1]; break;
+            default: {
+                note_names_key += fifths;
+                while ( names_map.has(note_names_key) == false )
+                    note_names_key += (note_names_key < 0) ? 12 : -12;
+            }
         }
     }
+}
+
+function transposeFifths(fifths) {
+    fifths_transposition += fifths;
+    chromatic_transposition += clampPitch(fifths*7, -12, 12);
+    transposeNoteNamesKey(fifths);
+}
+
+function transposeSemitones(steps) {
+    const fifths = clampPitch(steps*7, -12, 12);
+    chromatic_transposition += steps;
+    fifths_transposition += fifths;
+    transposeNoteNamesKey(fifths);
 }
 
 
@@ -880,21 +916,42 @@ function handleKeyboardShortcut(ev) {
         case "j": { ev.preventDefault(); changeMask("MajorThirds"); break; }
         case "i": { ev.preventDefault(); changeMask("MinorThirds"); break; }
         case "c": { ev.preventDefault(); changeMask("Chromatic"); break; }
+        case "0": { ev.preventDefault(); returnMasksToC(); break; }
+        case "1": { ev.preventDefault(); rotateMasksByFifths(1); break; }
+        case "2": { ev.preventDefault(); rotateMasksByFifths(2); break; }
+        case "3": { ev.preventDefault(); rotateMasksByFifths(3); break; }
+        case "4": { ev.preventDefault(); rotateMasksByFifths(4); break; }
+        case "5": { ev.preventDefault(); rotateMasksByFifths(5); break; }
+        case "6": { ev.preventDefault(); rotateMasksByFifths(6); break; }
+        case "7": { ev.preventDefault(); rotateMasksByFifths(7); break; }
+        case "8": { ev.preventDefault(); rotateMasksByFifths(8); break; }
+        case "9": { ev.preventDefault(); rotateMasksByFifths(9); break; }
+        case "ctrl+0": { ev.preventDefault(); returnMasksToC(); break; }
+        case "ctrl+1": { ev.preventDefault(); rotateMasksByFifths(-1); break; }
+        case "ctrl+2": { ev.preventDefault(); rotateMasksByFifths(-2); break; }
+        case "ctrl+3": { ev.preventDefault(); rotateMasksByFifths(-3); break; }
+        case "ctrl+4": { ev.preventDefault(); rotateMasksByFifths(-4); break; }
+        case "ctrl+5": { ev.preventDefault(); rotateMasksByFifths(-5); break; }
+        case "ctrl+6": { ev.preventDefault(); rotateMasksByFifths(-6); break; }
+        case "ctrl+7": { ev.preventDefault(); rotateMasksByFifths(-7); break; }
+        case "ctrl+8": { ev.preventDefault(); rotateMasksByFifths(-8); break; }
+        case "ctrl+9": { ev.preventDefault(); rotateMasksByFifths(-9); break; }
         case "arrowup": { ev.preventDefault(); rotateMasks(1); break; }
         case "arrowdown": { ev.preventDefault(); rotateMasks(-1); break; }
         case "shift+arrowup": { ev.preventDefault(); rotateMasks(2); break; }
         case "shift+arrowdown": { ev.preventDefault(); rotateMasks(-2); break; }
-        case "alt+arrowup": { ev.preventDefault(); rotateMasks(7); break; }
-        case "alt+arrowdown": { ev.preventDefault(); rotateMasks(-7); break; }
-        case "arrowright": { ev.preventDefault(); rotateMasks(7); break; }
-        case "arrowleft": { ev.preventDefault(); rotateMasks(-7); break; }
+        case "arrowright": { ev.preventDefault(); rotateMasksByFifths(1); break; }
+        case "arrowleft": { ev.preventDefault(); rotateMasksByFifths(-1); break; }
+        case "shift+arrowright": { ev.preventDefault(); rotateMasksByFifths(2); break; }
+        case "shift+arrowleft": { ev.preventDefault(); rotateMasksByFifths(-2); break; }
         case "tab": { ev.preventDefault(); swapEnharmonics(); break; }
-        case "ctrl+1": { ev.preventDefault(); changeNoteNames("enharmonics1"); break; }
-        case "ctrl+2": { ev.preventDefault(); changeNoteNames("enharmonics2"); break; }
-        case "ctrl+3": { ev.preventDefault(); changeNoteNames("numbers"); break; }
-        case "ctrl+4": { ev.preventDefault(); changeNoteNames("automatic"); break; }
-        case "ctrl+b": { ev.preventDefault(); switchShowBlackKeys(); break; }
-        case "ctrl+d": { ev.preventDefault(); switchDarkBackground(); break; }
+        case "f1": { ev.preventDefault(); changeNoteNames("enharmonics1"); break; }
+        case "f2": { ev.preventDefault(); changeNoteNames("enharmonics2"); break; }
+        case "f3": { ev.preventDefault(); changeNoteNames("numbers"); break; }
+        case "f4": { ev.preventDefault(); changeNoteNames("automatic"); break; }
+        case "f7": { ev.preventDefault(); switchShowBlackKeys(); break; }
+        case "f8": { ev.preventDefault(); switchDarkBackground(); break; }
+        case "f9": { ev.preventDefault(); switchControlsVisibility(); break; }
     }
 }
 
@@ -1020,6 +1077,9 @@ function initializeThisSvg() {
     changeNoteNames(readStringFromLocalStorage("note_names", "auto"), 1000);
 
     // Respond to window resizing
+    const control_panel = document.getElementById("Controls");
+    control_panel.style.transformBox = "boder-box";
+    control_panel.style.transformOrigin = "left top";
     window.parent.addEventListener("resize", resizeEventHandler);
     resizeEventHandler();
 
@@ -1072,27 +1132,44 @@ function storageAvailable(type) {
     }
 }
 
+function switchControlsVisibility() {
+    control_panel_visible = ! control_panel_visible;
+    const control_panel = document.getElementById("Controls");
+    control_panel.style.visibility = control_panel_visible ? "visible" : "hidden";
+    adaptForScreen();
+}
+
 function resizeEventHandler() {
     const ratio = window.parent.innerWidth / window.parent.innerHeight;
-    if ( (ratio < 1.0) && (vertical_screen == false) )
-        adaptForPortraitScreen();
-    if ( (ratio >= 1.0) && (vertical_screen == true) )
-        adaptForLandscapeScreen();
+    if (  ( (ratio <  1.0) && (vertical_screen == false) ) ||
+          ( (ratio >= 1.0) && (vertical_screen == true ) ) ) {
+        vertical_screen = ! vertical_screen;
+        adaptForScreen();
+    }
 }
 
-function adaptForPortraitScreen() {
+function adaptForScreen() {
     const t = 196.9;
-    document.getElementById("FthCircle").setAttribute("transform", `translate(-${t} ${t})`);
-    document.getElementById("Controls").setAttribute("transform", `translate(-3 ${t}) scale(0.51 1)`);
-    svg_root.setAttribute("viewBox", `0 0 ${t} ${241.64582 + t}`);
-    vertical_screen = true;
-}
-
-function adaptForLandscapeScreen() {
-    document.getElementById("FthCircle").setAttribute("transform", "translate(0 0)");
-    document.getElementById("Controls").setAttribute("transform", "translate(0 0) scale(1 1)");
-    svg_root.setAttribute("viewBox", "0 0 397.15732 241.64582");
-    vertical_screen = false;
+    const fifths_circle = document.getElementById("FthCircle");
+    const control_panel = document.getElementById("Controls");
+    if ( vertical_screen ) {
+        // portrait mode
+        var fifths_circle_transform = `translate(-${t} ${t})`;
+        var control_panel_transform = `translate(-3 ${t}) scale(0.51 1)`;
+        var viewbox = (control_panel_visible)
+            ? `0 0 ${t} ${241.64582 + t}`
+            : `0 0 ${t} ${241.64582 + t - control_panel.getBBox().height}`;
+    } else {
+        // landscape mode
+        var fifths_circle_transform = "translate(0 0)";
+        var control_panel_transform = "translate(0 0) scale(1 1)";
+        var viewbox = (control_panel_visible)
+            ? "0 0 397.15732 241.64582"
+            : `0 0 397.15732 ${241.64582 - control_panel.getBBox().height}`;
+    }
+    fifths_circle.setAttribute("transform", fifths_circle_transform);
+    control_panel.setAttribute("transform", control_panel_transform);
+    svg_root.setAttribute("viewBox", viewbox);
 }
 
 
@@ -1108,15 +1185,11 @@ function clampPitch(value, min, max) {
     return value;
 }
 
-function clampAngle(deg, center = 0, half_window = 180, min_inclusive = true) {
+function clampAngle(deg, center = 0, half_window = 180) {
     const min = center - half_window;
     const max = center + half_window;
     while (deg > max) deg -= 360;
-    if ( min_inclusive == true ) {
-        while (deg < min) deg += 360;
-    } else {
-        while (deg <= min) deg += 360;
-    }
+    while (deg < min) deg += 360;
     return deg;
 }
 
@@ -1131,6 +1204,14 @@ function degToRad(deg) {
 function pointInRect(rect, px, py) {
     return ( px >= rect.left && px <= rect.right && py >= rect.top && py <= rect.bottom );
 }
+
+function isEven(n) {
+    return n % 2 == 0;
+ }
+ 
+ function isOdd(n) {
+    return Math.abs(n % 2) == 1;
+ }
 
 /****************************
  *                          *
