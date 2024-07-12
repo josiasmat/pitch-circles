@@ -23,6 +23,8 @@ const AVAILABLE_TRANSLATIONS = ["en","es","pt"];
 const COLOR_BTN_MASK_ON = "#00ff77";
 const COLOR_BTN_MASK_OFF = "#ffffdd";
 
+const ANIMATE_NOTE_NAMES = true;
+
 
 // FIXED CONSTANTS
 
@@ -395,9 +397,8 @@ function rotateMasks(steps, animate = true) {
     chromatic_mask_rotation = clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation, ANGLE_FIFTH);
     fifths_mask_rotation = clampAngle(fifths_transposition*ANGLE_SEMITONE, fifths_mask_rotation, ANGLE_FIFTH);
     if ( visible_mask != null ) {
-        const mask_data = masks.get(visible_mask)[0];
-        applyMaskRotation(mask_data[0], chromatic_mask_rotation, animate);
-        applyMaskRotation(mask_data[1], fifths_mask_rotation, animate);
+        applyMaskRotation(getVisibleChrMask(), chromatic_mask_rotation, animate);
+        applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation, animate);
     }
     updateNoteNames(250);
 }
@@ -455,12 +456,12 @@ function enableDragRotationOnMasks() {
     for ( let mask_data of masks ) {
         for ( let mask of mask_data[1][0] ) {
             mask.addEventListener("wheel", handleWheelEvent);
-            mask.addEventListener("pointerdown",   handleMaskDragPointerBegin);
-            mask.addEventListener("pointerup",     handleMaskDragPointerEnd);
-            mask.addEventListener("pointercancel", handleMaskDragPointerEnd);
-            mask.addEventListener("touchstart",    handleMaskDragTouchBegin);
-            mask.addEventListener("touchend",      handleMaskDragTouchEnd);
-            mask.addEventListener("touchcancel",   handleMaskDragTouchEnd);
+            mask.addEventListener("mousedown",   handleMaskDragPointerBegin,{ capture: true, passive: false });
+            mask.addEventListener("mouseup",     handleMaskDragPointerEnd,  { capture: true, passive: false });
+            mask.addEventListener("mousecancel", handleMaskDragPointerEnd,  { capture: true, passive: false });
+            mask.addEventListener("touchstart",  handleMaskDragTouchBegin,  { capture: true, passive: false });
+            mask.addEventListener("touchend",    handleMaskDragTouchEnd,    { capture: true, passive: false });
+            mask.addEventListener("touchcancel", handleMaskDragTouchEnd,    { capture: true, passive: false });
         }
     }
 }
@@ -473,160 +474,193 @@ function handleWheelEvent(ev) {
     }
 }
 
-var mask_dragging_device = {
-    type: null,
-    id: null
-};
-var mask_being_dragged = null;
 var mask_drag_rotation = {
+    // properties
+    dev: {
+        type: null,
+        id: null
+    },
+    target: {
+        mask: null,
+        elm: null
+    },
     amount: 0,
     offset: 0,
+    begun_rotating: false,
+    // methods
     rad() { return this.amount + this.offset; },
     deg() { return radToDeg(this.amount + this.offset); },
-    set(angle_rad) {
+    set_angle(angle_rad) {
         this.amount = angle_rad;
         this.begun_rotating = true;
     },
-    reset(mask_angle_rad, pointer_angle_rad) { 
+    reset_angle(mask_angle_rad, pointer_angle_rad) { 
         this.amount_rad = 0; 
         this.offset = mask_angle_rad - pointer_angle_rad;
         this.begun_rotating = false;
     },
-    begun_rotating: false
+    set_params(dev_type, dev_id, mask, elm) {
+        this.dev.type = dev_type;
+        this.dev.id = dev_id;
+        this.target.mask = mask;
+        this.target.elm = elm;
+    },
+    clear() {
+        this.reset_angle(0, 0);
+        this.dev.type = null;
+        this.dev.id = null;
+        this.target.mask = null;
+        this.target.elm = null;
+    }
 };
 
 function handleMaskDragPointerBegin(ev) {
-    if ( mask_dragging_device.type != null ) return;
-    mask_dragging_device.type = "pointer";
-    mask_dragging_device.id = ev.pointerId;
+    console.log(`handleMaskDragPointerBegin() for ${ev.target.id}`);
+    if ( mask_drag_rotation.dev.type != null ) return;
+    mask_drag_rotation.set_params(
+        "pointer",
+        ev.pointerId,
+        (getVisibleChrMask().contains(ev.target)) ? getVisibleChrMask() : getVisibleFthMask(),
+        ev.target
+    );
     maskDragBegin(ev.clientX, ev.clientY);
-    mask_being_dragged.setPointerCapture(ev.pointerId);
-    mask_being_dragged.addEventListener("pointermove", handleMaskDragPointerMove);
+    mask_drag_rotation.target.elm.setPointerCapture(ev.pointerId);
+    mask_drag_rotation.target.elm.addEventListener(
+        "pointermove", handleMaskDragPointerMove, { capture: true, passive: false }
+    );
 }
 
 function handleMaskDragTouchBegin(ev) {
-    if ( mask_dragging_device.type != null ) return;
+    console.log(`handleMaskDragTouchBegin() for ${ev.target.id}`);
+    if ( mask_drag_rotation.dev.type != null ) return;
     ev.preventDefault();
-    mask_dragging_device.type = "touch";
-    const touchObj = ev.changedTouches.at(-1);
-    mask_dragging_device.id = touchObj.identifier;
+    const touchObj = Array.from(ev.changedTouches).at(-1);
+    mask_drag_rotation.set_params(
+        "touch",
+        touchObj.identifier,
+        (getVisibleChrMask().contains(ev.target)) ? getVisibleChrMask() : getVisibleFthMask(),
+        ev.target
+    );
     maskDragBegin(touchObj.clientX, touchObj.clientY);
-    mask_being_dragged.addEventListener("touchmove", handleMaskDragTouchMove);
+    mask_drag_rotation.target.elm.addEventListener("touchmove", handleMaskDragTouchMove, { capture: true, passive: false });
     
 }
 
 function handleMaskDragPointerEnd(ev) {
-    if ( mask_dragging_device.type != "pointer" ) return;
-    mask_being_dragged.releasePointerCapture(ev.pointerId);
-    mask_being_dragged.removeEventListener("pointermove", handleMaskDragPointerMove);
+    console.log(`handleMaskDragPointerEnd() for ${ev.target.id}`);
+    if ( mask_drag_rotation.dev.type != "pointer" ) return;
+    mask_drag_rotation.target.elm.releasePointerCapture(ev.pointerId);
+    mask_drag_rotation.target.elm.removeEventListener("pointermove", handleMaskDragPointerMove);
     maskDragEnd();
-    mask_dragging_device.type = null;
-    mask_dragging_device.id = null;
 }
 
 function handleMaskDragTouchEnd(ev) {
-    if ( mask_dragging_device.type != "touch" ) return;
+    console.log(`handleMaskDragTouchEnd() for ${ev.target.id}`);
+    if ( mask_drag_rotation.dev.type != "touch" ) return;
     ev.preventDefault();
     for ( let touchObj of ev.changedTouches ) {
-        if ( touchObj.identifier == mask_dragging_device.id ) {
-            mask_being_dragged.removeEventListener("touchmove", handleMaskDragTouchMove);
+        if ( touchObj.identifier == mask_drag_rotation.dev.id ) {
+            mask_drag_rotation.target.elm.removeEventListener("touchmove", handleMaskDragTouchMove);
             maskDragEnd();
-            mask_dragging_device.type = null;
-            mask_dragging_device.id = null;
-            return;
+            break;
         }
     }
 }
 
 function handleMaskDragPointerMove(ev) {
-    if ( mask_dragging_device.type == "pointer" )
+    console.log(`handleMaskDragPointerMove() for ${ev.target.id}`);
+    if ( mask_drag_rotation.dev.type == "pointer" )
         maskDragMove(ev.clientX, ev.clientY);
 }
 
 function handleMaskDragTouchMove(ev) {
-    if ( mask_dragging_device.type == "touch" ) {
+    console.log(`handleMaskDragTouchMove() for ${ev.target.id}`);
+    if ( mask_drag_rotation.dev.type == "touch" ) {
         ev.preventDefault();
         for ( let touchObj of ev.changedTouches ) {
-            if ( touchObj.identifier == mask_dragging_device.id ) {
+            console.log(`handleMaskDragTouchMove(): trying ${touchObj.identifier}, original was ${mask_drag_rotation.dev.id}`)
+            if ( touchObj.identifier == mask_drag_rotation.dev.id ) {
                 maskDragMove(touchObj.clientX, touchObj.clientY);
-                return;
+                break;
             }
         }
     }
 }
 
 function maskDragBegin(px, py) {
-    const chr_mask = masks.get(visible_mask)[0][0];
-    const fth_mask = masks.get(visible_mask)[0][1];
-    if ( pointInRect(chr_mask.getBoundingClientRect(), px, py) ) {
-        mask_being_dragged = masks.get(visible_mask)[0][0];
-        mask_drag_rotation.reset(
+    if ( mask_drag_rotation.target.mask.id.startsWith("Chr")  ) {
+        mask_drag_rotation.reset_angle(
             degToRad(clampAngle(chromatic_mask_rotation)),
-            computePointerAngle(mask_being_dragged.getBoundingClientRect(), px, py)
+            computePointerAngle(mask_drag_rotation.target.mask.getBoundingClientRect(), px, py)
         );
-    } else if ( pointInRect(fth_mask.getBoundingClientRect(), px, py) ) {
-        mask_being_dragged = masks.get(visible_mask)[0][1];
-        mask_drag_rotation.reset(
+    } else {
+        mask_drag_rotation.reset_angle(
             degToRad(clampAngle(fifths_mask_rotation)),
-            computePointerAngle(mask_being_dragged.getBoundingClientRect(), px, py)
+            computePointerAngle(mask_drag_rotation.target.mask.getBoundingClientRect(), px, py)
         );
     }
-    mask_being_dragged.style.cursor = "grabbing";
+    mask_drag_rotation.target.mask.style.cursor = "grabbing";
 }
 
 function maskDragEnd() {
     if ( mask_drag_rotation.begun_rotating == true ) {
-        const chr_mask = masks.get(visible_mask)[0][0];
-        const fth_mask = masks.get(visible_mask)[0][1];
-        if ( mask_being_dragged.id.startsWith("Chr") ) {
-
+        if ( mask_drag_rotation.target.mask.id.startsWith("Chr") ) {
             const steps = clampPitch(Math.round(mask_drag_rotation.deg() / ANGLE_SEMITONE), -5, 6);
-
             // set transpositions
             chromatic_transposition = steps;
             fifths_transposition = clampPitch(steps * 7, -5, 6);
             if ( typeof(note_names_key) == "number" )
                 note_names_key = fifths_transposition;
-
             // set rotations
             chromatic_mask_rotation = clampAngle(chromatic_transposition*ANGLE_SEMITONE, mask_drag_rotation.deg());
             fifths_mask_rotation = clampAngle(fifths_transposition*ANGLE_SEMITONE, fifths_mask_rotation);
-
         } else {
-
             const steps = clampPitch(Math.round(mask_drag_rotation.deg() / ANGLE_SEMITONE), -5, 6);
-
             // set transpositions
             fifths_transposition = steps;
             chromatic_transposition = clampPitch(steps * 7, -5, 6);
             if ( typeof(note_names_key) == "number" )
                 note_names_key = fifths_transposition;
-
             // set rotations
             fifths_mask_rotation = clampAngle(fifths_transposition*ANGLE_SEMITONE, mask_drag_rotation.deg());
             chromatic_mask_rotation = clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation);
         }
-
         updateNoteNames(0);
-        applyMaskRotation(chr_mask, chromatic_mask_rotation, true);
-        applyMaskRotation(fth_mask, fifths_mask_rotation, true);
+        applyMaskRotation(getVisibleChrMask(), chromatic_mask_rotation, true);
+        applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation, true);
     }
-    mask_being_dragged.style.cursor = "grab";
-    mask_being_dragged = null;
+    mask_drag_rotation.target.mask.style.cursor = "grab";
+    mask_drag_rotation.clear();
 }
 
 function maskDragMove(px, py) {
+    console.log(`maskDragMove(px=${px}, py=${py})`);
     if ( mask_drag_rotation.begun_rotating == false && typeof(note_names_key) == "number" )
         updateNoteNames(0, "enharmonics1");
-    const rect = mask_being_dragged.getBoundingClientRect();
-    mask_drag_rotation.set(computePointerAngle(rect, px, py));
-    doMaskRotation(mask_being_dragged, mask_drag_rotation.deg(), 0);
+    const rect = mask_drag_rotation.target.mask.getBoundingClientRect();
+    mask_drag_rotation.set_angle(computePointerAngle(rect, px, py));
+    doMaskRotation(mask_drag_rotation.target.mask, mask_drag_rotation.deg(), 0);
 }
 
 function computePointerAngle(rect, px, py) {
     const cx = (rect.width / 2.0) + rect.left;
     const cy = (rect.height / 2.0) + rect.top;
     return Math.atan2(py-cy, px-cx);
+}
+
+
+/****************************
+ *                          *
+ *  Mask utility routines   *
+ *                          *
+ ****************************/
+
+function getVisibleChrMask() {
+    return masks.get(visible_mask)[0][0];
+}
+
+function getVisibleFthMask() {
+    return masks.get(visible_mask)[0][1];
 }
 
 
@@ -682,72 +716,98 @@ function hideAllTabs() {
  *                          *
  ****************************/
 
+function initializeNoteNames() {
+    for (const grandpa_id of ["ChrNames","FthNames"]) {
+        const grandpa = document.getElementById(grandpa_id);
+        for (const parent of grandpa.childNodes) {
+            for (const elm of parent.childNodes) {
+                elm.setAttribute("showing", "0");
+                elm.style.visibility = "hidden";
+                elm.style.display = "inline";
+                elm.style.transformBox = "content-box";
+                elm.style.transformOrigin = "center center";
+                elm.style.transform = "scale(1, 0)";
+                elm.style.transition = "none";
+            }
+        }
+    }
+}
+
 function updateNoteNames(delay_ms = 0, override_names_type = null) {
+    console.log(`updateNoteNames(${delay_ms}, ${override_names_type})`);
     if ( override_names_type == null ) 
         override_names_type = note_names_key;
     if ( typeof(override_names_type) == "number" ) {
         automatic_names = true;
         if ( ["Pentatonic","Diatonic"].includes(visible_mask) ) {
             override_names_type = clampPitch(override_names_type, -12, 14);
-            showNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
+            showHideNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
         } else if ( ["HarmonicMinor","MelodicMinor"].includes(visible_mask) ) {
             override_names_type = clampPitch(override_names_type, -11, 14);
-            showNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
+            showHideNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
         } else if ( visible_mask == "MajorThirds" ) {
             override_names_type = clampPitch(override_names_type, -15, 11);
-            showNoteNames(note_names_major_thirds.get(override_names_type)[0], delay_ms);
+            showHideNoteNames(note_names_major_thirds.get(override_names_type)[0], delay_ms);
         } else if ( visible_mask == "MinorThirds" ) {
             override_names_type = clampPitch(override_names_type, -6, 19);
-            showNoteNames(note_names_minor_thirds.get(override_names_type)[0], delay_ms);
+            showHideNoteNames(note_names_minor_thirds.get(override_names_type)[0], delay_ms);
         } else {
-            showNoteNames(note_names_enharmonics1, delay_ms);
+            showHideNoteNames(note_names_enharmonics1, delay_ms);
             automatic_names = false;
         }
     } else {
         switch (override_names_type) {
-            case "enharmonics1": showNoteNames(note_names_enharmonics1, delay_ms); break;
-            case "enharmonics2": showNoteNames(note_names_enharmonics2, delay_ms); break;
-            case "numbers"     : showNoteNames(note_names_numbers, delay_ms); break;
+            case "enharmonics1": showHideNoteNames(note_names_enharmonics1, delay_ms); break;
+            case "enharmonics2": showHideNoteNames(note_names_enharmonics2, delay_ms); break;
+            case "numbers"     : showHideNoteNames(note_names_numbers, delay_ms); break;
         }
         automatic_names = false;
     }
     updateSwapEnharmonicsBtn();
 }
 
-function showNoteNames(postfix_array, delay_ms) {
-    const showNoteName = (elm) => {
-        elm.style.transitionProperty = "visibility, transform";
-        elm.style.transitionDelay = `${delay_ms + 100}ms`;
-        elm.style.transitionDuration = "100ms";
-        elm.style.transitionTimingFunction = "ease-out";
-        elm.style.visibility = "visible";
-        elm.style.transform = "scale(1, 1)";
-    };
-    const hideNoteName = (elm) => {
-        elm.style.transitionProperty = "visibility, transform";
-        elm.style.transitionDelay = `${delay_ms}ms`;
-        elm.style.transitionDuration = "100ms";
-        elm.style.transitionTimingFunction = "ease-out";
+async function showHideNoteNames(postfix_array, delay_ms) {
+    console.log(`showHideNoteNames(${postfix_array}, ${delay_ms})`);
+    // collect elements to be shown/hidden
+    var names_to_be_hidden = [];
+    var names_to_be_showed = [];
+    for ( let i = 0; i < 12; i++ ) {
+        const id_end_visible = `${i}${postfix_array[i]}`;
+        const all_note_names = 
+            Array.from(document.getElementById(`ChrNote${i}`).childNodes)
+                .concat(Array.from(document.getElementById(`FthNote${i}`).childNodes));
+        for (let elm of all_note_names) {
+            if ( elm.id.endsWith(id_end_visible) ) {
+                if ( elm.getAttribute("showing") != "1" )
+                    names_to_be_showed.push(elm);
+            } else {
+                if ( elm.getAttribute("showing") == "1" )
+                    names_to_be_hidden.push(elm);
+            }
+        }
+    }
+    // show/hide elements
+    for ( const elm of names_to_be_hidden ) {
+        elm.setAttribute("showing", "0");
+        if ( ANIMATE_NOTE_NAMES ) {
+            elm.style.transitionProperty = "visibility, transform";
+            elm.style.transitionDelay = `${delay_ms}ms`;
+            elm.style.transitionDuration = "100ms";
+            elm.style.transitionTimingFunction = "ease-out";
+        }
         elm.style.visibility = "hidden";
         elm.style.transform = "scale(1, 0)";
-    };
-    for (let i = 0; i < 12; i++) {
-        let chr_note_group = document.getElementById(`ChrNote${i}`);
-        let fth_note_group = document.getElementById(`FthNote${i}`);
-        let id_chr_visible = `ChrNote${i}${postfix_array[i]}`;
-        let id_fth_visible = `FthNote${i}${postfix_array[i]}`;
-        for (let elm of chr_note_group.childNodes) {
-            if (elm.id == id_chr_visible)
-                showNoteName(elm);
-            else
-                hideNoteName(elm);
+    }
+    for ( const elm of names_to_be_showed ) {
+        elm.setAttribute("showing", "1");
+        if ( ANIMATE_NOTE_NAMES ) {
+            elm.style.transitionProperty = "visibility, transform";
+            elm.style.transitionDelay = `${delay_ms+100}ms`;
+            elm.style.transitionDuration = "100ms";
+            elm.style.transitionTimingFunction = "ease-out";
         }
-        for (let elm of fth_note_group.childNodes) {
-            if (elm.id == id_fth_visible)
-                showNoteName(elm);
-            else
-                hideNoteName(elm);
-        }
+        elm.style.visibility = "visible";
+        elm.style.transform = "scale(1, 1)";
     }
 }
 
@@ -756,10 +816,10 @@ function checkNamesSwitch(switch_id) {
         document.getElementById(elm_id + "Mark").style.display = 
             (elm_id == switch_id) ? "inline" : "none";
     }
-    writeStringToLocalStorage("checked_names_switch", switch_id);
 }
 
-function changeNoteNames(value) {
+function changeNoteNames(value, delay_ms = 0) {
+    console.log(`changeNoteNames(${value}, ${delay_ms})`);
     switch (value) {
         case "enharmonics1" :
             checkNamesSwitch("SwitchNamesEnharmony1");
@@ -777,8 +837,8 @@ function changeNoteNames(value) {
             checkNamesSwitch("SwitchNamesDynamic");
             note_names_key = clampPitch(fifths_transposition, -5, 6);
     }
+    updateNoteNames(delay_ms);
     writeStringToLocalStorage("note_names", value);
-    updateNoteNames();
 }
 
 function swapEnharmonics() {
@@ -892,6 +952,7 @@ function initializeThisSvg() {
     translateSvgAsync(language);
 
     initializeMasks();
+    initializeNoteNames();
 
     // Set cursor for clickable controls
     for (let elm_id of clickable_elements) {
@@ -902,26 +963,12 @@ function initializeThisSvg() {
         }
     }
 
-    // Set style for note names
-    for (let grandpa_id of ["ChrNames","FthNames"]) {
-        let grandpa = document.getElementById(grandpa_id);
-        for (let parent of grandpa.childNodes) {
-            for (let elm of parent.childNodes) {
-                elm.style.visibility = "hidden";
-                elm.style.display = "inline";
-                elm.style.transformBox = "content-box";
-                elm.style.transformOrigin = "center center";
-                elm.style.transform = "scale(1, 0)";
-            }
-        }
-    }
-
     // Read stored preferences
     dark_background = readBoolFromLocalStorage("dark_background", false);
     black_keys_visible = readBoolFromLocalStorage("black_keys_visible", true);
     updateBackground();
     updateShowBlackKeys();
-    changeNoteNames(readStringFromLocalStorage("note_names", "auto"));
+    changeNoteNames(readStringFromLocalStorage("note_names", "auto"), 1000);
 
     // Respond to window resizing
     window.parent.addEventListener("resize", resizeEventHandler);
@@ -997,6 +1044,13 @@ function adaptForLandscapeScreen() {
     svg_root.setAttribute("viewBox", "0 0 397.15732 241.64582");
     vertical_screen = false;
 }
+
+
+/****************************
+ *                          *
+ *     Utility routines     *
+ *                          *
+ ****************************/
 
 function clampPitch(value, min, max) {
     while (value > max) value -= 12;
