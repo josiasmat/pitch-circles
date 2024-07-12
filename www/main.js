@@ -63,6 +63,31 @@ function changeNoteNames(value,delay_ms=0){console.log(`changeNoteNames(${value}
 updateNoteNames(delay_ms);writeStringToLocalStorage("note_names",value);}
 function swapEnharmonics(){if(automatic_names==true){if(["Pentatonic","Diatonic","HarmonicMinor","MelodicMinor"].includes(visible_mask)){note_names_key=note_names_diatonic.get(note_names_key)[4];}else if(visible_mask=="MajorThirds"){note_names_key=note_names_major_thirds.get(note_names_key)[4];}else if(visible_mask=="MinorThirds"){note_names_key=note_names_minor_thirds.get(note_names_key)[4];}
 updateNoteNames();}}
+function handleKeyboardShortcut(ev){if(ev.repeating)return;let comb=[];if(ev.ctrlKey)comb.push("ctrl");if(ev.altKey)comb.push("alt");if(ev.shiftKey)comb.push("shift");comb.push(ev.key.toLowerCase());const k=comb.join("+");console.log(`handleKeyboardShortcut(${k})`);switch(k){case"p":{ev.preventDefault();changeMask("Pentatonic");break;}
+case"d":{ev.preventDefault();changeMask("Diatonic");break;}
+case"h":{ev.preventDefault();changeMask("HarmonicMinor");break;}
+case"m":{ev.preventDefault();changeMask("MelodicMinor");break;}
+case"w":{ev.preventDefault();changeMask("WholeTones");break;}
+case"o":{ev.preventDefault();changeMask("Octatonic");break;}
+case"j":{ev.preventDefault();changeMask("MajorThirds");break;}
+case"i":{ev.preventDefault();changeMask("MinorThirds");break;}
+case"c":{ev.preventDefault();changeMask("Chromatic");break;}
+case"arrowup":{ev.preventDefault();rotateMasks(1);break;}
+case"arrowdown":{ev.preventDefault();rotateMasks(-1);break;}
+case"shift+arrowup":{ev.preventDefault();rotateMasks(2);break;}
+case"shift+arrowdown":{ev.preventDefault();rotateMasks(-2);break;}
+case"alt+arrowup":{ev.preventDefault();rotateMasks(7);break;}
+case"alt+arrowdown":{ev.preventDefault();rotateMasks(-7);break;}
+case"arrowright":{ev.preventDefault();rotateMasks(7);break;}
+case"arrowleft":{ev.preventDefault();rotateMasks(-7);break;}
+case"tab":{ev.preventDefault();swapEnharmonics();break;}
+case"ctrl+1":{ev.preventDefault();changeNoteNames("enharmonics1");break;}
+case"ctrl+2":{ev.preventDefault();changeNoteNames("enharmonics2");break;}
+case"ctrl+3":{ev.preventDefault();changeNoteNames("numbers");break;}
+case"ctrl+4":{ev.preventDefault();changeNoteNames("automatic");break;}
+case"ctrl+b":{ev.preventDefault();switchShowBlackKeys();break;}
+case"ctrl+d":{ev.preventDefault();switchDarkBackground();break;}}}
+function enableKeyboardShortcuts(){window.parent.addEventListener("keydown",handleKeyboardShortcut);document.addEventListener("keydown",handleKeyboardShortcut);}
 function switchShowBlackKeys(){black_keys_visible=(!black_keys_visible);writeStringToLocalStorage("black_keys_visible",black_keys_visible.toString());updateShowBlackKeys();}
 function updateShowBlackKeys(){if(black_keys_visible==true){document.getElementById("ChkBlackKeysMark").style.display="inline";document.getElementById("ChrCirclesBicolor").style.display="inline";document.getElementById("ChrCirclesWhite").style.display="none";document.getElementById("FthCirclesBicolor").style.display="inline";document.getElementById("FthCirclesWhite").style.display="none";}else{document.getElementById("ChkBlackKeysMark").style.display="none";document.getElementById("ChrCirclesBicolor").style.display="none";document.getElementById("ChrCirclesWhite").style.display="inline";document.getElementById("FthCirclesBicolor").style.display="none";document.getElementById("FthCirclesWhite").style.display="inline";}}
 function switchDarkBackground(){dark_background=(!dark_background);writeStringToLocalStorage("dark_background",dark_background.toString());updateBackground();}
@@ -74,7 +99,7 @@ function hoverTab(elm_id){let elm=document.getElementById(elm_id);elm.style.fill
 function unhoverTab(elm_id){let elm=document.getElementById(elm_id);elm.style.fill="#cccccc";}
 function initializeThisSvg(){svg_root.removeAttribute("height");svg_root.removeAttribute("width");svg_root.style.backgroundColor="white";language=getPreferredTranslation(AVAILABLE_TRANSLATIONS);translateSvgAsync(language);initializeMasks();initializeNoteNames();for(let elm_id of clickable_elements){let elm=document.getElementById(elm_id);if(elm!=null){elm.style.cursor="pointer";elm.style.overscrollBehavior="none";}}
 dark_background=readBoolFromLocalStorage("dark_background",false);black_keys_visible=readBoolFromLocalStorage("black_keys_visible",true);updateBackground();updateShowBlackKeys();changeNoteNames(readStringFromLocalStorage("note_names","auto"),1000);window.parent.addEventListener("resize",resizeEventHandler);resizeEventHandler();for(let elm of document.querySelectorAll("text"))
-elm.style.userSelect="none";enableDragRotationOnMasks();}
+elm.style.userSelect="none";enableKeyboardShortcuts();enableDragRotationOnMasks();}
 function readStringFromLocalStorage(key,default_value){if(storageAvailable("localStorage")){const val=localStorage.getItem(key);if(val==null)
 return default_value;return val;}
 return default_value;}

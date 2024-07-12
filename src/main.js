@@ -855,6 +855,55 @@ function swapEnharmonics() {
 }
 
 
+/*******************************
+ *                             *
+ * Keyboard shortcuts routines *
+ *                             *
+ *******************************/
+
+function handleKeyboardShortcut(ev) {
+    if ( ev.repeating ) return;
+    let comb = [];
+    if ( ev.ctrlKey ) comb.push("ctrl");
+    if ( ev.altKey ) comb.push("alt");
+    if ( ev.shiftKey ) comb.push("shift");
+    comb.push(ev.key.toLowerCase());
+    const k = comb.join("+");
+    console.log(`handleKeyboardShortcut(${k})`);
+    switch ( k ) {
+        case "p": { ev.preventDefault(); changeMask("Pentatonic"); break; }
+        case "d": { ev.preventDefault(); changeMask("Diatonic"); break; }
+        case "h": { ev.preventDefault(); changeMask("HarmonicMinor"); break; }
+        case "m": { ev.preventDefault(); changeMask("MelodicMinor"); break; }
+        case "w": { ev.preventDefault(); changeMask("WholeTones"); break; }
+        case "o": { ev.preventDefault(); changeMask("Octatonic"); break; }
+        case "j": { ev.preventDefault(); changeMask("MajorThirds"); break; }
+        case "i": { ev.preventDefault(); changeMask("MinorThirds"); break; }
+        case "c": { ev.preventDefault(); changeMask("Chromatic"); break; }
+        case "arrowup": { ev.preventDefault(); rotateMasks(1); break; }
+        case "arrowdown": { ev.preventDefault(); rotateMasks(-1); break; }
+        case "shift+arrowup": { ev.preventDefault(); rotateMasks(2); break; }
+        case "shift+arrowdown": { ev.preventDefault(); rotateMasks(-2); break; }
+        case "alt+arrowup": { ev.preventDefault(); rotateMasks(7); break; }
+        case "alt+arrowdown": { ev.preventDefault(); rotateMasks(-7); break; }
+        case "arrowright": { ev.preventDefault(); rotateMasks(7); break; }
+        case "arrowleft": { ev.preventDefault(); rotateMasks(-7); break; }
+        case "tab": { ev.preventDefault(); swapEnharmonics(); break; }
+        case "ctrl+1": { ev.preventDefault(); changeNoteNames("enharmonics1"); break; }
+        case "ctrl+2": { ev.preventDefault(); changeNoteNames("enharmonics2"); break; }
+        case "ctrl+3": { ev.preventDefault(); changeNoteNames("numbers"); break; }
+        case "ctrl+4": { ev.preventDefault(); changeNoteNames("automatic"); break; }
+        case "ctrl+b": { ev.preventDefault(); switchShowBlackKeys(); break; }
+        case "ctrl+d": { ev.preventDefault(); switchDarkBackground(); break; }
+    }
+}
+
+function enableKeyboardShortcuts() {
+    window.parent.addEventListener("keydown", handleKeyboardShortcut);
+    document.addEventListener("keydown", handleKeyboardShortcut);
+}
+
+
 /****************************
  *                          *
  *      Other routines      *
@@ -978,6 +1027,7 @@ function initializeThisSvg() {
     for ( let elm of document.querySelectorAll("text") )
         elm.style.userSelect = "none";
 
+    enableKeyboardShortcuts();
     enableDragRotationOnMasks();
 
 }

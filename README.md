@@ -13,6 +13,21 @@ Visit https://josiasmat.github.io/PitchCircles/
 3. On Windows: go to the folder where the files were downloaded/unzipped, and double-click the `run-local-server.cmd` file; on other systems, run `python3 -m http.server 80` from the downloaded files directory in a terminal.
 4. Visit `localhost/` using your internet browser.
 
+## Keyboard shortcuts
+
+|Keys|Function||Keys|Function|
+|-|-|-|-|-|
+|`P`|show pentatonic mask||`↑` `↓`|Transpose by semitones|
+|`D`|show diatonic mask||`Shift`+`↑` `↓`|Transpose by whole steps|
+|`H`|show harmonic minor mask||`←` `→`|Transpose by fifths|
+|`M`|show melodic minor mask||`Tab`|change enharmonic spelling|
+|`W`|show whole-tones mask||`Ctrl`+`1`|use enharmonic naming|
+|`O`|show octatonic mask||`Ctrl`+`2`|use enharmonic+B#/Cb/E#/Fb naming|
+|`J`|show major thirds mask||`Ctrl`+`3`|use pitch classes naming|
+|`I`|show minor thirds mask||`Ctrl`+`4`|use automatic naming|
+|`C`|show chromatic mask||`Ctrl`+`b`|switch dark black keys|
+||||`Ctrl`+`d`|switch dark background|
+
 ## Translations
 
 Currently available in english (`en`), spanish (`es`) and portuguese (`pt`).
