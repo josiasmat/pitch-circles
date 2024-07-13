@@ -127,10 +127,11 @@ function unhover(elm_id){let elm=document.getElementById(elm_id);elm.style.filte
 function hoverTab(elm_id){let elm=document.getElementById(elm_id);elm.style.fill=document.getElementById("ControlPanelBk").style.fill;}
 function unhoverTab(elm_id){let elm=document.getElementById(elm_id);elm.style.fill="#cccccc";}
 function initializeThisSvg(){svg_root.removeAttribute("height");svg_root.removeAttribute("width");svg_root.style.backgroundColor="white";language=getPreferredTranslation(AVAILABLE_TRANSLATIONS);translateSvgAsync(language);initializeMasks();initializeNoteNames();for(let elm_id of clickable_elements){let elm=document.getElementById(elm_id);if(elm!=null){elm.style.cursor="pointer";elm.style.overscrollBehavior="none";}}
-dark_background=readBoolFromLocalStorage("dark_background",false);black_keys_visible=readBoolFromLocalStorage("black_keys_visible",true);updateBackground();updateShowBlackKeys();changeNoteNames(readStringFromLocalStorage("note_names","auto"),1000);const control_panel=document.getElementById("Controls");control_panel.style.transformBox="boder-box";control_panel.style.transformOrigin="left top";window.parent.addEventListener("resize",resizeEventHandler);resizeEventHandler();for(let elm of document.querySelectorAll("text"))
-elm.style.userSelect="none";enableKeyboardShortcuts();enableDragRotationOnMasks();const urlmask=getUrlQueryValue("mask");if(urlmask!=null){changeMask(getCaseInsensitiveMaskName(urlmask),false);}
+dark_background=readBoolFromLocalStorage("dark_background",false);black_keys_visible=readBoolFromLocalStorage("black_keys_visible",true);updateBackground();updateShowBlackKeys();changeNoteNames(readStringFromLocalStorage("note_names","auto"),1000);for(let elm of document.querySelectorAll("text"))
+elm.style.userSelect="none";enableKeyboardShortcuts();enableDragRotationOnMasks();const control_panel=document.getElementById("Controls");control_panel.style.transformBox="boder-box";control_panel.style.transformOrigin="left top";window.parent.addEventListener("resize",resizeEventHandler);resizeEventHandler();const urlmask=getUrlQueryValue("mask");if(urlmask!=null){changeMask(getCaseInsensitiveMaskName(urlmask),false);}
 const urlrotation=getUrlQueryValue("rotate");if(urlrotation!=null){const fifths=parseInt(urlrotation);if(isNaN(fifths)==false)
-rotateMasksByFifths(fifths,true);}}
+rotateMasksByFifths(fifths,false);}
+const urlhidecontrols=getUrlQueryValue("hidecontrols");if(["1","true"].includes(urlhidecontrols)){switchControlsVisibility();}}
 function readStringFromLocalStorage(key,default_value){if(storageAvailable("localStorage")){const val=localStorage.getItem(key);return(val==null)?default_value:val;}
 return default_value;}
 function readBoolFromLocalStorage(key,default_bool_value){return(readStringFromLocalStorage(key,default_bool_value.toString())===true.toString());}
@@ -139,14 +140,15 @@ localStorage.setItem(key,value);}
 function storageAvailable(type){let storage;try{storage=window[type];const x="__storage_test__";storage.setItem(x,x);storage.removeItem(x);return true;}catch(e){return(e instanceof DOMException&&e.name==="QuotaExceededError"&&storage&&storage.length!==0);}}
 function switchControlsVisibility(){control_panel_visible=!control_panel_visible;const control_panel=document.getElementById("Controls");control_panel.style.visibility=control_panel_visible?"visible":"hidden";adaptForScreen();}
 function resizeEventHandler(){const ratio=window.parent.innerWidth/window.parent.innerHeight;if(((ratio<1.0)&&(vertical_screen==false))||((ratio>=1.0)&&(vertical_screen==true))){vertical_screen=!vertical_screen;adaptForScreen();}}
-function adaptForScreen(){const t=196.9;const fifths_circle=document.getElementById("FthCircle");const control_panel=document.getElementById("Controls");if(vertical_screen){var fifths_circle_transform=`translate(-${t} ${t})`;var control_panel_transform=`translate(-3 ${t}) scale(0.51 1)`;var viewbox=(control_panel_visible)?`0 0 ${t} ${241.64582 + t}`:`0 0 ${t} ${241.64582 + t - control_panel.getBBox().height}`;}else{var fifths_circle_transform="translate(0 0)";var control_panel_transform="translate(0 0) scale(1 1)";var viewbox=(control_panel_visible)?"0 0 397.15732 241.64582":`0 0 397.15732 ${241.64582 - control_panel.getBBox().height}`;}
+function adaptForScreen(){const t=196.9;const fifths_circle=document.getElementById("FthCircle");const control_panel=document.getElementById("Controls");if(vertical_screen){var fifths_circle_transform=`translate(-${t} ${t})`;var control_panel_transform=`translate(-3 ${t}) scale(0.51 1)`;var viewbox=(control_panel_visible)?`0 0 ${t} ${241.64582 + t}`:`0 0 ${t} ${241.64582 + t - control_panel.getBBox().height - 6}`;}else{var fifths_circle_transform="translate(0 0)";var control_panel_transform="translate(0 0) scale(1 1)";var viewbox=(control_panel_visible)?"0 0 397.15732 241.64582":`0 0 397.15732 ${241.64582 - control_panel.getBBox().height - 6}`;}
 fifths_circle.setAttribute("transform",fifths_circle_transform);control_panel.setAttribute("transform",control_panel_transform);svg_root.setAttribute("viewBox",viewbox);}
 function clampPitch(value,min,max){while(value>max)value-=12;while(value<min)value+=12;return value;}
 function clampAngle(deg,center=0,half_window=180){const min=center-half_window;const max=center+half_window;while(deg>max)deg-=360;while(deg<min)deg+=360;return deg;}
 function radToDeg(rad){return rad*(180/Math.PI);}
 function degToRad(deg){return deg*(Math.PI/180);}
 function pointInRect(rect,px,py){return(px>=rect.left&&px<=rect.right&&py>=rect.top&&py<=rect.bottom);}
-function getUrlQueryValue(param){return new URLSearchParams(window.parent.location.search).get(param);}
+function getUrlQueryValue(param,to_lower_case=true){const result=new URLSearchParams(window.parent.location.search).get(param);if(result!=null)
+return(to_lower_case)?result.toLowerCase():result;return null;}
 function getPreferredTranslation(available_translations){var url_param_lang=getUrlQueryValue("lang");if(url_param_lang!=null){url_param_lang=url_param_lang.toLowerCase();for(let translation of available_translations){if(url_param_lang==translation)
 return translation;}}
 for(let lang of navigator.languages){lang=lang.toLowerCase();for(let translation of available_translations){if(lang.startsWith(translation))

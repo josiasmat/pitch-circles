@@ -1086,13 +1086,6 @@ function initializeThisSvg() {
     updateShowBlackKeys();
     changeNoteNames(readStringFromLocalStorage("note_names", "auto"), 1000);
 
-    // Respond to window resizing
-    const control_panel = document.getElementById("Controls");
-    control_panel.style.transformBox = "boder-box";
-    control_panel.style.transformOrigin = "left top";
-    window.parent.addEventListener("resize", resizeEventHandler);
-    resizeEventHandler();
-
     // Make all text non-selectable
     for ( let elm of document.querySelectorAll("text") )
         elm.style.userSelect = "none";
@@ -1100,6 +1093,13 @@ function initializeThisSvg() {
     enableKeyboardShortcuts();
     enableDragRotationOnMasks();
     
+    // Respond to window resizing
+    const control_panel = document.getElementById("Controls");
+    control_panel.style.transformBox = "boder-box";
+    control_panel.style.transformOrigin = "left top";
+    window.parent.addEventListener("resize", resizeEventHandler);
+    resizeEventHandler();
+
     // Get initial mask from URL
     const urlmask = getUrlQueryValue("mask");
     if ( urlmask != null ) {
@@ -1112,6 +1112,12 @@ function initializeThisSvg() {
         const fifths = parseInt(urlrotation);
         if ( isNaN(fifths) == false )
             rotateMasksByFifths(fifths, false);
+    }
+
+    // Hide controls from URL
+    const urlhidecontrols = getUrlQueryValue("hidecontrols");
+    if ( ["1","true"].includes(urlhidecontrols) ) {
+        switchControlsVisibility();
     }
 
 }
@@ -1179,14 +1185,14 @@ function adaptForScreen() {
         var control_panel_transform = `translate(-3 ${t}) scale(0.51 1)`;
         var viewbox = (control_panel_visible)
             ? `0 0 ${t} ${241.64582 + t}`
-            : `0 0 ${t} ${241.64582 + t - control_panel.getBBox().height}`;
+            : `0 0 ${t} ${241.64582 + t - control_panel.getBBox().height - 6}`;
     } else {
         // landscape mode
         var fifths_circle_transform = "translate(0 0)";
         var control_panel_transform = "translate(0 0) scale(1 1)";
         var viewbox = (control_panel_visible)
             ? "0 0 397.15732 241.64582"
-            : `0 0 397.15732 ${241.64582 - control_panel.getBBox().height}`;
+            : `0 0 397.15732 ${241.64582 - control_panel.getBBox().height - 6}`;
     }
     fifths_circle.setAttribute("transform", fifths_circle_transform);
     control_panel.setAttribute("transform", control_panel_transform);
@@ -1226,8 +1232,11 @@ function pointInRect(rect, px, py) {
     return ( px >= rect.left && px <= rect.right && py >= rect.top && py <= rect.bottom );
 }
 
-function getUrlQueryValue(param) {
-    return new URLSearchParams(window.parent.location.search).get(param);
+function getUrlQueryValue(param, to_lower_case = true) {
+    const result = new URLSearchParams(window.parent.location.search).get(param);
+    if ( result != null )
+        return (to_lower_case) ? result.toLowerCase() : result;
+    return null;
 }
 
 
