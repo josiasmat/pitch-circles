@@ -1204,13 +1204,6 @@ function pointInRect(rect, px, py) {
     return ( px >= rect.left && px <= rect.right && py >= rect.top && py <= rect.bottom );
 }
 
-function isEven(n) {
-    return n % 2 == 0;
- }
- 
- function isOdd(n) {
-    return Math.abs(n % 2) == 1;
- }
 
 /****************************
  *                          *

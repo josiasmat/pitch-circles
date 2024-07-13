@@ -141,8 +141,6 @@ function clampAngle(deg,center=0,half_window=180){const min=center-half_window;c
 function radToDeg(rad){return rad*(180/Math.PI);}
 function degToRad(deg){return deg*(Math.PI/180);}
 function pointInRect(rect,px,py){return(px>=rect.left&&px<=rect.right&&py>=rect.top&&py<=rect.bottom);}
-function isEven(n){return n%2==0;}
-function isOdd(n){return Math.abs(n%2)==1;}
 function getPreferredTranslation(available_translations){let url_param_lang=new URLSearchParams(window.parent.location.search).get("lang");if(url_param_lang!=null){url_param_lang=url_param_lang.toLowerCase();for(let translation of available_translations){if(url_param_lang==translation)
 return translation;}}
 for(let lang of navigator.languages){lang=lang.toLowerCase();for(let translation of available_translations){if(lang.startsWith(translation))
