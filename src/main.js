@@ -402,26 +402,24 @@ function hideMask(mask, animate) {
  *                            *
  ******************************/
 
-function rotateMasks(steps, animate = true) {
-    transposeSemitones(steps);
-    chromatic_mask_rotation = Math.round(clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation, ANGLE_FIFTH));
-    fifths_mask_rotation = Math.round(clampAngle(fifths_transposition*ANGLE_SEMITONE, fifths_mask_rotation, ANGLE_FIFTH));
+function setMasksRotations(chr_steps, fth_steps, animate) {
+    chromatic_mask_rotation = Math.round( clampAngle(chr_steps*ANGLE_SEMITONE, chromatic_mask_rotation, ANGLE_FIFTH) );
+    fifths_mask_rotation    = Math.round( clampAngle(fth_steps*ANGLE_SEMITONE, fifths_mask_rotation,    ANGLE_FIFTH) );
     if ( visible_mask != null ) {
         applyMaskRotation(getVisibleChrMask(), chromatic_mask_rotation, animate);
-        applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation, animate);
+        applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation,    animate);
     }
     updateNoteNames(250);
 }
 
+function rotateMasks(semitones, animate = true) {
+    transposeSemitones(semitones);
+    setMasksRotations(chromatic_transposition, fifths_transposition, animate);
+}
+
 function rotateMasksByFifths(fifths, animate = true) {
     transposeFifths(fifths);
-    chromatic_mask_rotation = Math.round(clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation, ANGLE_FIFTH));
-    fifths_mask_rotation = Math.round(clampAngle(fifths_transposition*ANGLE_SEMITONE, fifths_mask_rotation, ANGLE_FIFTH));
-    if ( visible_mask != null ) {
-        applyMaskRotation(getVisibleChrMask(), chromatic_mask_rotation, animate);
-        applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation, animate);
-    }
-    updateNoteNames(250);
+    setMasksRotations(chromatic_transposition, fifths_transposition, animate);
 }
 
 function returnMasksToC(animate = true) {
@@ -429,13 +427,7 @@ function returnMasksToC(animate = true) {
     fifths_transposition = 0;
     if ( typeof(note_names_key) == "number" )
         note_names_key = 0;
-    chromatic_mask_rotation = Math.round(clampAngle(0, chromatic_mask_rotation, ANGLE_FIFTH));
-    fifths_mask_rotation = Math.round(clampAngle(0, fifths_mask_rotation, ANGLE_FIFTH));
-    if ( visible_mask != null ) {
-        applyMaskRotation(getVisibleChrMask(), chromatic_mask_rotation, animate);
-        applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation, animate);
-    }
-    updateNoteNames(250);
+    setMasksRotations(0, 0);
 }
 
 function applyMaskRotation(mask, degrees, animate) {

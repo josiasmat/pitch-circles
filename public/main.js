@@ -11,13 +11,12 @@ function showMask(mask,rotation_degrees=0,animate,delay){if(animate==true){mask.
 mask.style.scale="100%";mask.style.opacity="1";mask.style.visibility="visible";mask.style.rotate=`${rotation_degrees}deg`;}
 function hideMask(mask,animate){if(animate==true){mask.style.transitionProperty="scale, opacity, visibility";mask.style.transitionDelay="0s";mask.style.transitionDuration="200ms";mask.style.transitionTimingFunction="ease-in";}else{mask.style.transition="none";}
 mask.style.scale="120%";mask.style.opacity="0";mask.style.visibility="hidden";}
-function rotateMasks(steps,animate=true){transposeSemitones(steps);chromatic_mask_rotation=Math.round(clampAngle(chromatic_transposition*ANGLE_SEMITONE,chromatic_mask_rotation,ANGLE_FIFTH));fifths_mask_rotation=Math.round(clampAngle(fifths_transposition*ANGLE_SEMITONE,fifths_mask_rotation,ANGLE_FIFTH));if(visible_mask!=null){applyMaskRotation(getVisibleChrMask(),chromatic_mask_rotation,animate);applyMaskRotation(getVisibleFthMask(),fifths_mask_rotation,animate);}
+function setMasksRotations(chr_steps,fth_steps,animate){chromatic_mask_rotation=Math.round(clampAngle(chr_steps*ANGLE_SEMITONE,chromatic_mask_rotation,ANGLE_FIFTH));fifths_mask_rotation=Math.round(clampAngle(fth_steps*ANGLE_SEMITONE,fifths_mask_rotation,ANGLE_FIFTH));if(visible_mask!=null){applyMaskRotation(getVisibleChrMask(),chromatic_mask_rotation,animate);applyMaskRotation(getVisibleFthMask(),fifths_mask_rotation,animate);}
 updateNoteNames(250);}
-function rotateMasksByFifths(fifths,animate=true){transposeFifths(fifths);chromatic_mask_rotation=Math.round(clampAngle(chromatic_transposition*ANGLE_SEMITONE,chromatic_mask_rotation,ANGLE_FIFTH));fifths_mask_rotation=Math.round(clampAngle(fifths_transposition*ANGLE_SEMITONE,fifths_mask_rotation,ANGLE_FIFTH));if(visible_mask!=null){applyMaskRotation(getVisibleChrMask(),chromatic_mask_rotation,animate);applyMaskRotation(getVisibleFthMask(),fifths_mask_rotation,animate);}
-updateNoteNames(250);}
+function rotateMasks(steps,animate=true){transposeSemitones(steps);setMasksRotations(chromatic_transposition,fifths_transposition,animate);}
+function rotateMasksByFifths(fifths,animate=true){transposeFifths(fifths);setMasksRotations(chromatic_transposition,fifths_transposition,animate);}
 function returnMasksToC(animate=true){chromatic_transposition=0;fifths_transposition=0;if(typeof(note_names_key)=="number")
-note_names_key=0;chromatic_mask_rotation=Math.round(clampAngle(0,chromatic_mask_rotation,ANGLE_FIFTH));fifths_mask_rotation=Math.round(clampAngle(0,fifths_mask_rotation,ANGLE_FIFTH));if(visible_mask!=null){applyMaskRotation(getVisibleChrMask(),chromatic_mask_rotation,animate);applyMaskRotation(getVisibleFthMask(),fifths_mask_rotation,animate);}
-updateNoteNames(250);}
+note_names_key=0;setMasksRotations(0,0);}
 function applyMaskRotation(mask,degrees,animate){if(animate==true&&mask.style.visibility=="visible")
 doMaskRotation(mask,degrees,750);else
 doMaskRotation(mask,degrees,0);}
