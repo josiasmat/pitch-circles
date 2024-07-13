@@ -30,6 +30,20 @@ Visit https://josiasmat.github.io/PitchCircles/
 |`←` `→`|transpose by fifths||`F9`|show/hide controls|
 |`Shift`+`↑` `↓`|transpose by whole steps|||
 
+## Setting initial state
+
+It is possible to set the tool's initial state using URL query parameters.
+- Use `?mask=` to set the mask (`pentatonic`, `diatonic` etc.).
+- Use `?rotate=` to set the initial rotation, in fifths.
+- Use `?hidecontrols=1` to hide the control panel.
+- Use `?lang=` to change the language.
+
+You can combine these parameters using `&`, in any order, e.g.:
+
+`https://josiasmat.github.io/PitchCircles/?mask=diatonic&rotate=-2&hidecontrols=1&lang=es`
+
+This will start the tool in spanish, with the diatonic mask, rotated to B flat and with controls hidden.
+
 ## Translations
 
 Currently available in english (`en`), spanish (`es`) and portuguese (`pt`).
