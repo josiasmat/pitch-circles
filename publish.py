@@ -18,7 +18,7 @@ from wand.image import Image as WandImage
 from wand.image import Color as WandColor
 
 source_folder = "./src"
-publish_folder = "./www"
+publish_folder = "./public"
 
 # function to test if source file is newer
 # than destination file
@@ -34,7 +34,7 @@ abspath = os.path.abspath(__file__)
 thisdir = os.path.dirname(abspath)
 os.chdir(thisdir)
 
-# create ./www folder if it doesn't exist
+# create {publish_folder} folder if it doesn't exist
 if not os.path.exists(publish_folder):
     os.makedirs(publish_folder)
 if not os.path.exists(f"{publish_folder}/locale"):
