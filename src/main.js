@@ -551,7 +551,6 @@ var mask_drag_rotation = {
 };
 
 function handleMaskDragPointerBegin(ev) {
-    console.log(`handleMaskDragPointerBegin() for ${ev.target.id}`);
     if ( mask_drag_rotation.dev.type != null ) return;
     mask_drag_rotation.set_params(
         "pointer",
@@ -567,7 +566,6 @@ function handleMaskDragPointerBegin(ev) {
 }
 
 function handleMaskDragTouchBegin(ev) {
-    console.log(`handleMaskDragTouchBegin() for ${ev.target.id}`);
     if ( mask_drag_rotation.dev.type != null ) return;
     ev.preventDefault();
     const touchObj = Array.from(ev.changedTouches).at(-1);
@@ -583,7 +581,6 @@ function handleMaskDragTouchBegin(ev) {
 }
 
 function handleMaskDragPointerEnd(ev) {
-    console.log(`handleMaskDragPointerEnd() for ${ev.target.id}`);
     if ( mask_drag_rotation.dev.type != "pointer" ) return;
     mask_drag_rotation.target.elm.releasePointerCapture(ev.pointerId);
     mask_drag_rotation.target.elm.removeEventListener("pointermove", handleMaskDragPointerMove);
@@ -591,7 +588,6 @@ function handleMaskDragPointerEnd(ev) {
 }
 
 function handleMaskDragTouchEnd(ev) {
-    console.log(`handleMaskDragTouchEnd() for ${ev.target.id}`);
     if ( mask_drag_rotation.dev.type != "touch" ) return;
     ev.preventDefault();
     for ( let touchObj of ev.changedTouches ) {
@@ -604,17 +600,14 @@ function handleMaskDragTouchEnd(ev) {
 }
 
 function handleMaskDragPointerMove(ev) {
-    console.log(`handleMaskDragPointerMove() for ${ev.target.id}`);
     if ( mask_drag_rotation.dev.type == "pointer" )
         maskDragMove(ev.clientX, ev.clientY);
 }
 
 function handleMaskDragTouchMove(ev) {
-    console.log(`handleMaskDragTouchMove() for ${ev.target.id}`);
     if ( mask_drag_rotation.dev.type == "touch" ) {
         ev.preventDefault();
         for ( let touchObj of ev.changedTouches ) {
-            console.log(`handleMaskDragTouchMove(): trying ${touchObj.identifier}, original was ${mask_drag_rotation.dev.id}`)
             if ( touchObj.identifier == mask_drag_rotation.dev.id ) {
                 maskDragMove(touchObj.clientX, touchObj.clientY);
                 break;
@@ -670,7 +663,6 @@ function maskDragEnd() {
 }
 
 function maskDragMove(px, py) {
-    console.log(`maskDragMove(px=${px}, py=${py})`);
     if ( mask_drag_rotation.begun_rotating == false && typeof(note_names_key) == "number" )
         updateNoteNames(0, "enharmonics1");
     const rect = mask_drag_rotation.target.mask.getBoundingClientRect();
@@ -770,7 +762,6 @@ function initializeNoteNames() {
 }
 
 function updateNoteNames(delay_ms = 0, override_names_type = null) {
-    console.log(`updateNoteNames(${delay_ms}, ${override_names_type})`);
     if ( override_names_type == null ) 
         override_names_type = note_names_key;
     if ( typeof(override_names_type) == "number" ) {
@@ -803,7 +794,6 @@ function updateNoteNames(delay_ms = 0, override_names_type = null) {
 }
 
 async function showHideNoteNames(postfix_array, delay_ms) {
-    console.log(`showHideNoteNames(${postfix_array}, ${delay_ms})`);
     // collect elements to be shown/hidden
     var names_to_be_hidden = [];
     var names_to_be_showed = [];
@@ -855,7 +845,6 @@ function checkNamesSwitch(switch_id) {
 }
 
 function changeNoteNames(value, delay_ms = 0) {
-    console.log(`changeNoteNames(${value}, ${delay_ms})`);
     switch (value) {
         case "enharmonics1" :
             checkNamesSwitch("SwitchNamesEnharmony1");
@@ -905,7 +894,6 @@ function handleKeyboardShortcut(ev) {
     if ( ev.shiftKey ) comb.push("shift");
     comb.push(ev.key.toLowerCase());
     const k = comb.join("+");
-    console.log(`handleKeyboardShortcut(${k})`);
     switch ( k ) {
         case "p": { ev.preventDefault(); changeMask("Pentatonic"); break; }
         case "d": { ev.preventDefault(); changeMask("Diatonic"); break; }
@@ -1244,8 +1232,10 @@ function getPreferredTranslation(available_translations) {
 function getTranslatedStr(key, i18n_data) {
     if ( i18n_data.hasOwnProperty(key) ) {
         return i18n_data[key];
-    } else
+    } else {
+        console.log(`getTranslatedStr():\nKey '${key}' not found for language '${language}'.`);
         return null;
+    }
 }
 
 function translate(element, i18n_data) {
