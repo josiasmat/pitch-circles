@@ -155,5 +155,5 @@ return null;}
 function translate(element,i18n_data){if(element.hasAttribute("i18n")){const str=getTranslatedStr(element.getAttribute("i18n"),i18n_data);if(str!=null)
 element.innerHTML=str;}
 if(element.hasChildNodes()){for(let child of element.children){translate(child,i18n_data);}}}
-async function translateSvgAsync(){if(language=="en")return;try{const file_name=`locale/${language}.json`;const response=await fetch(file_name);if(!response.ok)
+async function translateSvgAsync(){try{const file_name=`locale/${language}.json`;const response=await fetch(file_name);if(!response.ok)
 throw new Error(`Response status: ${response.status}`);const data=await response.json();window.parent.document.title=getTranslatedStr("title",data);translate(svg_root,data);}catch(error){console.log(`translateSvgAsync(${language}) error: ${error}.`);}}

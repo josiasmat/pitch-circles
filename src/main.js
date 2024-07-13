@@ -1264,12 +1264,15 @@ function translate(element, i18n_data) {
 }
 
 async function translateSvgAsync() {
+    // english is the source language
+    if ( language == "en" ) return;
     try {
         const file_name = `locale/${language}.json`;
         const response = await fetch(file_name);
         if ( ! response.ok )
             throw new Error(`Response status: ${response.status}`);
         const data = await response.json();
+        window.parent.document.title = getTranslatedStr("title", data);
         translate(svg_root, data);
     } catch (error) {
         console.log(`translateSvgAsync(${language}) error: ${error}.`);

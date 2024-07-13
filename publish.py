@@ -9,7 +9,7 @@
 # You'll also need ImageMagick from:
 #   https://imagemagick.org/
 
-import os, glob, shutil
+import glob, pathlib, os, shutil
 
 import minify_html
 from rjsmin import jsmin
@@ -36,7 +36,9 @@ locale_subfolder = "/locale"
 locale_files = glob.iglob(os.path.join(f"{source_folder}{locale_subfolder}", "*.json"))
 for file in locale_files:
     if os.path.isfile(file):
-        shutil.copy2(file, f"{publish_folder}{locale_subfolder}")
+        # english file not needed because that's the source language
+        if pathlib.Path(file).stem != "en":
+            shutil.copy2(file, f"{publish_folder}{locale_subfolder}")
 
 # minify html file
 with open(f"{source_folder}/index.html", 'r', encoding="utf-8") as htmlrfile:

@@ -283,7 +283,7 @@
            id="tspan7"
            style="font-size:6.65492px;stroke-width:0.262694"
            x="54.362961"
-           y="19.865597">MAIS OPÇÕES</tspan></text>
+           y="19.865597">OPTIONS</tspan></text>
     </g>
     <g
        id="TabTranspose"
@@ -314,7 +314,7 @@
            id="tspan6"
            style="font-size:6.70278px;stroke-width:0.264583"
            x="54.753922"
-           y="-9.6591597">TRANSPOR</tspan></text>
+           y="-9.6591597">TRANSPOSE</tspan></text>
     </g>
     <g
        id="TabMasks"
@@ -344,7 +344,7 @@
            id="tspan2"
            style="font-size:6.70278px;stroke-width:0.264583"
            x="54.753922"
-           y="5.3408189">MÁSCARAS</tspan></text>
+           y="5.3408189">MASKS</tspan></text>
     </g>
     <g
        id="ControlsOptions"
@@ -379,7 +379,7 @@
              id="tspan427"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
              x="105.35422"
-             y="-1.2326021">Automático</tspan></text>
+             y="-1.2326021">Automatic</tspan></text>
         <circle
            style="fill:#f9f9f9;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
            id="SwitchNamesDynamicBox"
@@ -411,7 +411,7 @@
              id="tspan68"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
              x="105.35422"
-             y="-1.2326021">Classes numeradas</tspan></text>
+             y="-1.2326021">Numbered classes</tspan></text>
         <circle
            style="fill:#f9f9f9;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
            id="SwitchNamesPitchClassesBox"
@@ -447,7 +447,7 @@
              id="tspan57"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
              x="105.35422"
-             y="-1.2326021">Nomes fixos + E#/Fb/B#/Cb</tspan></text>
+             y="-1.2326021">Static names + E#/Fb/B#/Cb</tspan></text>
         <circle
            style="fill:#f9f9f9;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
            id="SwitchNamesEnharmony2Box"
@@ -479,7 +479,7 @@
              id="tspan10"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
              x="105.35422"
-             y="-1.2326021">Nomes fixos com enarmonias</tspan></text>
+             y="-1.2326021">Static names with enharmonics</tspan></text>
         <circle
            style="fill:#f9f9f9;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
            id="SwitchNamesEnharmony1Box"
@@ -523,7 +523,7 @@
              id="tspan5"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
              x="311.04123"
-             y="-3.8404946">Diferenciar teclas pretas</tspan></text>
+             y="-3.8404946">Distinguish black keys</tspan></text>
       </g>
       <g
          id="ChkDarkBackground"
@@ -555,7 +555,7 @@
              id="tspan3"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
              x="311.04123"
-             y="-3.8404946">Fundo preto</tspan></text>
+             y="-3.8404946">Dark background</tspan></text>
       </g>
     </g>
     <g
@@ -621,7 +621,7 @@
              id="tspan8"
              style="font-size:6.70278px;stroke-width:0.264583"
              x="143.45656"
-             y="-11.621173">SEMITOM</tspan></text>
+             y="-11.621173">HALF TONE</tspan></text>
       </g>
       <g
          id="g63"
@@ -638,7 +638,7 @@
              id="tspan9"
              style="font-size:6.70278px;stroke-width:0.264583"
              x="239.15547"
-             y="-11.621173">TOM</tspan></text>
+             y="-11.621173">WHOLE TONE</tspan></text>
         <g
            id="g115"
            inkscape:label="Minus"
@@ -689,7 +689,7 @@
              id="tspan11"
              style="font-size:6.70278px;stroke-width:0.264583"
              x="334.42377"
-             y="-11.619103">5ª JUSTA</tspan></text>
+             y="-11.619103">PERFECT 5TH</tspan></text>
         <g
            id="g133"
            inkscape:label="Minus"
@@ -778,7 +778,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
              x="123.01889"
              y="-4.8726277"
-             id="tspan90">PENTATÔNICA</tspan></text>
+             id="tspan90">PENTATONIC</tspan></text>
       </g>
       <g
          id="BtnMaskDiatonic"
@@ -806,7 +806,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
              x="123.01889"
              y="-10.1286"
-             id="tspan93">DIATÔNICA</tspan></text>
+             id="tspan93">DIATONIC</tspan></text>
       </g>
       <g
          id="BtnMaskHarmonicMinor"
@@ -834,7 +834,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
              x="125.47748"
              y="-4.8726277"
-             id="tspan95">MENOR HARMÔNICA</tspan></text>
+             id="tspan95">HARMONIC MINOR</tspan></text>
       </g>
       <g
          id="BtnMaskWholeTones"
@@ -862,7 +862,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
              x="125.79914"
              y="-10.1286"
-             id="tspan100">TONS INTEIROS</tspan></text>
+             id="tspan100">WHOLE TONES</tspan></text>
       </g>
       <g
          id="BtnMaskOctatonic"
@@ -890,7 +890,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
              x="128.00131"
              y="-4.8726277"
-             id="tspan105">OCTATÔNICA</tspan></text>
+             id="tspan105">OCTATONIC</tspan></text>
       </g>
       <g
          id="BtnMaskChromatic"
@@ -918,7 +918,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
              x="128.00131"
              y="-10.1286"
-             id="tspan106">CROMÁTICA</tspan></text>
+             id="tspan106">CHROMATIC</tspan></text>
       </g>
       <g
          id="BtnMaskMajorThirds"
@@ -946,7 +946,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
              x="130.67241"
              y="-4.8726277"
-             id="tspan111">TERÇAS MAIORES</tspan></text>
+             id="tspan111">MAJOR THIRDS</tspan></text>
       </g>
       <g
          id="BtnMaskMinorThirds"
@@ -974,7 +974,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
              x="130.67241"
              y="-10.1286"
-             id="tspan112">TERÇAS MENORES</tspan></text>
+             id="tspan112">MINOR THIRDS</tspan></text>
       </g>
       <g
          id="BtnMaskMelodicMinor"
@@ -1002,7 +1002,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
              x="125.47748"
              y="-4.8726277"
-             id="tspan425">MENOR MELÓDICA</tspan></text>
+             id="tspan425">MELODIC MINOR</tspan></text>
       </g>
       <g
          id="BtnMaskProgrammable"
@@ -1025,12 +1025,11 @@
            x="128.00131"
            y="-10.1286"
            id="text426"><tspan
-             i18n="btn-programmable"
              sodipodi:role="line"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
              x="128.00131"
              y="-10.1286"
-             id="tspan426">PROGRAMÁVEL</tspan></text>
+             id="tspan426">PROGRAMMABLE</tspan></text>
       </g>
     </g>
   </g>
@@ -1660,13 +1659,13 @@
              style="font-size:7.05556px;line-height:1.25;fill:#000000;stroke-width:0.264583"
              x="296.9303"
              y="98.091072"
-             id="tspan479">TÉTRADE DIMINUTA</tspan><tspan
+             id="tspan479">DIM. 7TH CHORD</tspan><tspan
              i18n="mask-minor-thirds-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.25;fill:#000000;stroke-width:0.264583"
              x="296.9303"
              y="106.91052"
-             id="tspan480">(TERÇAS MENORES)</tspan></text>
+             id="tspan480">(MINOR THIRDS)</tspan></text>
         <g
            id="g60"
            inkscape:label="modes_backgrounds">
@@ -1746,13 +1745,13 @@
              style="font-size:7.05556px;line-height:1.25;fill:#000000;stroke-width:0.264583"
              x="296.9303"
              y="98.091072"
-             id="tspan484">TRÍADE AUMENTADA</tspan><tspan
+             id="tspan484">AUGMENTED CHORD</tspan><tspan
              i18n="mask-major-thirds-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.25;fill:#000000;stroke-width:0.264583"
              x="296.9303"
              y="106.91052"
-             id="tspan485">(TERÇAS MAIORES)</tspan></text>
+             id="tspan485">(MAJOR THIRDS)</tspan></text>
         <g
            id="g59"
            inkscape:label="modes_backgrounds">
@@ -1819,13 +1818,13 @@
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="296.90964"
              y="98.791466"
-             id="tspan488">ESCALA</tspan><tspan
+             id="tspan488">CHROMATIC</tspan><tspan
              i18n="mask-chromatic-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="296.90964"
              y="106.19981"
-             id="tspan489">CROMÁTICA</tspan></text>
+             id="tspan489">SCALE</tspan></text>
         <g
            id="g500"
            inkscape:label="color_circles"
@@ -2168,13 +2167,13 @@
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="296.91309"
              y="98.791466"
-             id="tspan515">ESCALA</tspan><tspan
+             id="tspan515">OCTATONIC</tspan><tspan
              i18n="mask-octatonic-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="296.91309"
              y="106.19981"
-             id="tspan516">OCTATÔNICA</tspan></text>
+             id="tspan516">SCALE</tspan></text>
       </g>
       <g
          id="FthWholeTonesMask"
@@ -2313,13 +2312,13 @@
                id="tspan523"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="147.21956"
-               y="43.480057">ESCALA DE</tspan><tspan
+               y="43.480057">WHOLE-TONE</tspan><tspan
                i18n="mask-whole-tones-line2"
                sodipodi:role="line"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="147.21956"
                y="50.888393"
-               id="tspan524">TONS INTEIROS</tspan></text>
+               id="tspan524">SCALE</tspan></text>
         </g>
       </g>
       <g
@@ -2564,19 +2563,19 @@
                id="tspan62"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="296.97858"
-               y="95.087318">ESCALA</tspan><tspan
+               y="95.087318">MELODIC</tspan><tspan
                i18n="mask-melodic-minor-line2"
                sodipodi:role="line"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="296.97858"
                y="102.49566"
-               id="tspan91">MENOR</tspan><tspan
+               id="tspan91">MINOR</tspan><tspan
                i18n="mask-melodic-minor-line3"
                sodipodi:role="line"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="296.97858"
                y="109.90399"
-               id="tspan63">MELÓDICA</tspan></text>
+               id="tspan63">SCALE</tspan></text>
         </g>
       </g>
       <g
@@ -2840,19 +2839,19 @@
                id="tspan96"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="296.86313"
-               y="95.271629">ESCALA</tspan><tspan
+               y="95.271629">HARMONIC</tspan><tspan
                i18n="mask-harmonic-minor-line2"
                sodipodi:role="line"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="296.86313"
                y="102.67997"
-               id="tspan4">MENOR</tspan><tspan
+               id="tspan4">MINOR</tspan><tspan
                i18n="mask-harmonic-minor-line3"
                sodipodi:role="line"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="296.86313"
                y="110.0883"
-               id="tspan97">HARMÔNICA</tspan></text>
+               id="tspan97">SCALE</tspan></text>
         </g>
       </g>
       <g
@@ -3078,13 +3077,13 @@
              id="tspan543"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="296.9769"
-             y="98.791519">ESCALA</tspan><tspan
+             y="98.791519">DIATONIC</tspan><tspan
              i18n="mask-diatonic-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="296.9769"
              y="106.19986"
-             id="tspan544">DIATÔNICA</tspan></text>
+             id="tspan544">SCALE</tspan></text>
       </g>
       <g
          id="FthPentatonicMask"
@@ -3243,13 +3242,13 @@
              id="tspan558"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="296.97855"
-             y="98.791466">ESCALA</tspan><tspan
+             y="98.791466">PENTATONIC</tspan><tspan
              i18n="mask-pentatonic-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="296.97855"
              y="106.19981"
-             id="tspan559">PENTATÔNICA</tspan></text>
+             id="tspan559">SCALE</tspan></text>
       </g>
     </g>
   </g>
@@ -3889,13 +3888,13 @@
              style="font-size:7.05556px;line-height:1.25;fill:#000000;stroke-width:0.264583"
              x="100.09264"
              y="98.091171"
-             id="tspan318">TÉTRADE DIMINUTA</tspan><tspan
+             id="tspan318">DIM. 7TH CHORD</tspan><tspan
              i18n="mask-minor-thirds-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.25;fill:#000000;stroke-width:0.264583"
              x="100.09264"
              y="106.91062"
-             id="tspan329">(TERÇAS MENORES)</tspan></text>
+             id="tspan329">(MINOR THIRDS)</tspan></text>
         <g
            id="g33"
            inkscape:label="modes_backgrounds">
@@ -3972,7 +3971,7 @@
                  id="tspan458"
                  style="font-size:9.87778px;fill:#216778;stroke-width:0.264583"
                  x="149.75204"
-                 y="-87.870216">3m</tspan></text>
+                 y="-87.870216">m3</tspan></text>
             <path
                id="path458"
                style="display:inline;fill:none;stroke:#216778;stroke-width:1;stroke-dasharray:none;marker-start:url(#marker451);marker-end:url(#marker112)"
@@ -3994,7 +3993,7 @@
                  id="tspan457"
                  style="font-size:9.87778px;fill:#216778;stroke-width:0.264583"
                  x="149.75204"
-                 y="-87.870216">3m</tspan></text>
+                 y="-87.870216">m3</tspan></text>
             <path
                id="path457"
                style="display:inline;fill:none;stroke:#216778;stroke-width:1;stroke-dasharray:none;marker-start:url(#marker451);marker-end:url(#marker112)"
@@ -4016,13 +4015,13 @@
                  id="tspan456"
                  style="font-size:9.87778px;line-height:0.75;fill:#216778;stroke-width:0.264583"
                  x="149.75204"
-                 y="-87.870216">3m</tspan><tspan
+                 y="-87.870216">m3</tspan><tspan
                  i18n="interval-augmented-second-parentheses"
                  sodipodi:role="line"
                  style="font-size:7.05556px;line-height:0.75;fill:#216778;stroke-width:0.264583"
                  x="149.75204"
                  y="-80.461884"
-                 id="tspan459">(2A)</tspan></text>
+                 id="tspan459">(A2)</tspan></text>
             <path
                id="path456"
                style="display:inline;fill:none;stroke:#216778;stroke-width:1;stroke-dasharray:none;marker-start:url(#marker451);marker-end:url(#marker112)"
@@ -4044,7 +4043,7 @@
                  id="tspan455"
                  style="font-size:9.87778px;fill:#216778;stroke-width:0.264583"
                  x="149.75204"
-                 y="-87.870216">3m</tspan></text>
+                 y="-87.870216">m3</tspan></text>
             <path
                id="path454"
                style="display:inline;fill:none;stroke:#216778;stroke-width:1;stroke-dasharray:none;marker-start:url(#marker451);marker-end:url(#marker112)"
@@ -4073,13 +4072,13 @@
              style="font-size:7.05556px;line-height:1.25;fill:#000000;stroke-width:0.264583"
              x="100.09262"
              y="98.091156"
-             id="tspan315">TRÍADE AUMENTADA</tspan><tspan
+             id="tspan315">AUGMENTED CHORD</tspan><tspan
              i18n="mask-major-thirds-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.25;fill:#000000;stroke-width:0.264583"
              x="100.09262"
              y="106.91061"
-             id="tspan316">(TERÇAS MAIORES)</tspan></text>
+             id="tspan316">(MAJOR THIRDS)</tspan></text>
         <g
            id="g32"
            inkscape:label="modes_backgrounds">
@@ -4147,7 +4146,7 @@
                  id="tspan451"
                  style="font-size:9.87778px;fill:#2ca05a;fill-opacity:1;stroke-width:0.264583"
                  x="104.90359"
-                 y="59.266666">3M</tspan></text>
+                 y="59.266666">M3</tspan></text>
           </g>
           <g
              id="g452"
@@ -4168,7 +4167,7 @@
                  id="tspan452"
                  style="font-size:9.87778px;fill:#2ca05a;fill-opacity:1;stroke-width:0.264583"
                  x="104.90359"
-                 y="59.266666">3M</tspan></text>
+                 y="59.266666">M3</tspan></text>
           </g>
           <g
              id="g453"
@@ -4189,13 +4188,13 @@
                  id="tspan453"
                  style="font-size:9.87778px;line-height:0.75;fill:#2ca05a;fill-opacity:1;stroke-width:0.264583"
                  x="104.90359"
-                 y="59.266666">3M</tspan><tspan
+                 y="59.266666">M3</tspan><tspan
                  i18n="interval-diminished-fourth-parentheses"
                  sodipodi:role="line"
                  style="font-size:7.05556px;line-height:0.75;fill:#2ca05a;fill-opacity:1;stroke-width:0.264583"
                  x="104.90359"
                  y="66.675003"
-                 id="tspan454">(4D)</tspan></text>
+                 id="tspan454">(d4)</tspan></text>
           </g>
         </g>
       </g>
@@ -4219,13 +4218,13 @@
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="100.07195"
              y="98.79155"
-             id="tspan239">ESCALA</tspan><tspan
+             id="tspan239">CHROMATIC</tspan><tspan
              i18n="mask-chromatic-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="100.07195"
              y="106.19989"
-             id="tspan248">CROMÁTICA</tspan></text>
+             id="tspan248">SCALE</tspan></text>
         <g
            id="g345"
            inkscape:label="color_circles"
@@ -4570,13 +4569,13 @@
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="100.0754"
              y="98.791534"
-             id="tspan249">ESCALA</tspan><tspan
+             id="tspan249">OCTATONIC</tspan><tspan
              i18n="mask-octatonic-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="100.0754"
              y="106.19987"
-             id="tspan283">OCTATÔNICA</tspan></text>
+             id="tspan283">SCALE</tspan></text>
       </g>
       <g
          id="ChrWholeTonesMask"
@@ -4715,13 +4714,13 @@
                id="tspan246"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="147.21956"
-               y="43.480057">ESCALA DE</tspan><tspan
+               y="43.480057">WHOLE-TONE</tspan><tspan
                i18n="mask-whole-tones-line2"
                sodipodi:role="line"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="147.21956"
                y="50.888393"
-               id="tspan247">TONS INTEIROS</tspan></text>
+               id="tspan247">SCALE</tspan></text>
         </g>
       </g>
       <g
@@ -4988,19 +4987,19 @@
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="100.14086"
                y="95.087387"
-               id="tspan462">ESCALA</tspan><tspan
+               id="tspan462">MELODIC</tspan><tspan
                i18n="mask-melodic-minor-line2"
                sodipodi:role="line"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="100.14086"
                y="102.49573"
-               id="tspan466">MENOR</tspan><tspan
+               id="tspan466">MINOR</tspan><tspan
                i18n="mask-melodic-minor-line3"
                sodipodi:role="line"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
                x="100.14086"
                y="109.90406"
-               id="tspan463">MELÓDICA</tspan></text>
+               id="tspan463">SCALE</tspan></text>
         </g>
       </g>
       <g
@@ -5243,7 +5242,7 @@
                id="tspan49"
                style="font-size:9.87778px;fill:#800000;stroke-width:0.264583"
                x="104.94217"
-               y="51.391418">2A</tspan></text>
+               y="51.391418">A2</tspan></text>
         </g>
         <g
            id="g112"
@@ -5280,19 +5279,19 @@
                style="font-size:7.05556px;line-height:1.05;fill:#000000;paint-order:markers stroke fill"
                x="100.02545"
                y="95.271706"
-               id="tspan32">ESCALA</tspan><tspan
+               id="tspan32">HARMONIC</tspan><tspan
                i18n="mask-harmonic-minor-line2"
                sodipodi:role="line"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;paint-order:markers stroke fill"
                x="100.02545"
                y="102.68005"
-               id="tspan1">MENOR</tspan><tspan
+               id="tspan1">MINOR</tspan><tspan
                i18n="mask-harmonic-minor-line3"
                sodipodi:role="line"
                style="font-size:7.05556px;line-height:1.05;fill:#000000;paint-order:markers stroke fill"
                x="100.02545"
                y="110.08838"
-               id="tspan33">HARMÔNICA</tspan></text>
+               id="tspan33">SCALE</tspan></text>
         </g>
       </g>
       <g
@@ -5526,13 +5525,13 @@
              id="tspan142"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="100.13909"
-             y="98.79158">ESCALA</tspan><tspan
+             y="98.79158">DIATONIC</tspan><tspan
              i18n="mask-diatonic-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="100.13909"
              y="106.19992"
-             id="tspan143">DIATÔNICA</tspan></text>
+             id="tspan143">SCALE</tspan></text>
       </g>
       <g
          id="ChrPentatonicMask"
@@ -5703,7 +5702,7 @@
                id="tspan80"
                style="font-size:9.03112px;fill:#800080;stroke:none;stroke-width:0.264583"
                x="-2.9965198"
-               y="-204.35542">3m</tspan></text>
+               y="-204.35542">m3</tspan></text>
           <text
              xml:space="preserve"
              style="font-size:9.03112px;line-height:1.25;font-family:'Droid Serif';-inkscape-font-specification:'Droid Serif, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#800080;stroke:none;stroke-width:0.264583"
@@ -5717,7 +5716,7 @@
                id="tspan79"
                style="font-size:9.03112px;fill:#800080;stroke:none;stroke-width:0.264583"
                x="139.86081"
-               y="-99.380852">2M</tspan></text>
+               y="-99.380852">M2</tspan></text>
           <text
              xml:space="preserve"
              style="font-size:9.03112px;line-height:1.25;font-family:'Droid Serif';-inkscape-font-specification:'Droid Serif, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#800080;stroke:none;stroke-width:0.264583"
@@ -5731,7 +5730,7 @@
                id="tspan78"
                style="font-size:9.03112px;fill:#800080;stroke:none;stroke-width:0.264583"
                x="75.294022"
-               y="65.9142">3m</tspan></text>
+               y="65.9142">m3</tspan></text>
           <text
              xml:space="preserve"
              style="font-size:9.03112px;line-height:1.25;font-family:'Droid Serif';-inkscape-font-specification:'Droid Serif, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#800080;stroke:none;stroke-width:0.264583"
@@ -5745,7 +5744,7 @@
                id="tspan77"
                style="font-size:9.03112px;fill:#800080;stroke:none;stroke-width:0.264583"
                x="-100.85648"
-               y="46.109222">2M</tspan></text>
+               y="46.109222">M2</tspan></text>
           <text
              xml:space="preserve"
              style="font-size:9.03112px;line-height:1.25;font-family:'Droid Serif';-inkscape-font-specification:'Droid Serif, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#800080;stroke:none;stroke-width:0.264583"
@@ -5759,7 +5758,7 @@
                id="tspan76"
                style="font-size:9.03112px;fill:#800080;stroke:none;stroke-width:0.264583"
                x="-141.3602"
-               y="-93.742165">2M</tspan></text>
+               y="-93.742165">M2</tspan></text>
         </g>
         <g
            id="g10"
@@ -5798,13 +5797,13 @@
              id="tspan81"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="100.14087"
-             y="98.791473">ESCALA</tspan><tspan
+             y="98.791473">PENTATONIC</tspan><tspan
              i18n="mask-pentatonic-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
              x="100.14087"
              y="106.19981"
-             id="tspan82">PENTATÔNICA</tspan></text>
+             id="tspan82">SCALE</tspan></text>
       </g>
     </g>
   </g>
