@@ -260,6 +260,14 @@ const masks = new Map([
     ["Chromatic"    , null]
 ]);
 
+function getCaseInsensitiveMaskName(cimask) {
+    for ( let mask_key of masks.keys() ) {
+        if ( cimask.toLowerCase() == mask_key.toLowerCase() )
+            return mask_key;
+    }
+    return null;
+}
+
 const control_groups = [
     "ControlsMasks",
     "ControlsTranspose",
@@ -1088,9 +1096,23 @@ function initializeThisSvg() {
     // Make all text non-selectable
     for ( let elm of document.querySelectorAll("text") )
         elm.style.userSelect = "none";
-
+    
     enableKeyboardShortcuts();
     enableDragRotationOnMasks();
+    
+    // Get initial mask from URL
+    const urlmask = getUrlQueryValue("mask");
+    if ( urlmask != null ) {
+        changeMask(getCaseInsensitiveMaskName(urlmask), false);
+    }
+
+    // Get initial rotation from URL
+    const urlrotation = getUrlQueryValue("rotate");
+    if ( urlrotation != null ) {
+        const fifths = parseInt(urlrotation);
+        if ( isNaN(fifths) == false )
+            rotateMasksByFifths(fifths, false);
+    }
 
 }
 
@@ -1204,6 +1226,10 @@ function pointInRect(rect, px, py) {
     return ( px >= rect.left && px <= rect.right && py >= rect.top && py <= rect.bottom );
 }
 
+function getUrlQueryValue(param) {
+    return new URLSearchParams(window.parent.location.search).get(param);
+}
+
 
 /****************************
  *                          *
@@ -1213,7 +1239,7 @@ function pointInRect(rect, px, py) {
 
 function getPreferredTranslation(available_translations) {
     // check url query
-    let url_param_lang = new URLSearchParams(window.parent.location.search).get("lang");
+    var url_param_lang = getUrlQueryValue("lang");
     if ( url_param_lang != null ) {
         url_param_lang = url_param_lang.toLowerCase();
         for ( let translation of available_translations ) {
