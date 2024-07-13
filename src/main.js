@@ -766,21 +766,28 @@ function updateNoteNames(delay_ms = 0, override_names_type = null) {
         override_names_type = note_names_key;
     if ( typeof(override_names_type) == "number" ) {
         automatic_names = true;
-        if ( ["Pentatonic","Diatonic"].includes(visible_mask) ) {
-            override_names_type = clampPitch(override_names_type, -12, 14);
-            showHideNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
-        } else if ( ["HarmonicMinor","MelodicMinor"].includes(visible_mask) ) {
-            override_names_type = clampPitch(override_names_type, -11, 14);
-            showHideNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
-        } else if ( visible_mask == "MajorThirds" ) {
-            override_names_type = clampPitch(override_names_type, -15, 11);
-            showHideNoteNames(note_names_major_thirds.get(override_names_type)[0], delay_ms);
-        } else if ( visible_mask == "MinorThirds" ) {
-            override_names_type = clampPitch(override_names_type, -6, 19);
-            showHideNoteNames(note_names_minor_thirds.get(override_names_type)[0], delay_ms);
-        } else {
-            showHideNoteNames(note_names_enharmonics1, delay_ms);
-            automatic_names = false;
+        switch ( visible_mask ) {
+            case "Pentatonic":
+            case "Diatonic":
+                override_names_type = clampPitch(override_names_type, -12, 14);
+                showHideNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
+                break;
+            case "HarmonicMinor":
+            case "MelodicMinor":
+                override_names_type = clampPitch(override_names_type, -11, 14);
+                showHideNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
+                break;
+            case "MajorThirds":
+                override_names_type = clampPitch(override_names_type, -15, 11);
+                showHideNoteNames(note_names_major_thirds.get(override_names_type)[0], delay_ms);
+                break;
+            case "MinorThirds":
+                override_names_type = clampPitch(override_names_type, -6, 19);
+                showHideNoteNames(note_names_minor_thirds.get(override_names_type)[0], delay_ms);
+                break;
+            default:
+                showHideNoteNames(note_names_enharmonics1, delay_ms);
+                automatic_names = false;
         }
     } else {
         switch (override_names_type) {
@@ -868,12 +875,19 @@ function changeNoteNames(value, delay_ms = 0) {
 
 function swapEnharmonics() {
     if (automatic_names == true) {
-        if ( ["Pentatonic","Diatonic","HarmonicMinor","MelodicMinor"].includes(visible_mask) ) {
-            note_names_key = note_names_diatonic.get(note_names_key)[4];
-        } else if ( visible_mask == "MajorThirds" ) {
-            note_names_key = note_names_major_thirds.get(note_names_key)[4];
-        } else if ( visible_mask == "MinorThirds" ) {
-            note_names_key = note_names_minor_thirds.get(note_names_key)[4];
+        switch ( visible_mask ) {
+            case "Pentatonic":
+            case "Diatonic":
+            case "HarmonicMinor":
+            case "MelodicMinor":
+                note_names_key = note_names_diatonic.get(note_names_key)[4];
+                break;
+            case "MajorThirds":
+                note_names_key = note_names_major_thirds.get(note_names_key)[4];
+                break;
+            case "MinorThirds":
+                note_names_key = note_names_minor_thirds.get(note_names_key)[4];
+                break;
         }
         updateNoteNames();
     }
@@ -904,7 +918,8 @@ function handleKeyboardShortcut(ev) {
         case "j": { ev.preventDefault(); changeMask("MajorThirds"); break; }
         case "i": { ev.preventDefault(); changeMask("MinorThirds"); break; }
         case "c": { ev.preventDefault(); changeMask("Chromatic"); break; }
-        case "0": { ev.preventDefault(); returnMasksToC(); break; }
+        case "0": 
+        case "ctrl+0": { ev.preventDefault(); returnMasksToC(); break; }
         case "1": { ev.preventDefault(); rotateMasksByFifths(1); break; }
         case "2": { ev.preventDefault(); rotateMasksByFifths(2); break; }
         case "3": { ev.preventDefault(); rotateMasksByFifths(3); break; }
@@ -914,7 +929,6 @@ function handleKeyboardShortcut(ev) {
         case "7": { ev.preventDefault(); rotateMasksByFifths(7); break; }
         case "8": { ev.preventDefault(); rotateMasksByFifths(8); break; }
         case "9": { ev.preventDefault(); rotateMasksByFifths(9); break; }
-        case "ctrl+0": { ev.preventDefault(); returnMasksToC(); break; }
         case "ctrl+1": { ev.preventDefault(); rotateMasksByFifths(-1); break; }
         case "ctrl+2": { ev.preventDefault(); rotateMasksByFifths(-2); break; }
         case "ctrl+3": { ev.preventDefault(); rotateMasksByFifths(-3); break; }
@@ -1083,9 +1097,7 @@ function initializeThisSvg() {
 function readStringFromLocalStorage(key, default_value) {
     if ( storageAvailable("localStorage") ) {
         const val = localStorage.getItem(key);
-        if (val == null)
-            return default_value;
-        return val;
+        return (val == null) ? default_value : val;
     }
     return default_value;
 }
@@ -1095,9 +1107,8 @@ function readBoolFromLocalStorage(key, default_bool_value) {
 }
 
 function writeStringToLocalStorage(key, value) {
-    if ( storageAvailable("localStorage") ) {
+    if ( storageAvailable("localStorage") )
         localStorage.setItem(key, value);
-    }
 }
 
 // from https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
