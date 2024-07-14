@@ -56,7 +56,7 @@ If you want to contribute with a new translation, copy one of the files inside t
 
 Press `F10` to request access to a MIDI input port to the browser. This will enable you to get the notes highlighted when you play them!
 
-Tip: If you want to route MIDI from another software to this tool, try using [loopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html) from Tobias Erichsen.
+Tip: If you want to use the MIDI output from another software to control the pitch circles, try using [loopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html) from Tobias Erichsen.
 
 ## Bugs
 
