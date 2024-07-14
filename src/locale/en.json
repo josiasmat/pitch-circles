@@ -46,5 +46,11 @@
     "interval-major-third": "M3",
     "interval-diminished-fourth-parentheses": "(d4)",
     "interval-augmented-second": "A2",
-    "interval-major-second": "M2"
+    "interval-major-second": "M2",
+    "midi-denied": "Sorry, the browser denied access to MIDI.",
+    "midi-unavailable": "Sorry, there are no MIDI devices available.",
+    "midi-available-ports": "These are the available MIDI ports:",
+    "midi-ask-port": "Please, type the number of the port to use:",
+    "midi-granted": "Access to MIDI input port \"%s\" granted.",
+    "midi-invalid-port": "Sorry, you typed an invalid port number!"
 }

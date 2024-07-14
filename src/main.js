@@ -31,8 +31,19 @@ const ANIMATE_NOTE_NAMES = true;
 const ANGLE_SEMITONE = 30;
 const ANGLE_FIFTH = ANGLE_SEMITONE * 7;
 
+const translatable_strings = new Map([
+    ["title", "Pitch Circles"],
+    ["midi-denied", "Sorry, the browser denied access to MIDI."],
+    ["midi-unavailable", "Sorry, there are no MIDI devices available."],
+    ["midi-available-ports", "These are the available MIDI ports:"],
+    ["midi-ask-port", "Please, type the number of the port to use:"],
+    ["midi-granted", "Access to MIDI input port \"%s\" granted."],
+    ["midi-invalid-port", "Sorry, you typed an invalid port number!"]
+]);
+
 
 // GLOBAL VARIABLES
+
 var language = "en";
 
 var vertical_screen = false;
@@ -50,6 +61,8 @@ var dark_background = false;
 
 var note_names_key = "auto";
 var automatic_names = true;
+
+var played_notes = Array(12).fill(0);
 
 var control_panel_visible = true;
 
@@ -75,7 +88,7 @@ value: array, where:
     index 4: index of enharmonic equivalent.
 */
 
-const note_names_diatonic = new Map ([
+const note_names_diatonic = new Map([
     // C Major/Minor
     [0, [["n","f","n","f","n","n","s","n","f","n","f","n"],  [ 7, 5], [ 2,-2], [ 1,-1], 12]],
     // G Major/Minor
@@ -132,7 +145,7 @@ const note_names_diatonic = new Map ([
     [-12, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-5, -6], [-10,-2], [-11,-1], 0]]
 ]);
 
-const note_names_major_thirds = new Map ([
+const note_names_major_thirds = new Map([
     // C aug
     [0, [["n","s","n","s","n","n","s","n","s","n","f","n"],  [ 7, 5], [ 2,-2], [ 1,-1], -12]],
     // G aug
@@ -189,7 +202,7 @@ const note_names_major_thirds = new Map ([
     [-15, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-8, -9], [-13,-5], [-14,-4], -3]]
 ]);
 
-const note_names_minor_thirds = new Map ([
+const note_names_minor_thirds = new Map([
     // C Dim
     [0, [["n","f","n","f","f","n","f","n","f","ff","f","f"],  [ 7, 5], [ 2,-2], [ 1,-1], 12]],
     // G Dim
@@ -246,7 +259,7 @@ const note_names_minor_thirds = new Map ([
 
 const note_names_enharmonics1 = ["n","e","n","e","n","n","e","n","e","n","e","n"];
 const note_names_enharmonics2 = ["e","e","n","e","e","e","e","n","e","n","e","e"];
-const note_names_numbers      = ["p","p","p","p","p","p","p","p","p","p","p","p"];
+const note_names_numbers      = Array(12).fill("p");;
 
 const masks = new Map([
     ["Pentatonic"   , null],
@@ -894,6 +907,76 @@ function swapEnharmonics() {
 }
 
 
+/*****************************
+ *                           *
+ *   MIDI-related routines   *
+ *                           *
+ *****************************/
+
+function requestMIDI() {
+    // query browser about permission to use MIDI
+    navigator.permissions.query({ name: "midi", sysex: false }).then((perm) => {
+        if ( perm.state === "denied" ) {
+            alert(translatable_strings.get("midi-denied"));
+            return;
+        }
+        // request MIDI to browser and check available inputs
+        navigator.requestMIDIAccess().then((access) => {
+            let id = "0";
+            if ( access.inputs.size == 0 ) {
+                alert(translatable_strings.get("midi-unavailable"));
+                return;
+            } else if ( access.inputs.size > 1 ) {
+                // ask user about which MIDI device to use
+                let msg = translatable_strings.get("midi-available-ports") + "\n\n";
+                let i = 0;
+                for ( let port of access.inputs.values() ) {
+                    msg += `  ${i++}: "${port.name}\n`;
+                }
+                msg += "\n" + translatable_strings.get("midi-ask-port");
+                id = prompt(msg);
+                if ( id == null || id == "" ) return;
+            }
+            // get the selected port
+            if ( isNumber(id) ) {
+                let i = 0;
+                id = Number(id);
+                for ( let port of access.inputs.values() ) {
+                    if ( i++ == id ) {
+                        port.addEventListener("midimessage", handleMIDIEvent);
+                        console.log(translatable_strings.get("midi-granted").replace("%s", port.name));
+                        return;
+                    }
+                }
+            }
+            alert(translatable_strings.get("midi-invalid-port"));
+        });
+    });
+}
+
+function handleMIDIEvent(ev) {
+    //console.log(`MIDI message received:\n${ev.data}`);
+    // note on
+    if ( ev.data[0] >= 0x90 && ev.data[0] <= 0x9F ) {
+        setNoteOn(ev.data[1]);
+    } else if ( ev.data[0] >= 0x80 && ev.data[0] <= 0x8F ) {
+        setNoteOff(ev.data[1]);
+    }
+}
+
+function setNoteOn(key) {
+    const note = clampPitch(key, 0, 11);
+    played_notes[note] += 1;
+    updateNotesBackgrounds();
+}
+
+function setNoteOff(key) {
+    const note = clampPitch(key, 0, 11);
+    played_notes[note] -= 1;
+    updateNotesBackgrounds();
+}
+
+
 /*******************************
  *                             *
  * Keyboard shortcuts routines *
@@ -918,8 +1001,7 @@ function handleKeyboardShortcut(ev) {
         case "j": { ev.preventDefault(); changeMask("MajorThirds"); break; }
         case "i": { ev.preventDefault(); changeMask("MinorThirds"); break; }
         case "c": { ev.preventDefault(); changeMask("Chromatic"); break; }
-        case "0": 
-        case "ctrl+0": { ev.preventDefault(); returnMasksToC(); break; }
+        case "0": { ev.preventDefault(); returnMasksToC(); break; }
         case "1": { ev.preventDefault(); rotateMasksByFifths(1); break; }
         case "2": { ev.preventDefault(); rotateMasksByFifths(2); break; }
         case "3": { ev.preventDefault(); rotateMasksByFifths(3); break; }
@@ -954,6 +1036,7 @@ function handleKeyboardShortcut(ev) {
         case "f7": { ev.preventDefault(); switchShowBlackKeys(); break; }
         case "f8": { ev.preventDefault(); switchDarkBackground(); break; }
         case "f9": { ev.preventDefault(); switchControlsVisibility(); break; }
+        case "f10": { ev.preventDefault(); requestMIDI(); break; }
     }
 }
 
@@ -972,22 +1055,26 @@ function enableKeyboardShortcuts() {
 function switchShowBlackKeys() {
     black_keys_visible = (! black_keys_visible);
     writeStringToLocalStorage("black_keys_visible", black_keys_visible.toString());
-    updateShowBlackKeys();
+    updateNotesBackgrounds();
 }
 
-function updateShowBlackKeys() {
-    if (black_keys_visible == true) {
-        document.getElementById("ChkBlackKeysMark").style.display = "inline";
-        document.getElementById("ChrCirclesBicolor").style.display = "inline";
-        document.getElementById("ChrCirclesWhite").style.display = "none";
-        document.getElementById("FthCirclesBicolor").style.display = "inline";
-        document.getElementById("FthCirclesWhite").style.display = "none";
-    } else {
-        document.getElementById("ChkBlackKeysMark").style.display = "none";
-        document.getElementById("ChrCirclesBicolor").style.display = "none";
-        document.getElementById("ChrCirclesWhite").style.display = "inline";
-        document.getElementById("FthCirclesBicolor").style.display = "none";
-        document.getElementById("FthCirclesWhite").style.display = "inline";
+function updateNotesBackgrounds() {
+    for ( let i = 0; i < 12; i++ ) {
+        let elm_chr = document.getElementById(`ChrNoteBk${i}`);
+        let elm_fth = document.getElementById(`FthNoteBk${i}`);
+        if ( played_notes[i] > 0 ) {
+            const angle = clampAngle((i*ANGLE_SEMITONE) - chromatic_mask_rotation, 180, 180);
+            elm_chr.style.fill = `hsl(${angle} 100% 50%)`;
+            elm_fth.style.fill = `hsl(${angle} 100% 50%)`;
+        } else {
+            if ( black_keys_visible && [1,3,6,8,10].includes(i) ) {
+                elm_chr.style.fill = "black";
+                elm_fth.style.fill = "black";
+            } else {
+                elm_chr.style.fill = "white";
+                elm_fth.style.fill = "white";
+            }
+        }
     }
 }
 
@@ -1075,7 +1162,7 @@ function initializeThisSvg() {
     dark_background = readBoolFromLocalStorage("dark_background", false);
     black_keys_visible = readBoolFromLocalStorage("black_keys_visible", true);
     updateBackground();
-    updateShowBlackKeys();
+    updateNotesBackgrounds();
     changeNoteNames(readStringFromLocalStorage("note_names", "auto"), 1000);
 
     // Make all text non-selectable
@@ -1102,7 +1189,7 @@ function initializeThisSvg() {
     const urlrotation = getUrlQueryValue("rotate");
     if ( urlrotation != null ) {
         const fifths = parseInt(urlrotation);
-        if ( isNaN(fifths) == false )
+        if ( isNumber(fifths) == false )
             rotateMasksByFifths(fifths, false);
     }
 
@@ -1231,6 +1318,10 @@ function getUrlQueryValue(param, to_lower_case = true) {
     return null;
 }
 
+function isNumber(x) {
+    return ( !isNaN(x) && x != null && x != "" );
+}
+
 
 /****************************
  *                          *
@@ -1284,6 +1375,14 @@ function translate(element, i18n_data) {
     }
 }
 
+function translateStringsMap(i18n_data) {
+    for ( let k of translatable_strings.keys() ) {
+        const s = getTranslatedStr(k, i18n_data);
+        if ( s != null )
+            translatable_strings.set(k, s);
+    }
+}
+
 async function translateSvgAsync() {
     // english is the source language
     if ( language == "en" ) return;
@@ -1293,7 +1392,8 @@ async function translateSvgAsync() {
         if ( ! response.ok )
             throw new Error(`Response status: ${response.status}`);
         const data = await response.json();
-        window.parent.document.title = getTranslatedStr("title", data);
+        translateStringsMap(data);
+        window.parent.document.title = translatable_strings.get("title");
         translate(svg_root, data);
     } catch (error) {
         console.log(`translateSvgAsync(${language}) error: ${error}.`);

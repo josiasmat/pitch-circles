@@ -46,5 +46,11 @@
     "tab-options": "MAIS OPÇÕES",
     "transpose-half-step": "SEMITOM",
     "transpose-whole-step": "TOM",
-    "transpose-fifth": "5ª JUSTA"
+    "transpose-fifth": "5ª JUSTA",
+    "midi-denied": "Desculpe, o navegador impediu o acesso ao MIDI.",
+    "midi-unavailable": "Desculpe, não há dispositivos MIDI disponíveis.",
+    "midi-available-ports": "Estas são as portas MIDI disponíveis:",
+    "midi-ask-port": "Por favor, informe o número da porta a ser utilizada:",
+    "midi-granted": "O acesso à porta de entrada MIDI \"%s\" foi autorizado.",
+    "midi-invalid-port": "Desculpe, você informou um número de porta inválido!"
 }

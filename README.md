@@ -28,7 +28,7 @@ Visit https://josiasmat.github.io/PitchCircles/
 |`C`|show chromatic mask||`F7`|switch dark black keys|
 |`↑` `↓`|transpose by semitones||`F8`|switch dark background|
 |`←` `→`|transpose by fifths||`F9`|show/hide controls|
-|`Shift`+`↑` `↓`|transpose by whole steps|||
+|`Shift`+`↑` `↓`|transpose by whole steps|`F10`|request MIDI input|
 
 ## Setting initial state
 
@@ -51,6 +51,12 @@ Currently available in english (`en`), spanish (`es`) and portuguese (`pt`).
 It tries to automatically detect the user's preferred language. If you want to use a specific language, append `?lang=` followed by the language code to the URL.
 
 If you want to contribute with a new translation, copy one of the files inside the `locale` folder and change the strings accordingly. After that, send me an e-mail (see below) with your translation file. Also feel free to ask for help.
+
+## MIDI input
+
+Press `F10` to request access to a MIDI input port to the browser. This will enable you to get the notes highlighted when you play them!
+
+Tip: If you want to route MIDI from another software to this tool, try using [loopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html) from Tobias Erichsen.
 
 ## Bugs
 
