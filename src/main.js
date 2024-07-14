@@ -38,7 +38,8 @@ const translatable_strings = new Map([
     ["midi-available-ports", "These are the available MIDI ports:"],
     ["midi-ask-port", "Please, type the number of the port to use:"],
     ["midi-granted", "Access to MIDI input port \"%s\" granted."],
-    ["midi-invalid-port", "Sorry, you typed an invalid port number!"]
+    ["midi-invalid-port", "Sorry, you typed an invalid port number!"],
+    ["midi-ask-channel", "Please type the MIDI channels (1 to 16) you wish to listen to.\nYou can use comma-separated numbers and ranges."]
 ]);
 
 
@@ -67,6 +68,9 @@ var played_notes = Array(12).fill(0);
 var control_panel_visible = true;
 
 const svg_root = document.getElementById("svg1");
+
+var midi_port = null;
+var midi_channels = Array(16).fill(false);
 
 
 /*
@@ -423,6 +427,7 @@ function setMasksRotations(chr_steps, fth_steps, animate) {
         applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation,    animate);
     }
     updateNoteNames(250);
+    updateNotesBackgrounds(750);
 }
 
 function rotateMasks(semitones, animate = true) {
@@ -440,7 +445,7 @@ function returnMasksToC(animate = true) {
     fifths_transposition = 0;
     if ( typeof(note_names_key) == "number" )
         note_names_key = 0;
-    setMasksRotations(0, 0);
+    setMasksRotations(0, 0, animate);
 }
 
 function applyMaskRotation(mask, degrees, animate) {
@@ -943,8 +948,20 @@ function requestMIDI() {
                 id = Number(id);
                 for ( let port of access.inputs.values() ) {
                     if ( i++ == id ) {
-                        port.addEventListener("midimessage", handleMIDIEvent);
-                        console.log(translatable_strings.get("midi-granted").replace("%s", port.name));
+                        if ( midi_port != null )
+                            midi_port.removeEventListener("midimessage", handleMIDIEvent);
+                        midi_port = port;
+                        midi_port.addEventListener("midimessage", handleMIDIEvent);
+                        console.log(translatable_strings.get("midi-granted").replace("%s", midi_port.name));
+                        let channels = prompt(translatable_strings.get("midi-ask-channel"), "1-16");
+                        channels = parseListOfNumbers(channels);
+                        if ( channels.length > 0 ) {
+                            midi_channels = Array(16).fill(false);
+                            for ( let n of channels )
+                                midi_channels[n-1] = true;
+                        } else {
+                            midi_channels = Array(16).fill(true);
+                        }
                         return;
                     }
                 }
@@ -955,12 +972,19 @@ function requestMIDI() {
 }
 
 function handleMIDIEvent(ev) {
-    //console.log(`MIDI message received:\n${ev.data}`);
-    // note on
-    if ( ev.data[0] >= 0x90 && ev.data[0] <= 0x9F ) {
-        setNoteOn(ev.data[1]);
-    } else if ( ev.data[0] >= 0x80 && ev.data[0] <= 0x8F ) {
-        setNoteOff(ev.data[1]);
+    console.log(`Received MIDI data: ${ev.data}`);
+    for ( let ch = 0; ch < 16; ch++ ) {
+        if ( midi_channels[ch] == true ) {
+            if ( ev.data[0] == (0x90 + ch) ) {
+                setNoteOn(ev.data[1]);
+            } else if ( ev.data[0] == (0x80 + ch) ) {
+                setNoteOff(ev.data[1]);
+            } else if ( ev.data[0] == (0xB0 + ch) ) {
+                if ( ev.data[1] == 123 ) {
+                    setAllNotesOff();
+                }
+            }
+        }
     }
 }
 
@@ -972,8 +996,20 @@ function setNoteOn(key) {
 
 function setNoteOff(key) {
     const note = clampPitch(key, 0, 11);
-    played_notes[note] -= 1;
+    played_notes[note] = Math.max(played_notes[note]-1, 0);
     updateNotesBackgrounds();
+}
+
+function setAllNotesOff() {
+    played_notes = Array(12).fill(0);
+    updateNotesBackgrounds();
+}
+
+function allNotesOffOrRemoveMask() {
+    if ( played_notes.some((x) => x > 0) )
+        setAllNotesOff();
+    else
+        changeMask(null, true);
 }
 
 
@@ -1001,6 +1037,7 @@ function handleKeyboardShortcut(ev) {
         case "j": { ev.preventDefault(); changeMask("MajorThirds"); break; }
         case "i": { ev.preventDefault(); changeMask("MinorThirds"); break; }
         case "c": { ev.preventDefault(); changeMask("Chromatic"); break; }
+        case "escape": { ev.preventDefault(); allNotesOffOrRemoveMask(); break; }
         case "0": { ev.preventDefault(); returnMasksToC(); break; }
         case "1": { ev.preventDefault(); rotateMasksByFifths(1); break; }
         case "2": { ev.preventDefault(); rotateMasksByFifths(2); break; }
@@ -1033,10 +1070,10 @@ function handleKeyboardShortcut(ev) {
         case "f2": { ev.preventDefault(); changeNoteNames("enharmonics2"); break; }
         case "f3": { ev.preventDefault(); changeNoteNames("numbers"); break; }
         case "f4": { ev.preventDefault(); changeNoteNames("automatic"); break; }
+        case "f6": { ev.preventDefault(); switchControlsVisibility(); break; }
         case "f7": { ev.preventDefault(); switchShowBlackKeys(); break; }
         case "f8": { ev.preventDefault(); switchDarkBackground(); break; }
-        case "f9": { ev.preventDefault(); switchControlsVisibility(); break; }
-        case "f10": { ev.preventDefault(); requestMIDI(); break; }
+        case "f9": { ev.preventDefault(); requestMIDI(); break; }
     }
 }
 
@@ -1058,10 +1095,12 @@ function switchShowBlackKeys() {
     updateNotesBackgrounds();
 }
 
-function updateNotesBackgrounds() {
+function updateNotesBackgrounds(animation_ms = 0) {
     for ( let i = 0; i < 12; i++ ) {
         let elm_chr = document.getElementById(`ChrNoteBk${i}`);
         let elm_fth = document.getElementById(`FthNoteBk${i}`);
+        elm_chr.style.transition = `fill ${animation_ms}ms ease-out`;
+        elm_fth.style.transition = `fill ${animation_ms}ms ease-out`;
         if ( played_notes[i] > 0 ) {
             const angle = clampAngle((i*ANGLE_SEMITONE) - chromatic_mask_rotation, 180, 180);
             elm_chr.style.fill = `hsl(${angle} 100% 50%)`;
@@ -1320,6 +1359,21 @@ function getUrlQueryValue(param, to_lower_case = true) {
 
 function isNumber(x) {
     return ( !isNaN(x) && x != null && x != "" );
+}
+
+function parseListOfNumbers(s) {
+    let numbers = [];
+    for (let match of s.match(/[0-9]+(?:\-[0-9]+)?/g)) {
+        if (match.includes("-")) {
+            let [begin, end] = match.split("-");
+            for (let num = parseInt(begin); num <= parseInt(end); num++) {
+                numbers.push(num);
+            }
+        } else {
+            numbers.push(parseInt(match));
+        }
+    }
+    return numbers;
 }
 
 

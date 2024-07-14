@@ -25,10 +25,10 @@ Visit https://josiasmat.github.io/PitchCircles/
 |`O`|show octatonic mask||`F2`|use enharmonic+B#/Cb/E#/Fb naming|
 |`J`|show major thirds mask||`F3`|use pitch classes naming|
 |`I`|show minor thirds mask||`F4`|use automatic naming|
-|`C`|show chromatic mask||`F7`|switch dark black keys|
-|`↑` `↓`|transpose by semitones||`F8`|switch dark background|
-|`←` `→`|transpose by fifths||`F9`|show/hide controls|
-|`Shift`+`↑` `↓`|transpose by whole steps|`F10`|request MIDI input|
+|`C`|show chromatic mask||`F6`|show/hide controls|
+|`↑` `↓`|transpose by semitones||`F7`|switch dark black keys|
+|`←` `→`|transpose by fifths||`F8`|switch dark background|
+|`Shift`+`↑` `↓`|transpose by whole steps|`F9`|request MIDI input|
 
 ## Setting initial state
 
@@ -54,9 +54,11 @@ If you want to contribute with a new translation, copy one of the files inside t
 
 ## MIDI input
 
-Press `F10` to request access to a MIDI input port to the browser. This will enable you to get the notes highlighted when you play them!
+Press `F9` to request access to a MIDI input port to the browser. This will enable you to get the notes highlighted when you play them!
 
-Tip: If you want to use the MIDI output from another software to control the pitch circles, try using [loopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html) from Tobias Erichsen.
+In the case some notes get stuck, press `ESC` to reset them.
+
+Tip: if you want to use the MIDI output from another software to control the pitch circles, try using [loopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html) from Tobias Erichsen.
 
 ## Bugs
 
