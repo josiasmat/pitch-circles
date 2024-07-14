@@ -28,7 +28,7 @@ Visit https://josiasmat.github.io/PitchCircles/
 |`C`|show chromatic mask||`F6`|show/hide controls|
 |`↑` `↓`|transpose by semitones||`F7`|switch dark black keys|
 |`←` `→`|transpose by fifths||`F8`|switch dark background|
-|`Shift`+`↑` `↓`|transpose by whole steps|`F9`|request MIDI input|
+|`Shift`+`↑` `↓`|transpose by whole steps||`F9`|request MIDI input|
 
 ## Setting initial state
 
