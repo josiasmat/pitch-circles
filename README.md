@@ -54,7 +54,7 @@ If you want to contribute with a new translation, copy one of the files inside t
 
 ## MIDI input
 
-Press `F9` to request access to a MIDI input port to the browser. This will enable you to get the notes highlighted when you play them!
+Press `F9` to request access to a MIDI input port from the browser. This will enable you to get the notes highlighted when you play them!
 
 In the case some notes get stuck, press `ESC` to reset them.
 
