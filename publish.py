@@ -50,8 +50,8 @@ for file in locale_files:
         # english file not needed because that's the source language
         if lang_filename != "en.json":
             if isFileModified(file, lang_dest):
-                with shutil.copy2(file, lang_dest) as newfile:
-                    print(f"File '{lang_filename}' copied to '{newfile}'.")
+                shutil.copy2(file, lang_dest)
+                print(f"File '{lang_filename}' copied to '{lang_dest}'.")
             else:
                 print(f"File '{lang_filename}' skipped.")
 
