@@ -53,5 +53,5 @@
     "midi-ask-port": "Por favor, digite el numero de puerto a usar:",
     "midi-granted": "Acceso al puerto de entrada MIDI \"%s\" concedido.",
     "midi-invalid-port": "Disculpe, usted digitó un numero de puerto invalido!",
-    "midi-ask-channel": "Porfavor digite los canales MIDI (1 to 16) a los que usted desea conectarse. Puede digitar numeros separados por comas o en rangos."
+    "midi-ask-channel": "Por favor, digite los canales MIDI (1 to 16) a los que usted desea conectarse. Puede digitar numeros separados por comas o en rangos."
 }
