@@ -52,5 +52,6 @@
     "midi-available-ports": "These are the available MIDI ports:",
     "midi-ask-port": "Please, type the number of the port to use:",
     "midi-granted": "Access to MIDI input port \"%s\" granted.",
-    "midi-invalid-port": "Sorry, you typed an invalid port number!"
+    "midi-invalid-port": "Sorry, you typed an invalid port number!",
+    "midi-ask-channel": "Please type the MIDI channels (1 to 16) you wish to listen to. You can use comma-separated numbers and ranges."
 }
