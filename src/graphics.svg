@@ -47,7 +47,7 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="0.70710678"
-     inkscape:cx="691.55043"
+     inkscape:cx="692.25754"
      inkscape:cy="478.71129"
      inkscape:current-layer="svg1"
      showgrid="false"
@@ -1758,7 +1758,7 @@
            inkscape:label="color_circles"
            transform="translate(191.99745,-12.248472)">
           <circle
-             style="display:inline;fill:none;stroke:#00ff00;stroke-width:0.7;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+             style="display:inline;fill:none;stroke:#00ff80;stroke-width:0.7;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
              id="circle489"
              cx="189.64368"
              cy="-11.762087"
@@ -2356,7 +2356,7 @@
            style="display:inline"
            transform="translate(191.99748,-12.248458)">
           <circle
-             style="display:inline;fill:none;stroke:#00ff00;stroke-width:0.7;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+             style="display:inline;fill:none;stroke:#00ff80;stroke-width:0.7;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
              id="circle14"
              cx="189.64368"
              cy="-11.762087"
@@ -2571,32 +2571,13 @@
            style="display:inline"
            transform="translate(191.99745,-12.248456)">
           <circle
-             style="display:inline;fill:none;stroke:#00ff00;stroke-width:0.7;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+             style="display:inline;fill:none;stroke:#00ff80;stroke-width:0.7;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
              id="circle98"
              cx="189.64368"
              cy="-11.762087"
              r="12.10603"
              transform="rotate(-150,140.20121,37.912819)"
              inkscape:label="circle_chromatic_note11" />
-          <g
-             id="g316"
-             inkscape:label="circle_note10_raised"
-             style="display:none">
-            <circle
-               style="display:inline;fill:none;stroke:#800000;stroke-width:0.7;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-               id="circle110"
-               cx="189.64368"
-               cy="-11.762087"
-               r="12.10603"
-               transform="rotate(180,119.2193,34.102783)"
-               inkscape:label="circle_chromatic_note10" />
-            <path
-               style="font-size:8.46667px;line-height:1.25;font-family:'ScaleDegrees Times';-inkscape-font-specification:'ScaleDegrees Times';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#800000;stroke-width:0.264583"
-               d="m 46.221244,76.611347 0.316069,-0.316055 1.290613,1.290598 0.342391,-0.613321 0.820266,0.820266 -0.338641,0.617085 1.320701,1.320687 0.338642,-0.617084 0.816495,0.816509 -0.342403,0.613309 1.3508,1.3508 -0.316048,0.316077 -1.256741,-1.256741 -0.564406,0.993351 1.373379,1.373378 -0.319839,0.319825 -1.279304,-1.279319 -0.349926,0.605799 -0.82402,-0.82402 0.349932,-0.605792 -1.320704,-1.320691 -0.349933,0.605779 -0.820266,-0.820266 0.357467,-0.598258 -1.362104,-1.362091 0.319834,-0.319829 1.264254,1.264254 0.56817,-0.989572 z m 2.957481,4.515209 0.564391,-0.993337 -1.313166,-1.31318 -0.568165,0.989591 z"
-               id="path315"
-               aria-label="#"
-               inkscape:label="sharp" />
-          </g>
           <circle
              style="display:inline;fill:none;stroke:#80ff00;stroke-width:0.7;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
              id="circle100"
@@ -2799,7 +2780,7 @@
            style="display:inline"
            transform="translate(191.99748,-12.248472)">
           <circle
-             style="display:inline;fill:none;stroke:#00ff00;stroke-width:0.7;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+             style="display:inline;fill:none;stroke:#00ff80;stroke-width:0.7;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
              id="circle766"
              cx="189.64368"
              cy="-11.762087"
