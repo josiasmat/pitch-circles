@@ -1096,7 +1096,7 @@ function switchShowBlackKeys() {
 }
 
 function updateNotesBackgrounds(animation_ms = 0) {
-    const elm_mark = document.getElementById("ChkDarkBackgroundMark");
+    const elm_mark = document.getElementById("ChkBlackKeysMark");
     elm_mark.style.display = ( black_keys_visible ) ? "inline" : "none";
     for ( let i = 0; i < 12; i++ ) {
         let elm_chr = document.getElementById(`ChrNoteBk${i}`);
