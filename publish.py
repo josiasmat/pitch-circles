@@ -24,7 +24,7 @@ publish_folder = "./public"
 # than destination file
 def isFileModified(filename_src, filename_dest):
     if os.path.isfile(filename_src) == False:
-        print(f"File 'filename_src' not found.")
+        print(f"File '{filename_src}' not found.")
         return False
     if os.path.isfile(filename_dest) == False:
         return True
