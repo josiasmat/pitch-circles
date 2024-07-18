@@ -9,7 +9,7 @@
 # You'll also need ImageMagick from:
 #   https://imagemagick.org/
 
-import glob, pathlib, os, shutil
+import glob, gzip, pathlib, os, shutil
 
 import minify_html
 from rjsmin import jsmin
@@ -23,7 +23,10 @@ publish_folder = "./public"
 # function to test if source file is newer
 # than destination file
 def isFileModified(filename_src, filename_dest):
-    if os.path.isfile == False:
+    if os.path.isfile(filename_src) == False:
+        print(f"File 'filename_src' not found.")
+        return False
+    if os.path.isfile(filename_dest) == False:
         return True
     dt_src = os.path.getmtime(filename_src)
     dt_dst = os.path.getmtime(filename_dest)
@@ -40,18 +43,29 @@ if not os.path.exists(publish_folder):
 if not os.path.exists(f"{publish_folder}/locale"):
     os.makedirs(f"{publish_folder}/locale")
 
+# function that compresses a file using gzip
+def compressFile(src, dst):
+    with open(src, 'rb') as srcfile:
+        srcdata = srcfile.read()
+        srcfile.close()
+        with open(dst, 'wb') as gzfile:
+            gzfile.write(gzip.compress(srcdata))
+            gzfile.close()
+            print(f"File '{src}' file compressed and saved to '{dst}'.")
+
 # copy locale files
 locale_subfolder = "/locale"
 locale_files = glob.iglob(os.path.join(f"{source_folder}{locale_subfolder}", "*.json"))
-for file in locale_files:
-    lang_filename = pathlib.Path(file).name
-    lang_dest = f"{publish_folder}{locale_subfolder}/{lang_filename}"
-    if os.path.isfile(file):
+for lang_src in locale_files:
+    lang_filename = pathlib.Path(lang_src).name
+    lang_dest = f"{publish_folder}{locale_subfolder}/{lang_filename}.gz"
+    if os.path.isfile(lang_src):
         # english file not needed because that's the source language
         if lang_filename != "en.json":
-            if isFileModified(file, lang_dest):
-                shutil.copy2(file, lang_dest)
-                print(f"File '{lang_filename}' copied to '{lang_dest}'.")
+            if isFileModified(lang_src, lang_dest):
+                compressFile(lang_src, lang_dest)
+                #shutil.copy2(lang_src, lang_dest)
+                #print(f"File '{lang_filename}' copied to '{lang_dest}'.")
             else:
                 print(f"File '{lang_filename}' skipped.")
 

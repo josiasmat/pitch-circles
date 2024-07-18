@@ -277,9 +277,9 @@ const masks = new Map([
     ["Chromatic"    , null]
 ]);
 
-function getCaseInsensitiveMaskName(cimask) {
-    for ( let mask_key of masks.keys() ) {
-        if ( cimask.toLowerCase() == mask_key.toLowerCase() )
+function getCaseInsensitiveMaskName(name) {
+    for ( const mask_key of masks.keys() ) {
+        if ( name.toLowerCase() == mask_key.toLowerCase() )
             return mask_key;
     }
     return null;
@@ -333,17 +333,17 @@ function initializeMasks() {
     // Initialize masks with the following structure:
     // key: [ [chr_mask_element, fth_mask_element],
     //        [mask_btn_element, mask_btn_background_element] ]    
-    for (let mask of masks) {
-        masks.set(mask[0], [
-            [ document.getElementById(`Chr${mask[0]}Mask`),
-              document.getElementById(`Fth${mask[0]}Mask`)   ],
-            [ document.getElementById(`BtnMask${mask[0]}`),
-              document.getElementById(`BtnMask${mask[0]}Bk`) ]
+    for ( const mask_key of masks.keys() ) {
+        masks.set(mask_key, [
+            [ document.getElementById(`Chr${mask_key}Mask`),
+              document.getElementById(`Fth${mask_key}Mask`)   ],
+            [ document.getElementById(`BtnMask${mask_key}`),
+              document.getElementById(`BtnMask${mask_key}Bk`) ]
         ]);
     }
     // Set properties of masks
-    for (let mask_data of masks) {
-        for (let mask of mask_data[1][0]) {
+    for ( const mask_elements of masks.values() ) {
+        for ( const mask of mask_elements[0] ) {
             mask.style.transformBox = "border-box";
             mask.style.transformOrigin = "center center";
             mask.style.opacity = "0";
@@ -449,10 +449,11 @@ function returnMasksToC(animate = true) {
 }
 
 function applyMaskRotation(mask, degrees, animate) {
-    if (animate == true && mask.style.visibility == "visible")
-        doMaskRotation(mask, degrees, 750);
-    else
-        doMaskRotation(mask, degrees, 0);
+    doMaskRotation(mask, degrees, 
+        (animate == true && mask.style.visibility == "visible")
+            ? 750 
+            : 0
+    );
 }
 
 function doMaskRotation(elm, angle_deg, animation_ms = 0) {
@@ -507,15 +508,15 @@ function transposeSemitones(steps) {
  *************************************/
 
 function enableDragRotationOnMasks() {
-    for ( let mask_data of masks ) {
-        for ( let mask of mask_data[1][0] ) {
-            mask.addEventListener("wheel", handleWheelEvent);
-            mask.addEventListener("mousedown",   handleMaskDragPointerBegin,{ capture: true, passive: false });
-            mask.addEventListener("mouseup",     handleMaskDragPointerEnd,  { capture: true, passive: false });
-            mask.addEventListener("mousecancel", handleMaskDragPointerEnd,  { capture: true, passive: false });
-            mask.addEventListener("touchstart",  handleMaskDragTouchBegin,  { capture: true, passive: false });
-            mask.addEventListener("touchend",    handleMaskDragTouchEnd,    { capture: true, passive: false });
-            mask.addEventListener("touchcancel", handleMaskDragTouchEnd,    { capture: true, passive: false });
+    for ( const mask_elements of masks.values() ) {
+        for ( const mask of mask_elements[0] ) {
+            mask.addEventListener("wheel",       handleWheelEvent);
+            mask.addEventListener("mousedown",   handleMaskDragPointerBegin, { capture: true, passive: false });
+            mask.addEventListener("mouseup",     handleMaskDragPointerEnd,   { capture: true, passive: false });
+            mask.addEventListener("mousecancel", handleMaskDragPointerEnd,   { capture: true, passive: false });
+            mask.addEventListener("touchstart",  handleMaskDragTouchBegin,   { capture: true, passive: false });
+            mask.addEventListener("touchend",    handleMaskDragTouchEnd,     { capture: true, passive: false });
+            mask.addEventListener("touchcancel", handleMaskDragTouchEnd,     { capture: true, passive: false });
         }
     }
 }
@@ -608,7 +609,7 @@ function handleMaskDragPointerEnd(ev) {
 function handleMaskDragTouchEnd(ev) {
     if ( mask_drag_rotation.dev.type != "touch" ) return;
     ev.preventDefault();
-    for ( let touchObj of ev.changedTouches ) {
+    for ( const touchObj of ev.changedTouches ) {
         if ( touchObj.identifier == mask_drag_rotation.dev.id ) {
             mask_drag_rotation.target.elm.removeEventListener("touchmove", handleMaskDragTouchMove);
             maskDragEnd();
@@ -625,7 +626,7 @@ function handleMaskDragPointerMove(ev) {
 function handleMaskDragTouchMove(ev) {
     if ( mask_drag_rotation.dev.type == "touch" ) {
         ev.preventDefault();
-        for ( let touchObj of ev.changedTouches ) {
+        for ( const touchObj of ev.changedTouches ) {
             if ( touchObj.identifier == mask_drag_rotation.dev.id ) {
                 maskDragMove(touchObj.clientX, touchObj.clientY);
                 break;
@@ -673,6 +674,7 @@ function maskDragEnd() {
             chromatic_mask_rotation = clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation);
         }
         updateNoteNames(0);
+        updateNotesBackgrounds(750);
         applyMaskRotation(getVisibleChrMask(), chromatic_mask_rotation, true);
         applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation, true);
     }
@@ -745,14 +747,10 @@ function hideTab(tabbk_id, controls_id) {
 }
 
 function hideAllTabs() {
-    for (let elm_id of control_groups) {
-        let elm = document.getElementById(elm_id);
-        elm.style.display = "none";
-    }
-    for (let elm_id of tabs) {
-        let elm = document.getElementById(elm_id);
-        elm.style.display = "inline";
-    }
+    for ( const elm_id of control_groups )
+        document.getElementById(elm_id).style.display = "none";
+    for ( const elm_id of tabs )
+        document.getElementById(elm_id).style.display = "inline";
 }
 
 
@@ -763,10 +761,10 @@ function hideAllTabs() {
  ****************************/
 
 function initializeNoteNames() {
-    for (const grandpa_id of ["ChrNames","FthNames"]) {
+    for ( const grandpa_id of ["ChrNames","FthNames"] ) {
         const grandpa = document.getElementById(grandpa_id);
-        for (const parent of grandpa.childNodes) {
-            for (const elm of parent.childNodes) {
+        for ( const parent of grandpa.childNodes ) {
+            for ( const elm of parent.childNodes ) {
                 elm.setAttribute("showing", "0");
                 elm.style.visibility = "hidden";
                 elm.style.display = "inline";
@@ -827,7 +825,7 @@ async function showHideNoteNames(postfix_array, delay_ms) {
         const all_note_names = 
             Array.from(document.getElementById(`ChrNote${i}`).childNodes)
                 .concat(Array.from(document.getElementById(`FthNote${i}`).childNodes));
-        for (let elm of all_note_names) {
+        for ( const elm of all_note_names ) {
             if ( elm.id.endsWith(id_end_visible) ) {
                 if ( elm.getAttribute("showing") != "1" )
                     names_to_be_showed.push(elm);
@@ -863,9 +861,9 @@ async function showHideNoteNames(postfix_array, delay_ms) {
 }
 
 function checkNamesSwitch(switch_id) {
-    for (let elm_id of options_names_switches) {
+    for ( const elm_id of options_names_switches ) {
         document.getElementById(elm_id + "Mark").style.display = 
-            (elm_id == switch_id) ? "inline" : "none";
+            ( elm_id == switch_id ) ? "inline" : "none";
     }
 }
 
@@ -935,7 +933,7 @@ function requestMIDI() {
                 // ask user about which MIDI device to use
                 let msg = translatable_strings.get("midi-available-ports") + "\n\n";
                 let i = 0;
-                for ( let port of access.inputs.values() ) {
+                for ( const port of access.inputs.values() ) {
                     msg += `  ${i++}: "${port.name}\n`;
                 }
                 msg += "\n" + translatable_strings.get("midi-ask-port");
@@ -946,7 +944,7 @@ function requestMIDI() {
             if ( isNumber(id) ) {
                 let i = 0;
                 id = Number(id);
-                for ( let port of access.inputs.values() ) {
+                for ( const port of access.inputs.values() ) {
                     if ( i++ == id ) {
                         if ( midi_port != null )
                             midi_port.removeEventListener("midimessage", handleMIDIEvent);
@@ -957,7 +955,7 @@ function requestMIDI() {
                         channels = parseListOfNumbers(channels);
                         if ( channels.length > 0 ) {
                             midi_channels = Array(16).fill(false);
-                            for ( let n of channels )
+                            for ( const n of channels )
                                 midi_channels[n-1] = true;
                         } else {
                             midi_channels = Array(16).fill(true);
@@ -972,17 +970,19 @@ function requestMIDI() {
 }
 
 function handleMIDIEvent(ev) {
-    console.log(`Received MIDI data: ${ev.data}`);
+    //console.log(`Received MIDI data: ${ev.data}`);
     for ( let ch = 0; ch < 16; ch++ ) {
         if ( midi_channels[ch] == true ) {
-            if ( ev.data[0] == (0x90 + ch) ) {
-                setNoteOn(ev.data[1]);
-            } else if ( ev.data[0] == (0x80 + ch) ) {
-                setNoteOff(ev.data[1]);
-            } else if ( ev.data[0] == (0xB0 + ch) ) {
-                if ( ev.data[1] == 123 ) {
-                    setAllNotesOff();
-                }
+            switch ( ev.data[0] ) {
+                case 0x90 + ch:
+                    setNoteOn(ev.data[1]);
+                    break;
+                case 0x80 + ch:
+                    setNoteOff(ev.data[1]);
+                    break;
+                case 0xB0 + ch:
+                    if ( ev.data[1] == 123 )
+                        setAllNotesOff();
             }
         }
     }
@@ -1022,8 +1022,8 @@ function allNotesOffOrRemoveMask() {
 function handleKeyboardShortcut(ev) {
     if ( ev.repeating ) return;
     let comb = [];
-    if ( ev.ctrlKey ) comb.push("ctrl");
-    if ( ev.altKey ) comb.push("alt");
+    if ( ev.ctrlKey  ) comb.push("ctrl");
+    if ( ev.altKey   ) comb.push("alt");
     if ( ev.shiftKey ) comb.push("shift");
     comb.push(ev.key.toLowerCase());
     const k = comb.join("+");
@@ -1097,27 +1097,18 @@ function switchShowBlackKeys() {
 
 function updateNotesBackgrounds(animation_ms = 0) {
     const elm_mark = document.getElementById("ChkDarkBackgroundMark");
-    if ( black_keys_visible )
-        elm_mark.style.display = "inline";
-    else
-        elm_mark.style.display = "none";
+    elm_mark.style.display = ( black_keys_visible ) ? "inline" : "none";
     for ( let i = 0; i < 12; i++ ) {
         let elm_chr = document.getElementById(`ChrNoteBk${i}`);
         let elm_fth = document.getElementById(`FthNoteBk${i}`);
-        elm_chr.style.transition = `fill ${animation_ms}ms ease-out`;
-        elm_fth.style.transition = `fill ${animation_ms}ms ease-out`;
+        elm_chr.style.transition = elm_fth.style.transition = `fill ${animation_ms}ms ease-out`;
         if ( played_notes[i] > 0 ) {
             const angle = clampAngle((i*ANGLE_SEMITONE) - chromatic_mask_rotation, 180, 180);
-            elm_chr.style.fill = `hsl(${angle} 100% 50%)`;
-            elm_fth.style.fill = `hsl(${angle} 100% 50%)`;
+            elm_chr.style.fill = elm_fth.style.fill = `hsl(${angle} 100% 50%)`;
         } else {
-            if ( black_keys_visible && [1,3,6,8,10].includes(i) ) {
-                elm_chr.style.fill = "black";
-                elm_fth.style.fill = "black";
-            } else {
-                elm_chr.style.fill = "white";
-                elm_fth.style.fill = "white";
-            }
+            elm_chr.style.fill = elm_fth.style.fill = 
+                ( black_keys_visible && [1,3,6,8,10].includes(i) )
+                    ? "black" : "white";
         }
     }
 }
@@ -1135,13 +1126,13 @@ function updateBackground() {
     if (dark_background) {
         elm_mark.style.display = "inline";
         svg_root.style.backgroundColor = "black";
-        for ( let elm of white_key_markers ) elm.style.stroke = "black";
-        for ( let elm of black_key_markers ) elm.style.stroke = "#666666";
+        for ( const elm of white_key_markers ) elm.style.stroke = "black";
+        for ( const elm of black_key_markers ) elm.style.stroke = "#666666";
     } else {
         elm_mark.style.display = "none";
         svg_root.style.backgroundColor = "white";
-        for ( let elm of white_key_markers ) elm.style.stroke = "#666666";
-        for ( let elm of black_key_markers ) elm.style.stroke = "white";
+        for ( const elm of white_key_markers ) elm.style.stroke = "#666666";
+        for ( const elm of black_key_markers ) elm.style.stroke = "white";
     }
 }
 
@@ -1194,8 +1185,8 @@ function initializeThisSvg() {
     initializeNoteNames();
 
     // Set cursor for clickable controls
-    for (let elm_id of clickable_elements) {
-        let elm = document.getElementById(elm_id);
+    for ( const elm_id of clickable_elements ) {
+        const elm = document.getElementById(elm_id);
         if (elm != null) {
             elm.style.cursor = "pointer";
             elm.style.overscrollBehavior = "none";
@@ -1210,7 +1201,7 @@ function initializeThisSvg() {
     changeNoteNames(readStringFromLocalStorage("note_names", "auto"), 1000);
 
     // Make all text non-selectable
-    for ( let elm of document.querySelectorAll("text") )
+    for ( const elm of document.querySelectorAll("text") )
         elm.style.userSelect = "none";
     
     enableKeyboardShortcuts();
@@ -1225,9 +1216,8 @@ function initializeThisSvg() {
 
     // Get initial mask from URL
     const urlmask = getUrlQueryValue("mask");
-    if ( urlmask != null ) {
+    if ( urlmask != null )
         changeMask(getCaseInsensitiveMaskName(urlmask), false);
-    }
 
     // Get initial rotation from URL
     const urlrotation = getUrlQueryValue("rotate");
@@ -1239,9 +1229,8 @@ function initializeThisSvg() {
 
     // Hide controls from URL
     const urlhidecontrols = getUrlQueryValue("hidecontrols");
-    if ( ["1","true"].includes(urlhidecontrols) ) {
+    if ( ["1","true"].includes(urlhidecontrols) )
         switchControlsVisibility();
-    }
 
 }
 
@@ -1357,9 +1346,7 @@ function pointInRect(rect, px, py) {
 
 function getUrlQueryValue(param, to_lower_case = true) {
     const result = new URLSearchParams(window.parent.location.search).get(param);
-    if ( result != null )
-        return (to_lower_case) ? result.toLowerCase() : result;
-    return null;
+    return result ? result.toLowerCase() : result;
 }
 
 function isNumber(x) {
@@ -1368,11 +1355,11 @@ function isNumber(x) {
 
 function parseListOfNumbers(s) {
     let numbers = [];
-    for (let match of s.match(/[0-9]+(?:\-[0-9]+)?/g)) {
-        if (match.includes("-")) {
-            let [begin, end] = match.split("-");
-            for (let num = parseInt(begin); num <= parseInt(end); num++) {
-                numbers.push(num);
+    for ( const match of s.match(/[0-9]+(?:\-[0-9]+)?/g) ) {
+        if ( match.includes('-') ) {
+            const [begin, end] = match.split('-');
+            for ( let n = parseInt(begin); n <= parseInt(end); n++ ) {
+                numbers.push(n);
             }
         } else {
             numbers.push(parseInt(match));
@@ -1393,7 +1380,7 @@ function getPreferredTranslation(available_translations) {
     var url_param_lang = getUrlQueryValue("lang");
     if ( url_param_lang != null ) {
         url_param_lang = url_param_lang.toLowerCase();
-        for ( let translation of available_translations ) {
+        for ( const translation of available_translations ) {
             if ( url_param_lang == translation )
                 return translation;
         }
@@ -1401,7 +1388,7 @@ function getPreferredTranslation(available_translations) {
     // check browser languages
     for ( let lang of navigator.languages ) {
         lang = lang.toLowerCase();
-        for ( let translation of available_translations ) {
+        for ( const translation of available_translations ) {
             if ( lang.startsWith(translation) )
                 return translation;
         }
@@ -1423,38 +1410,53 @@ function translate(element, i18n_data) {
     // translate element if it has i18n attribute
     if ( element.hasAttribute("i18n") ) {
         const str = getTranslatedStr(element.getAttribute("i18n"), i18n_data);
-        if ( str != null )
-            element.innerHTML = str;
+        if ( str ) element.innerHTML = str;
     }
     // recurse into child nodes
     if ( element.hasChildNodes() ) {
-        for ( let child of element.children ) {
+        for ( const child of element.children )
             translate(child, i18n_data);
-        }
     }
 }
 
 function translateStringsMap(i18n_data) {
-    for ( let k of translatable_strings.keys() ) {
+    for ( const k of translatable_strings.keys() ) {
         const s = getTranslatedStr(k, i18n_data);
-        if ( s != null )
-            translatable_strings.set(k, s);
+        if ( s ) translatable_strings.set(k, s);
     }
+}
+
+async function fetchJson(filepath, try_gz) {
+    if ( try_gz ) {
+        const compressed_path = filepath + '.gz';
+        const response = await fetch(compressed_path);
+        if ( response.ok ) {
+            const blob = await response.blob();
+            const ds = new DecompressionStream('gzip');
+            const result = new Response(blob.stream().pipeThrough(ds));
+            if ( result.ok )
+                return await result.json();
+        }
+    }
+    const response = await fetch(filepath);
+    if ( ! response.ok )
+        throw new Error( (try_gz)
+            ? `Could not fetch files: '${filepath}', '${filepath}.gz'`
+            : `Could not fetch file: '${filepath}'`
+        );
+    return await response.json();
 }
 
 async function translateSvgAsync() {
     // english is the source language
     if ( language == "en" ) return;
     try {
-        const file_name = `locale/${language}.json`;
-        const response = await fetch(file_name);
-        if ( ! response.ok )
-            throw new Error(`Response status: ${response.status}`);
-        const data = await response.json();
+        const filepath = `locale/${language}.json`;
+        const data = await fetchJson(filepath, true);
         translateStringsMap(data);
         window.parent.document.title = translatable_strings.get("title");
         translate(svg_root, data);
     } catch (error) {
-        console.log(`translateSvgAsync(${language}) error: ${error}.`);
+        console.log(`translateSvgAsync(${language}): ${error}.`);
     }
 }
