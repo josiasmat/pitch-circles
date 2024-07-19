@@ -63,20 +63,16 @@
   </sodipodi:namedview>
   <style
      id="styles"><![CDATA[
-.noteName {
-  fill:#ffffff;
-  letter-spacing:0px;
-  mix-blend-mode:difference;
-  text-align:center;
-  text-anchor:middle;
-  word-spacing:0px;
-}
-]]></style>
-  <style
-     id="style1">
-      @import url('https://fonts.googleapis.com/css?family=Droid Sans');
-      @import url('https://fonts.googleapis.com/css?family=Droid Serif');
-  </style>
+      @import url('./styles/default.css');
+      .noteName {
+      fill:#ffffff;
+      letter-spacing:0px;
+      mix-blend-mode:difference;
+      text-align:center;
+      text-anchor:middle;
+      word-spacing:0px;
+      }
+    ]]></style>
   <script
      xlink:href="main.js"
      id="script_main" />
@@ -84,20 +80,20 @@
      id="defs1">
     <linearGradient
        id="linearGradient104"
-       inkscape:collect="always">
+       inkscape:collect="always">''
       <stop
-         style="stop-color:#808080;stop-opacity:1;"
-         offset="0"
-         id="stop102" />
-      <stop
-         style="stop-color:#4d4d4d;stop-opacity:1;"
-         offset="0.39593905"
-         id="stop103" />
-      <stop
-         style="stop-color:#666666;stop-opacity:0;"
-         offset="1"
-         id="stop104" />
-    </linearGradient>
+   style="stop-color:#808080;stop-opacity:1;"
+   offset="0"
+   id="stop102" />
+<stop
+   style="stop-color:#4d4d4d;stop-opacity:1;"
+   offset="0.39593905"
+   id="stop103" />
+<stop
+   style="stop-color:#666666;stop-opacity:0;"
+   offset="1"
+   id="stop104" />
+</linearGradient>
     <linearGradient
        id="linearGradient33"
        inkscape:collect="always">
@@ -255,10 +251,9 @@
        inkscape:label="ControlPanelBk" />
     <g
        id="TabOptions"
+       class="tab"
        inkscape:label="TabOptions"
        onclick="showTabOptions();"
-       onmouseover="hoverTab('TabOptionsBk');"
-       onmouseout="unhoverTab('TabOptionsBk');"
        transform="matrix(1,0,0,1.0144351,-12.999475,212.69485)"
        style="stroke-width:0.99286">
       <rect
@@ -287,10 +282,9 @@
     </g>
     <g
        id="TabTranspose"
+       class="tab"
        inkscape:label="TabTranspose"
        onclick="showTabTranspose();"
-       onmouseover="hoverTab('TabTransposeBk');"
-       onmouseout="unhoverTab('TabTransposeBk');"
        style="display:inline"
        transform="translate(-12.999475,230.69548)">
       <rect
@@ -318,10 +312,9 @@
     </g>
     <g
        id="TabMasks"
+       class="tab"
        inkscape:label="TabMasks"
        onclick="showTabMasks();"
-       onmouseover="hoverTab('TabMasksBk');"
-       onmouseout="unhoverTab('TabMasksBk');"
        transform="translate(-12.999475,204.0285)">
       <rect
          style="display:none;fill:#cccccc;stroke:#000000;stroke-width:1;stroke-dasharray:none;paint-order:normal"
@@ -363,23 +356,10 @@
            id="tspan107">©2024 Josias Matschulat</tspan></text>
       <g
          id="SwitchNamesDynamic"
+         class="radiobox"
          transform="translate(99.058434,8.6590161)"
          style="display:inline"
-         onclick="changeNoteNames(&quot;auto&quot;);"
-         onmouseover="hover(&quot;SwitchNamesDynamicBox&quot;);"
-         onmouseout="unhover(&quot;SwitchNamesDynamicBox&quot;);">
-        <text
-           xml:space="preserve"
-           style="font-size:5.64444px;line-height:1.25;font-family:Wingdings;-inkscape-font-specification:Wingdings;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;stroke-width:0.264583"
-           x="105.35422"
-           y="-1.2326021"
-           id="SwitchNamesDynamicTxt"><tspan
-             i18n="automatic"
-             sodipodi:role="line"
-             id="tspan427"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
-             x="105.35422"
-             y="-1.2326021">Automatic</tspan></text>
+         onclick="changeNoteNames(&quot;auto&quot;);">
         <circle
            style="fill:#f9f9f9;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
            id="SwitchNamesDynamicBox"
@@ -392,26 +372,25 @@
            cx="100.10648"
            cy="-3.265347"
            r="2.3758912" />
-      </g>
-      <g
-         id="SwitchNamesPitchClasses"
-         transform="translate(99.058434,-3.247234)"
-         style="display:inline"
-         onclick="changeNoteNames(&quot;numbers&quot;);"
-         onmouseover="hover(&quot;SwitchNamesPitchClassesBox&quot;);"
-         onmouseout="unhover(&quot;SwitchNamesPitchClassesBox&quot;);">
         <text
            xml:space="preserve"
            style="font-size:5.64444px;line-height:1.25;font-family:Wingdings;-inkscape-font-specification:Wingdings;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;stroke-width:0.264583"
            x="105.35422"
            y="-1.2326021"
-           id="SwitchNamesPitchClassesTxt"><tspan
-             i18n="numbered-classes"
+           id="SwitchNamesDynamicTxt"><tspan
+             i18n="automatic"
              sodipodi:role="line"
-             id="tspan68"
+             id="tspan427"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
              x="105.35422"
-             y="-1.2326021">Numbered classes</tspan></text>
+             y="-1.2326021">Automatic</tspan></text>
+      </g>
+      <g
+         id="SwitchNamesPitchClasses"
+         class="radiobox"
+         transform="translate(99.058434,-3.247234)"
+         style="display:inline"
+         onclick="changeNoteNames(&quot;numbers&quot;);">
         <circle
            style="fill:#f9f9f9;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
            id="SwitchNamesPitchClassesBox"
@@ -424,6 +403,18 @@
            cx="100.10648"
            cy="-3.265347"
            r="2.3758912" />
+        <text
+           xml:space="preserve"
+           style="font-size:5.64444px;line-height:1.25;font-family:Wingdings;-inkscape-font-specification:Wingdings;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;stroke-width:0.264583"
+           x="105.35422"
+           y="-1.2326021"
+           id="SwitchNamesPitchClassesTxt"><tspan
+             i18n="numbered-classes"
+             sodipodi:role="line"
+             id="tspan68"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
+             x="105.35422"
+             y="-1.2326021">Numbered classes</tspan></text>
       </g>
       <path
          style="display:inline;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
@@ -431,23 +422,10 @@
          id="path18" />
       <g
          id="SwitchNamesEnharmony2"
+         class="radiobox"
          transform="translate(5.2329753,8.6590161)"
          style="display:inline"
-         onclick="changeNoteNames(&quot;enharmonics2&quot;);"
-         onmouseover="hover(&quot;SwitchNamesEnharmony2Box&quot;);"
-         onmouseout="unhover(&quot;SwitchNamesEnharmony2Box&quot;);">
-        <text
-           xml:space="preserve"
-           style="font-size:5.64444px;line-height:1.25;font-family:Wingdings;-inkscape-font-specification:Wingdings;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;stroke-width:0.264583"
-           x="105.35422"
-           y="-1.2326021"
-           id="SwitchNamesEnharmony2Txt"><tspan
-             i18n="fixed-names-extended"
-             sodipodi:role="line"
-             id="tspan57"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
-             x="105.35422"
-             y="-1.2326021">Static names + E#/Fb/B#/Cb</tspan></text>
+         onclick="changeNoteNames(&quot;enharmonics2&quot;);">
         <circle
            style="fill:#f9f9f9;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
            id="SwitchNamesEnharmony2Box"
@@ -460,26 +438,25 @@
            cx="100.10648"
            cy="-3.265347"
            r="2.3758912" />
-      </g>
-      <g
-         id="SwitchNamesEnharmony1"
-         transform="translate(5.2329753,-3.247234)"
-         style="display:inline"
-         onclick="changeNoteNames(&quot;enharmonics1&quot;);"
-         onmouseover="hover(&quot;SwitchNamesEnharmony1Box&quot;);"
-         onmouseout="unhover(&quot;SwitchNamesEnharmony1Box&quot;);">
         <text
            xml:space="preserve"
            style="font-size:5.64444px;line-height:1.25;font-family:Wingdings;-inkscape-font-specification:Wingdings;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;stroke-width:0.264583"
            x="105.35422"
            y="-1.2326021"
-           id="SwitchNamesEnharmony1Txt"><tspan
-             i18n="fixed-names"
+           id="SwitchNamesEnharmony2Txt"><tspan
+             i18n="fixed-names-extended"
              sodipodi:role="line"
-             id="tspan10"
+             id="tspan57"
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
              x="105.35422"
-             y="-1.2326021">Static names with enharmonics</tspan></text>
+             y="-1.2326021">Static names + E#/Fb/B#/Cb</tspan></text>
+      </g>
+      <g
+         id="SwitchNamesEnharmony1"
+         class="radiobox"
+         transform="translate(5.2329753,-3.247234)"
+         style="display:inline"
+         onclick="changeNoteNames(&quot;enharmonics1&quot;);">
         <circle
            style="fill:#f9f9f9;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
            id="SwitchNamesEnharmony1Box"
@@ -492,11 +469,22 @@
            cx="100.10648"
            cy="-3.265347"
            r="2.3758912" />
+        <text
+           xml:space="preserve"
+           style="font-size:5.64444px;line-height:1.25;font-family:Wingdings;-inkscape-font-specification:Wingdings;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;stroke-width:0.264583"
+           x="105.35422"
+           y="-1.2326021"
+           id="SwitchNamesEnharmony1Txt"><tspan
+             i18n="fixed-names"
+             sodipodi:role="line"
+             id="tspan10"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';text-align:start;text-anchor:start;stroke-width:0.264583"
+             x="105.35422"
+             y="-1.2326021">Static names with enharmonics</tspan></text>
       </g>
       <g
          id="ChkBlackKeys"
-         onmouseover="hover(&quot;ChkBlackKeysBox&quot;);"
-         onmouseout="unhover(&quot;ChkBlackKeysBox&quot;);"
+         class="checkbox"
          onclick="switchShowBlackKeys();"
          style="display:inline"
          transform="translate(-22.211023,-0.44090353)">
@@ -527,8 +515,7 @@
       </g>
       <g
          id="ChkDarkBackground"
-         onmouseover="hover(&quot;ChkDarkBackgroundBox&quot;);"
-         onmouseout="unhover(&quot;ChkDarkBackgroundBox&quot;);"
+         class="checkbox"
          onclick="switchDarkBackground();"
          style="display:inline"
          transform="translate(-22.211023,11.465347)">
@@ -580,10 +567,9 @@
          inkscape:label="Half">
         <g
            id="g51"
+           class="button transpose-button"
            inkscape:label="Minus"
-           onclick="rotateMasks(-1);"
-           onmouseover="hover('rect35');"
-           onmouseout="unhover('rect35');">
+           onclick="rotateMasks(-1);">
           <path
              id="rect35"
              style="fill:#00ffff;stroke:#000000;stroke-width:0.75;stroke-dasharray:none;paint-order:normal"
@@ -596,10 +582,9 @@
         </g>
         <g
            id="g52"
+           class="button transpose-button"
            inkscape:label="Plus"
-           onclick="rotateMasks(1);"
-           onmouseover="hover('path36');"
-           onmouseout="unhover('path36');">
+           onclick="rotateMasks(1);">
           <path
              id="path36"
              style="fill:#ffff00;stroke:#000000;stroke-width:0.75;stroke-dasharray:none;paint-order:normal"
@@ -641,10 +626,9 @@
              y="-11.621173">WHOLE TONE</tspan></text>
         <g
            id="g115"
+           class="button transpose-button"
            inkscape:label="Minus"
            onclick="rotateMasks(-2);"
-           onmouseover="hover('path114');"
-           onmouseout="unhover('path114');"
            transform="translate(95.736121)">
           <path
              id="path114"
@@ -658,10 +642,9 @@
         </g>
         <g
            id="g117"
+           class="button transpose-button"
            inkscape:label="Plus"
            onclick="rotateMasks(2);"
-           onmouseover="hover('path116');"
-           onmouseout="unhover('path116');"
            transform="translate(95.736121)">
           <path
              id="path116"
@@ -692,10 +675,9 @@
              y="-11.619103">PERFECT 5TH</tspan></text>
         <g
            id="g133"
+           class="button transpose-button"
            inkscape:label="Minus"
            onclick="rotateMasks(-7);"
-           onmouseover="hover('path132');"
-           onmouseout="unhover('path132');"
            transform="translate(190.47932)">
           <path
              id="path132"
@@ -709,10 +691,9 @@
         </g>
         <g
            id="g135"
+           class="button transpose-button"
            inkscape:label="Plus"
            onclick="rotateMasks(7);"
-           onmouseover="hover('path134');"
-           onmouseout="unhover('path134');"
            transform="translate(190.47932)">
           <path
              id="path134"
@@ -727,9 +708,8 @@
       </g>
       <g
          id="BtnSwapEnharmonics"
+         class="button"
          transform="translate(13.528642,-219.2313)"
-         onmouseover="hover('BtnSwapEnharmonicsBk');"
-         onmouseout="unhover('BtnSwapEnharmonicsBk');"
          onclick="swapEnharmonics();">
         <rect
            style="fill:#66ff66;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-dasharray:none"
@@ -754,11 +734,10 @@
        transform="translate(-12.999473,219.02848)">
       <g
          id="BtnMaskPentatonic"
+         class="button mask-button"
          transform="matrix(0.98989775,0,0,0.94758362,-0.87153015,-1.6343508)"
          inkscape:label="BtnMaskPentatonic"
          onclick="changeMask(&quot;Pentatonic&quot;);"
-         onmouseover="hover('BtnMaskPentatonicBk');"
-         onmouseout="unhover('BtnMaskPentatonicBk');"
          style="stroke-width:1.03251">
         <rect
            style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
@@ -782,11 +761,10 @@
       </g>
       <g
          id="BtnMaskDiatonic"
+         class="button mask-button"
          transform="matrix(0.98989775,0,0,0.94758362,-0.87153015,18.198486)"
          inkscape:label="BtnMaskDiatonic"
          onclick="changeMask(&quot;Diatonic&quot;);"
-         onmouseover="hover('BtnMaskDiatonicBk');"
-         onmouseout="unhover('BtnMaskDiatonicBk');"
          style="stroke-width:1.03251">
         <rect
            style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
@@ -810,11 +788,10 @@
       </g>
       <g
          id="BtnMaskHarmonicMinor"
+         class="button mask-button"
          transform="matrix(0.98989775,0,0,0.94758362,57.929466,-1.6343508)"
          inkscape:label="BtnMaskHarmonicMinor"
          onclick="changeMask(&quot;HarmonicMinor&quot;);"
-         onmouseover="hover('BtnMaskHarmonicMinorBk');"
-         onmouseout="unhover('BtnMaskHarmonicMinorBk');"
          style="stroke-width:1.03251">
         <rect
            style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
@@ -838,11 +815,10 @@
       </g>
       <g
          id="BtnMaskWholeTones"
+         class="button mask-button"
          transform="matrix(0.98989775,0,0,0.94758362,119.16422,3.3461231)"
          inkscape:label="BtnMaskWholeTones"
          onclick="changeMask(&quot;WholeTones&quot;);"
-         onmouseover="hover('BtnMaskWholeTonesBk');"
-         onmouseout="unhover('BtnMaskWholeTonesBk');"
          style="stroke-width:1.03251">
         <rect
            style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
@@ -866,11 +842,10 @@
       </g>
       <g
          id="BtnMaskOctatonic"
+         class="button mask-button"
          transform="matrix(0.98989775,0,0,0.94758362,116.75219,13.218012)"
          inkscape:label="BtnMaskOctatonic"
          onclick="changeMask(&quot;Octatonic&quot;);"
-         onmouseover="hover('BtnMaskOctatonicBk');"
-         onmouseout="unhover('BtnMaskOctatonicBk');"
          style="stroke-width:1.03251">
         <rect
            style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
@@ -894,11 +869,10 @@
       </g>
       <g
          id="BtnMaskChromatic"
+         class="button mask-button"
          transform="matrix(0.98989775,0,0,0.94758362,239.2217,3.3461231)"
          inkscape:label="BtnMaskChromatic"
          onclick="changeMask(&quot;Chromatic&quot;);"
-         onmouseover="hover('BtnMaskChromaticBk');"
-         onmouseout="unhover('BtnMaskChromaticBk');"
          style="stroke-width:1.03251">
         <rect
            style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
@@ -922,11 +896,10 @@
       </g>
       <g
          id="BtnMaskMajorThirds"
+         class="button mask-button"
          transform="matrix(0.98989775,0,0,0.94758362,175.57493,-1.6343508)"
          inkscape:label="BtnMaskMajorThirds"
          onclick="changeMask(&quot;MajorThirds&quot;);"
-         onmouseover="hover('BtnMaskMajorThirdsBk');"
-         onmouseout="unhover('BtnMaskMajorThirdsBk');"
          style="stroke-width:1.03251">
         <rect
            style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
@@ -950,11 +923,10 @@
       </g>
       <g
          id="BtnMaskMinorThirds"
+         class="button mask-button"
          transform="matrix(0.98989775,0,0,0.94758362,175.57493,18.198486)"
          inkscape:label="BtnMaskMinorThirds"
          onclick="changeMask(&quot;MinorThirds&quot;);"
-         onmouseover="hover('BtnMaskMinorThirdsBk');"
-         onmouseout="unhover('BtnMaskMinorThirdsBk');"
          style="stroke-width:1.03251">
         <rect
            style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
@@ -978,11 +950,10 @@
       </g>
       <g
          id="BtnMaskMelodicMinor"
+         class="button mask-button"
          transform="matrix(0.98989775,0,0,0.94758362,57.929466,13.218012)"
          inkscape:label="BtnMaskMelodicMinor"
          onclick="changeMask(&quot;MelodicMinor&quot;);"
-         onmouseover="hover('BtnMaskMelodicMinorBk');"
-         onmouseout="unhover('BtnMaskMelodicMinorBk');"
          style="stroke-width:1.03251">
         <rect
            style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
@@ -1006,11 +977,10 @@
       </g>
       <g
          id="BtnMaskProgrammable"
+         class="button mask-button"
          transform="matrix(0.98989775,0,0,0.94758362,239.2217,18.198486)"
          inkscape:label="BtnMaskProgrammable"
          onclick="changeMask(&quot;Programmable&quot;);"
-         onmouseover="hover('BtnMaskProgrammableBk');"
-         onmouseout="unhover('BtnMaskProgrammableBk');"
          style="display:none;stroke-width:1.03251">
         <rect
            style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
@@ -1734,9 +1704,14 @@
            style="display:inline;fill:#bdb0a8;fill-opacity:1;stroke:#000000;stroke-width:1"
            d="M 296.99724,18.086059 A 82.073692,82.073692 0 0 0 214.9237,100.1596 82.073692,82.073692 0 0 0 296.99724,182.23367 82.073692,82.073692 0 0 0 379.0713,100.1596 82.073692,82.073692 0 0 0 296.99724,18.086059 Z m 0,5.874576 a 11.275629,11.275629 0 0 1 11.2758,11.275281 11.275629,11.275629 0 0 1 -11.2758,11.275798 11.275629,11.275629 0 0 1 -11.27528,-11.275798 11.275629,11.275629 0 0 1 11.27528,-11.275281 z m -32.46158,8.698178 a 11.275629,11.275629 0 0 1 11.2758,11.27528 11.275629,11.275629 0 0 1 -11.2758,11.275798 11.275629,11.275629 0 0 1 -11.2758,-11.275798 11.275629,11.275629 0 0 1 11.2758,-11.27528 z m 64.92368,0 a 11.275629,11.275629 0 0 1 11.27528,11.27528 11.275629,11.275629 0 0 1 -11.27528,11.275798 11.275629,11.275629 0 0 1 -11.27579,-11.275798 11.275629,11.275629 0 0 1 11.27579,-11.27528 z M 240.77173,56.42222 a 11.275629,11.275629 0 0 1 11.2758,11.275797 11.275629,11.275629 0 0 1 -11.2758,11.275798 11.275629,11.275629 0 0 1 -11.27528,-11.275798 11.275629,11.275629 0 0 1 11.27528,-11.275797 z m 112.45102,0 a 11.275629,11.275629 0 0 1 11.2758,11.275797 11.275629,11.275629 0 0 1 -11.2758,11.275798 A 11.275629,11.275629 0 0 1 341.94747,67.698017 11.275629,11.275629 0 0 1 353.22275,56.42222 Z M 232.07407,88.884318 a 11.275629,11.275629 0 0 1 11.27528,11.275282 11.275629,11.275629 0 0 1 -11.27528,11.2758 11.275629,11.275629 0 0 1 -11.27579,-11.2758 11.275629,11.275629 0 0 1 11.27579,-11.275282 z m 129.84686,0 a 11.275629,11.275629 0 0 1 11.2758,11.275282 11.275629,11.275629 0 0 1 -11.2758,11.2758 11.275629,11.275629 0 0 1 -11.27528,-11.2758 11.275629,11.275629 0 0 1 11.27528,-11.275282 z m -121.1492,32.461592 a 11.275629,11.275629 0 0 1 11.2758,11.2758 11.275629,11.275629 0 0 1 -11.2758,11.27528 11.275629,11.275629 0 0 1 -11.27528,-11.27528 11.275629,11.275629 0 0 1 11.27528,-11.2758 z m 112.45102,0 a 11.275629,11.275629 0 0 1 11.2758,11.2758 11.275629,11.275629 0 0 1 -11.2758,11.27528 11.275629,11.275629 0 0 1 -11.27528,-11.27528 11.275629,11.275629 0 0 1 11.27528,-11.2758 z m -88.68709,23.76392 a 11.275629,11.275629 0 0 1 11.2758,11.27528 11.275629,11.275629 0 0 1 -11.2758,11.2758 11.275629,11.275629 0 0 1 -11.2758,-11.2758 11.275629,11.275629 0 0 1 11.2758,-11.27528 z m 64.92368,0 a 11.275629,11.275629 0 0 1 11.2758,11.27528 11.275629,11.275629 0 0 1 -11.2758,11.2758 11.275629,11.275629 0 0 1 -11.27579,-11.2758 11.275629,11.275629 0 0 1 11.27579,-11.27528 z m -32.4621,8.69818 a 11.275629,11.275629 0 0 1 11.2758,11.27528 11.275629,11.275629 0 0 1 -11.2758,11.2758 11.275629,11.275629 0 0 1 -11.27528,-11.2758 11.275629,11.275629 0 0 1 11.27528,-11.27528 z"
            inkscape:label="mask" />
+        <path
+           style="font-size:63.5835px;line-height:1.25;font-family:Broadway;-inkscape-font-specification:'Broadway, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#a7958b;fill-opacity:1"
+           d="m 296.38079,90.055787 q -1.39146,-0.0914 -2.34018,-0.0914 -5.72393,0 -8.57009,2.316473 -0.6641,0.518154 -0.98034,0.518154 -0.31624,0 -0.69573,-0.365758 -0.34787,-0.365759 -0.34787,-0.670561 0,-0.182879 0.15812,-0.548637 l 0.37949,-1.005836 0.56923,-1.523989 q 0.9171,-2.316463 2.15043,-6.065484 l 1.32821,-3.809977 9.55044,0.121919 4.17436,0.03048 7.1154,-0.152399 1.35983,-0.03048 q 1.20171,0 1.20171,0.731515 0,0.822956 -0.56923,1.402072 -0.53761,0.548637 -1.32821,0.548637 -0.56923,0 -1.48633,-0.09144 -7.33676,-0.365758 -18.02566,-0.426717 h -0.63248 l -2.75128,7.924753 q 2.97265,-0.914396 7.49487,-0.914396 5.34445,0 9.89831,1.402077 6.35642,1.950705 9.39232,6.370278 2.52992,3.688067 2.52992,8.534359 0,4.75485 -2.56154,8.7477 -5.43933,8.53436 -17.20344,8.53436 -8.03249,0 -13.34532,-4.17574 -4.80685,-3.7795 -4.80685,-10.21074 0,-4.11477 2.11881,-7.1018 1.04359,-1.432555 1.99231,-1.432555 0.50598,0 0.9171,0.457198 0.44273,0.457198 0.44273,0.975357 0,0.36576 -0.22137,0.64008 -0.18974,0.24384 -1.35983,1.46303 -1.80256,1.82879 -1.80256,5.24253 0,3.74902 2.21368,6.61412 2.08718,2.77367 6.45129,4.3891 3.25727,1.18871 6.19829,1.18871 0.31624,0 1.39146,-0.0914 z"
+           id="path11"
+           aria-label="5" />
         <text
            xml:space="preserve"
-           style="font-size:7.05556px;line-height:1.05;font-family:'Droid Serif';-inkscape-font-specification:'Droid Serif, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#2c2521;fill-opacity:1;stroke-width:0.264583"
+           style="font-size:7.05556px;line-height:1.05;font-family:'Droid Serif';-inkscape-font-specification:'Droid Serif, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:none;fill:#2c2521;fill-opacity:1;stroke-width:0.264583"
            x="296.90964"
            y="98.791466"
            id="text489"
@@ -1744,14 +1719,14 @@
              i18n="mask-chromatic-line1"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#2c2521;fill-opacity:1;stroke-width:0.264583"
-             x="296.90964"
-             y="98.791466"
+             x="0"
+             y="0"
              id="tspan488">CHROMATIC</tspan><tspan
              i18n="mask-chromatic-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#2c2521;fill-opacity:1;stroke-width:0.264583"
-             x="296.90964"
-             y="106.19981"
+             x="0"
+             y="0"
              id="tspan489">SCALE</tspan></text>
         <g
            id="g500"
@@ -3875,9 +3850,15 @@
            style="display:inline;fill:#bdb0a8;fill-opacity:1;stroke:#000000;stroke-width:1"
            d="M 100.15954,18.08614 A 82.073692,82.073692 0 0 0 18.086,100.15968 82.073692,82.073692 0 0 0 100.15954,182.23375 82.073692,82.073692 0 0 0 182.2336,100.15968 82.073692,82.073692 0 0 0 100.15954,18.08614 Z m 0,5.87458 A 11.275629,11.275629 0 0 1 111.43534,35.236 11.275629,11.275629 0 0 1 100.15954,46.5118 11.275629,11.275629 0 0 1 88.884263,35.236 11.275629,11.275629 0 0 1 100.15954,23.96072 Z M 67.697959,32.6589 A 11.275629,11.275629 0 0 1 78.973757,43.93417 11.275629,11.275629 0 0 1 67.697959,55.20997 11.275629,11.275629 0 0 1 56.422161,43.93417 11.275629,11.275629 0 0 1 67.697959,32.6589 Z m 64.923681,0 A 11.275629,11.275629 0 0 1 143.89692,43.93418 11.275629,11.275629 0 0 1 132.62164,55.20997 11.275629,11.275629 0 0 1 121.34585,43.93418 11.275629,11.275629 0 0 1 132.62164,32.6589 Z M 43.934035,56.4223 A 11.275629,11.275629 0 0 1 55.209832,67.6981 11.275629,11.275629 0 0 1 43.934035,78.9739 11.275629,11.275629 0 0 1 32.658754,67.6981 11.275629,11.275629 0 0 1 43.934035,56.4223 Z m 112.451015,0 a 11.275629,11.275629 0 0 1 11.2758,11.2758 11.275629,11.275629 0 0 1 -11.2758,11.2758 11.275629,11.275629 0 0 1 -11.27528,-11.2758 11.275629,11.275629 0 0 1 11.27528,-11.2758 z M 35.236375,88.8844 a 11.275629,11.275629 0 0 1 11.27528,11.27528 11.275629,11.275629 0 0 1 -11.27528,11.2758 11.275629,11.275629 0 0 1 -11.275798,-11.2758 11.275629,11.275629 0 0 1 11.275798,-11.27528 z m 129.846855,0 a 11.275629,11.275629 0 0 1 11.2758,11.27528 11.275629,11.275629 0 0 1 -11.2758,11.2758 11.275629,11.275629 0 0 1 -11.27528,-11.2758 11.275629,11.275629 0 0 1 11.27528,-11.27528 z M 43.934035,121.34599 a 11.275629,11.275629 0 0 1 11.275797,11.2758 11.275629,11.275629 0 0 1 -11.275797,11.27528 11.275629,11.275629 0 0 1 -11.275281,-11.27528 11.275629,11.275629 0 0 1 11.275281,-11.2758 z m 112.451015,0 a 11.275629,11.275629 0 0 1 11.2758,11.2758 11.275629,11.275629 0 0 1 -11.2758,11.27528 11.275629,11.275629 0 0 1 -11.27528,-11.27528 11.275629,11.275629 0 0 1 11.27528,-11.2758 z m -88.687091,23.76392 a 11.275629,11.275629 0 0 1 11.275798,11.27528 11.275629,11.275629 0 0 1 -11.275798,11.2758 11.275629,11.275629 0 0 1 -11.275798,-11.2758 11.275629,11.275629 0 0 1 11.275798,-11.27528 z m 64.923681,0 a 11.275629,11.275629 0 0 1 11.2758,11.27528 11.275629,11.275629 0 0 1 -11.2758,11.2758 11.275629,11.275629 0 0 1 -11.27579,-11.2758 11.275629,11.275629 0 0 1 11.27579,-11.27528 z m -32.4621,8.69818 a 11.275629,11.275629 0 0 1 11.2758,11.27528 11.275629,11.275629 0 0 1 -11.2758,11.2758 11.275629,11.275629 0 0 1 -11.275277,-11.2758 11.275629,11.275629 0 0 1 11.275277,-11.27528 z"
            inkscape:label="mask" />
+        <path
+           style="font-size:63.5835px;line-height:1.25;font-family:Broadway;-inkscape-font-specification:'Broadway, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#a7958b;fill-opacity:1"
+           d="m 101.68596,94.147612 -0.15523,22.012058 0.15523,18.69007 q 1.61443,0.21733 2.67001,0.21733 3.04257,0 6.24038,-1.08663 3.1978,-1.08663 5.65048,-2.94943 1.58338,-1.21082 3.2599,-3.22885 1.70756,-2.01803 2.7321,-3.94292 0.58989,-1.11768 1.27291,-1.11768 1.02454,0 1.02454,0.8693 0,0.9314 -1.55233,3.16676 -1.52128,2.20431 -3.35304,3.97397 -3.97396,3.81873 -9.34503,5.30897 -3.22885,0.90036 -6.20933,0.90036 -4.346526,0 -8.724101,-1.8628 -7.016538,-2.94943 -10.680041,-9.34504 -3.042569,-5.30897 -3.042569,-11.26993 0,-6.08513 3.166756,-11.48725 3.384083,-5.743625 9.562362,-8.786195 4.501762,-2.173264 9.717593,-2.173264 8.94143,0 15.46122,6.054093 3.10467,2.887336 3.10467,4.160246 0,0.34152 -0.31047,0.62093 -0.31046,0.27942 -0.68302,0.27942 -0.62094,0 -1.49024,-1.21081 -2.67001,-3.694553 -7.04759,-5.836771 -4.37757,-2.173264 -9.25189,-2.173264 -1.14873,0 -2.17327,0.217327 z"
+           id="path3"
+           transform="matrix(1.018596,0,0,0.9817435,-4.8401391,-12.248472)"
+           aria-label="C" />
         <text
            xml:space="preserve"
-           style="font-size:7.05556px;line-height:1.05;font-family:'Droid Serif';-inkscape-font-specification:'Droid Serif, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000000;stroke-width:0.264583"
+           style="font-size:7.05556px;line-height:1.05;font-family:'Droid Serif';-inkscape-font-specification:'Droid Serif, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:none;fill:#000000;stroke-width:0.264583"
            x="100.07195"
            y="98.79155"
            id="text239"
@@ -3885,14 +3866,14 @@
              i18n="mask-chromatic-line1"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
-             x="100.07195"
-             y="98.79155"
+             x="0"
+             y="0"
              id="tspan239">CHROMATIC</tspan><tspan
              i18n="mask-chromatic-line2"
              sodipodi:role="line"
              style="font-size:7.05556px;line-height:1.05;fill:#000000;stroke-width:0.264583"
-             x="100.07195"
-             y="106.19989"
+             x="0"
+             y="0"
              id="tspan248">SCALE</tspan></text>
         <g
            id="g345"

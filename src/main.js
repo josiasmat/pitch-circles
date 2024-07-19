@@ -20,9 +20,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // CONSTANTS
 const AVAILABLE_TRANSLATIONS = ["en","es","pt"];
 
-const COLOR_BTN_MASK_ON = "#00ff77";
-const COLOR_BTN_MASK_OFF = "#ffffdd";
-
 const ANIMATE_NOTE_NAMES = true;
 
 
@@ -67,10 +64,10 @@ var played_notes = Array(12).fill(0);
 
 var control_panel_visible = true;
 
-const svg_root = document.getElementById("svg1");
-
 var midi_port = null;
 var midi_channels = Array(16).fill(false);
+
+const svg_root = document.getElementById("svg1");
 
 
 /*
@@ -318,10 +315,6 @@ const options_names_switches = [
     "SwitchNamesPitchClasses", "SwitchNamesDynamic"
 ];
 
-const options_clickables = options_names_switches.concat(
-    ["ChkBlackKeys", "ChkDarkBackground", "BtnSwapEnharmonics"]);
-
-const clickable_elements = tabs.concat(masks_buttons, transpose_buttons, options_clickables);
 
 /*****************************
  *                           *
@@ -368,7 +361,7 @@ function changeMask(mask_key, animate = true) {
         const hiding_mask_data = masks.get(visible_mask);
         hideMask(hiding_mask_data[0][0], animate);
         hideMask(hiding_mask_data[0][1], animate);
-        hiding_mask_data[1][1].style.fill = COLOR_BTN_MASK_OFF;
+        hiding_mask_data[1][0].setAttribute('selected', '0');
         delay = true;
     }
     if (mask_key == visible_mask || mask_key == null) {
@@ -378,7 +371,7 @@ function changeMask(mask_key, animate = true) {
         const showing_mask_data = masks.get(visible_mask);
         showMask(showing_mask_data[0][0], chromatic_mask_rotation, animate, delay);
         showMask(showing_mask_data[0][1], fifths_mask_rotation, animate, delay);
-        showing_mask_data[1][1].style.fill = COLOR_BTN_MASK_ON;
+        showing_mask_data[1][0].setAttribute('selected', '1');
     }
     updateNoteNames();
 }
@@ -510,13 +503,13 @@ function transposeSemitones(steps) {
 function enableDragRotationOnMasks() {
     for ( const mask_elements of masks.values() ) {
         for ( const mask of mask_elements[0] ) {
-            mask.addEventListener("wheel",       handleWheelEvent);
-            mask.addEventListener("mousedown",   handleMaskDragPointerBegin, { capture: true, passive: false });
-            mask.addEventListener("mouseup",     handleMaskDragPointerEnd,   { capture: true, passive: false });
-            mask.addEventListener("mousecancel", handleMaskDragPointerEnd,   { capture: true, passive: false });
-            mask.addEventListener("touchstart",  handleMaskDragTouchBegin,   { capture: true, passive: false });
-            mask.addEventListener("touchend",    handleMaskDragTouchEnd,     { capture: true, passive: false });
-            mask.addEventListener("touchcancel", handleMaskDragTouchEnd,     { capture: true, passive: false });
+            mask.addEventListener("wheel",         handleWheelEvent);
+            mask.addEventListener("pointerdown",   handleMaskDragPointerBegin, { capture: true, passive: false });
+            mask.addEventListener("pointerup",     handleMaskDragPointerEnd,   { capture: true, passive: false });
+            mask.addEventListener("pointercancel", handleMaskDragPointerEnd,   { capture: true, passive: false });
+            mask.addEventListener("touchstart",    handleMaskDragTouchBegin,   { capture: true, passive: false });
+            mask.addEventListener("touchend",      handleMaskDragTouchEnd,     { capture: true, passive: false });
+            mask.addEventListener("touchcancel",   handleMaskDragTouchEnd,     { capture: true, passive: false });
         }
     }
 }
@@ -585,7 +578,7 @@ function handleMaskDragPointerBegin(ev) {
 }
 
 function handleMaskDragTouchBegin(ev) {
-    if ( mask_drag_rotation.dev.type != null ) return;
+    if ( mask_drag_rotation.dev.type == "touch" ) return;
     ev.preventDefault();
     const touchObj = Array.from(ev.changedTouches).at(-1);
     mask_drag_rotation.set_params(
@@ -1137,38 +1130,8 @@ function updateBackground() {
 }
 
 function updateSwapEnharmonicsBtn() {
-    const btn_elm = document.getElementById("BtnSwapEnharmonics");
-    const btnbk_elm = document.getElementById("BtnSwapEnharmonicsBk");
-    const btntx_elm = document.getElementById("BtnSwapEnharmonicsTxt");
-    if (automatic_names == true) {
-        btn_elm.style.cursor = "pointer";
-        btnbk_elm.style.fill = "#66ff66";
-        btntx_elm.style.fill = "black";
-    } else {
-        btn_elm.style.cursor = "not-allowed";
-        btnbk_elm.style.fill = "#aaaaaa";
-        btntx_elm.style.fill = "#555555";
-    }
-}
-
-function hover(elm_id) {
-	let elm = document.getElementById(elm_id);
-    elm.style.filter = "drop-shadow(0px 0px 1px red)";
-}
-
-function unhover(elm_id){
-	let elm = document.getElementById(elm_id);
-    elm.style.filter = "none";
-}
-
-function hoverTab(elm_id) {
-	let elm = document.getElementById(elm_id);
-    elm.style.fill = document.getElementById("ControlPanelBk").style.fill;
-}
-
-function unhoverTab(elm_id){
-	let elm = document.getElementById(elm_id);
-    elm.style.fill = "#cccccc";
+    document.getElementById("BtnSwapEnharmonics")
+        .setAttribute("disabled", (automatic_names) ? "0" : "1");
 }
 
 
@@ -1183,15 +1146,6 @@ function initializeThisSvg() {
 
     initializeMasks();
     initializeNoteNames();
-
-    // Set cursor for clickable controls
-    for ( const elm_id of clickable_elements ) {
-        const elm = document.getElementById(elm_id);
-        if (elm != null) {
-            elm.style.cursor = "pointer";
-            elm.style.overscrollBehavior = "none";
-        }
-    }
 
     // Read stored preferences
     dark_background = readBoolFromLocalStorage("dark_background", false);

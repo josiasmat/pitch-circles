@@ -9,7 +9,9 @@
 # You'll also need ImageMagick from:
 #   https://imagemagick.org/
 
-import glob, gzip, pathlib, os, shutil
+import gzip, os, shutil
+import xml.etree.ElementTree as ET
+from pathlib import Path
 
 import minify_html
 from rjsmin import jsmin
@@ -20,30 +22,37 @@ from wand.image import Color as WandColor
 source_folder = "./src"
 publish_folder = "./public"
 
+
 # function to test if source file is newer
 # than destination file
 def isFileModified(filename_src, filename_dest):
-    if os.path.isfile(filename_src) == False:
+    if Path(filename_src).is_file() == False:
         print(f"File '{filename_src}' not found.")
         return False
-    if os.path.isfile(filename_dest) == False:
+    if Path(filename_dest).is_file() == False:
         return True
     dt_src = os.path.getmtime(filename_src)
     dt_dst = os.path.getmtime(filename_dest)
     return (dt_src > dt_dst)
 
-# cd to this file directory
-abspath = os.path.abspath(__file__)
-thisdir = os.path.dirname(abspath)
-os.chdir(thisdir)
 
-# create {publish_folder} folder if it doesn't exist
-if not os.path.exists(publish_folder):
-    os.makedirs(publish_folder)
-if not os.path.exists(f"{publish_folder}/locale"):
-    os.makedirs(f"{publish_folder}/locale")
+# function to test if file was modified and do
+# something; the function argument must receive
+# two arguments: source and destination file
+def doIfFileModified(src, dst, func):
+    if isFileModified(src, dst):
+        func(src, dst)
+    else:
+        print(f"File '{Path(src).name}' skipped.")
 
-# function that compresses a file using gzip
+
+# function to copy a file
+def copyFile(src, dst):
+    shutil.copy2(src, dst)
+    print(f"File '{Path(src).name}' copied to '{dst}'.")
+
+
+# function to compress a file using gzip
 def compressFile(src, dst):
     with open(src, 'rb') as srcfile:
         srcdata = srcfile.read()
@@ -51,82 +60,129 @@ def compressFile(src, dst):
         with open(dst, 'wb') as gzfile:
             gzfile.write(gzip.compress(srcdata))
             gzfile.close()
-            print(f"File '{src}' file compressed and saved to '{dst}'.")
+            print(f"File '{Path(src).name}' file compressed and saved to '{dst}'.")
 
-# copy locale files
-locale_subfolder = "/locale"
-locale_files = glob.iglob(os.path.join(f"{source_folder}{locale_subfolder}", "*.json"))
+
+# function to minify html
+def minifyHtml(src, dst):
+    with open(src, 'r', encoding="utf-8") as read_stream:
+        with open(dst, 'w', encoding="utf-8") as write_stream:
+            data = read_stream.read()
+            read_stream.close()
+            write_stream.write(minify_html.minify(data, \
+                minify_js=True, remove_processing_instructions=True))
+            write_stream.close()
+            print(f"File '{Path(src).name}' file minified and saved to '{dst}'.")
+
+
+# function to minify javascript
+def minifyJs(src, dst):
+    with open(src, 'r', encoding="utf-8") as read_stream:
+        with open(dst, 'w', encoding="utf-8") as write_stream:
+            jsdata = read_stream.read()
+            read_stream.close()
+            write_stream.write(jsmin(jsdata))
+            write_stream.close()
+            print(f"File '{Path(src).name}' file minified and saved to '{dst}'.")
+
+
+# function to convert svg to png
+def svgToPng(src, dst):
+    bgcolor = WandColor("transparent")
+    #with WandImage(filename=src, width=128, height=128, background=bgcolor) as img:
+    with WandImage(filename=src, background=bgcolor) as img:
+        with img.convert('png') as output_img:
+            output_img.save(filename=dst)
+            print(f"File '{Path(src).name}' converted and saved to '{dst}'.")
+
+
+# cd to this file directory
+abspath = Path(__file__).absolute()
+thisdir = Path(abspath).parent
+os.chdir(thisdir)
+
+
+
+# create {publish_folder} folder
+Path(publish_folder).mkdir(exist_ok=True)
+
+
+# copy/compress locale files
+locale_subfolder = "locale"
+Path(publish_folder, locale_subfolder).mkdir(exist_ok=True)
+locale_files = Path(source_folder, locale_subfolder).glob("*.json")
 for lang_src in locale_files:
-    lang_filename = pathlib.Path(lang_src).name
-    lang_dest = f"{publish_folder}{locale_subfolder}/{lang_filename}.gz"
-    if os.path.isfile(lang_src):
-        # english file not needed because that's the source language
-        if lang_filename != "en.json":
-            if isFileModified(lang_src, lang_dest):
-                compressFile(lang_src, lang_dest)
-                #shutil.copy2(lang_src, lang_dest)
-                #print(f"File '{lang_filename}' copied to '{lang_dest}'.")
-            else:
-                print(f"File '{lang_filename}' skipped.")
+    lang_filename = Path(lang_src).name
+    lang_dest = Path(publish_folder, locale_subfolder, lang_filename + ".gz")
+    # english file not needed because that's the source language
+    if lang_filename != "en.json":
+        doIfFileModified(lang_src, lang_dest, compressFile)
+
+
+# copy style files
+styles_subfolder = "styles"
+Path(publish_folder, styles_subfolder).mkdir(exist_ok=True)
+style_files = Path(source_folder, locale_subfolder).glob("*.css")
+for style_src in style_files:
+    style_filename = Path(style_src).name
+    style_dest = Path(publish_folder, styles_subfolder, style_filename)
+    doIfFileModified(style_src, style_dest, copyFile)
+
 
 # minify html file
 html_name = "index.html"
-html_src = f"{source_folder}/{html_name}"
-html_dst = f"{publish_folder}/{html_name}"
-if isFileModified(html_src, html_dst):
-    with open(html_src, 'r', encoding="utf-8") as htmlrfile:
-        htmldata = htmlrfile.read()
-        htmlrfile.close()
-        with open(html_dst, 'w', encoding="utf-8") as htmlwfile:
-            htmlwfile.write(minify_html.minify(htmldata, \
-                minify_js=True, remove_processing_instructions=True))
-            htmlwfile.close()
-            print(f"File '{html_name}' file minified and saved to '{html_dst}'.")
-else:
-    print(f"File '{html_name}' skipped.")
+html_src = Path(source_folder, html_name)
+html_dst = Path(publish_folder, html_name)
+doIfFileModified(html_src, html_dst, minifyHtml)
+
 
 # minify javascript file
 js_name = "main.js"
-js_src = f"{source_folder}/{js_name}"
-js_dst = f"{publish_folder}/{js_name}"
-if isFileModified(js_src, js_dst):
-    with open(js_src, 'r', encoding="utf-8") as jsrfile:
-        jsdata = jsrfile.read()
-        jsrfile.close()
-        with open(js_dst, 'w', encoding="utf-8") as jswfile:
-            jswfile.write(jsmin(jsdata))
-            jswfile.close()
-            print(f"File '{js_name}' file minified and saved to '{js_dst}'.")
-else:
-    print(f"File '{js_name}' skipped.")
+js_src = Path(source_folder, js_name)
+js_dst = Path(publish_folder, js_name)
+doIfFileModified(js_src, js_dst, minifyJs)
 
-# minify svg file using scour
+
+# convert favicon.svg to favicon.png
+favicon_name = "favicon"
+favicon_src = Path(source_folder, favicon_name + ".svg")
+favicon_dst = Path(publish_folder, favicon_name + ".png")
+doIfFileModified(favicon_src, favicon_dst, svgToPng)
+
+
+# process svg file
 svg_name = "graphics.svg"
-svg_src = f"{source_folder}/{svg_name}"
-svg_dst = f"{publish_folder}/{svg_name}"
+svg_src = Path(source_folder, svg_name)
+svg_dst = Path(publish_folder, svg_name)
+svg_tmp = Path(publish_folder, svg_name + '.tmp')
 if isFileModified(svg_src, svg_dst):
+
+    # remove inline styling
+    xmltree = ET.parse(svg_src)
+    for elm in xmltree.iter():
+        elm_class = elm.get('class')
+        if elm_class != None:
+            if elm.get('style') != None:
+                elm.attrib.pop('style')
+            if elm_class.find('children') != -1:
+                for child in elm.iter():
+                    if child.get('style') != None:
+                        child.attrib.pop('style')
+    xmltree.write(svg_tmp, encoding='UTF-8')
+
+    # minify svg file using scour
     scour_options = scour.parse_args([
         "--enable-viewboxing", 
         "--enable-comment-stripping",
         "--remove-descriptive-elements",
         "--no-line-breaks"
     ])
-    scour_options.infilename = svg_src
+    scour_options.infilename = svg_tmp
     scour_options.outfilename = svg_dst
     (input, output) = scour.getInOut(scour_options)
     scour.start(scour_options, input, output)
+    os.remove(svg_tmp)
     print(f"File '{svg_name}' file minified and saved to '{svg_dst}'.")
 else:
     print(f"File '{svg_name}' skipped.")
 
-# convert favicon.svg to favicon.png
-favicon_src = f"{source_folder}/favicon.svg"
-favicon_dst = f"{publish_folder}/favicon.png"
-if isFileModified(favicon_src, favicon_dst):
-    bgcolor = WandColor("transparent")
-    with WandImage(filename=favicon_src, width=128, height=128, background=bgcolor) as img:
-        with img.convert('png') as output_img:
-            output_img.save(filename=favicon_dst)
-            print(f"File 'favicon.svg' file converted and saved to '{favicon_dst}'.")
-else:
-    print("File 'favicon.svg' skipped.")

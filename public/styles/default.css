@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css?family=Droid Sans');
+@import url('https://fonts.googleapis.com/css?family=Droid Serif');
+
+.checkbox, .radiobox, .button {
+    &:not([disabled="1"]) {
+        cursor: pointer;
+        &:hover {
+            >:first-child {
+                filter: drop-shadow(0px 0px 1px red);
+            }
+        }
+    }
+    &[disabled="1"] {
+        cursor: not-allowed;
+    }
+}
+
+.mask-button {
+    > rect {
+        fill: #ffffcc;
+        fill-opacity: 1;
+        stroke: black;
+        stroke-width: 0.6;
+        stroke-dasharray: none;
+        paint-order: normal;
+        ry: 1%;
+    }
+    > text {
+        font-style: normal;
+        font-variant: normal;
+        font-weight: normal;
+        font-stretch: normal;
+        font-size: 4.826px;
+        line-height: 1.05;
+        font-family: 'Droid Sans';
+        font-variant-ligatures: normal;
+        font-variant-caps: normal;
+        font-variant-numeric: normal;
+        font-variant-east-asian: normal;
+        text-align: center;
+        letter-spacing: 0px;
+        word-spacing: 0px;
+        text-anchor: middle;
+        stroke-width: 0.273186
+    }
+    &[selected="1"] > rect {
+        fill: #00ff77 !important;
+    }
+}
+
+#BtnSwapEnharmonics {
+    > rect {
+        stroke: #000000;
+        stroke-width: 0.75;
+        ry: 1%;
+    }
+    &:not([disabled="1"]) {
+        > rect { fill: #66ff66; }
+        > path { fill: black; }
+    }
+    &[disabled="1"] {
+        > rect { fill: #aaaaaa; }
+        > path { fill: #555555; }
+    }
+}
+
+.tab {
+    cursor: pointer;
+    &:hover > rect {
+        fill: #f2f2f2;
+    };
+}
