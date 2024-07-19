@@ -4,11 +4,11 @@ A tool for visualizing scales and their transpositions on the chromatic circle a
 
 ## Online usage
 
-Visit https://josiasmat.github.io/PitchCircles/
+Visit https://josiasmat.github.io/pitch-circles/
 
 ## Offline usage
 
-1. Download and install [Python](https://www.python.org/) (if you don't have it installed yet).
+1. Download and install [Python](https://www.python.org/) (if you don't have it installed yet). Important: make sure to enable "Add Python to environment variables" or "Add Python to %PATH%".
 2. [Download the files](../../archive/refs/heads/main.zip) from the repository, and unzip them.
 3. On Windows: go to the folder where the files were downloaded/unzipped, and double-click the `run-local-server.cmd` file; on other systems, run `python3 -m http.server 80` from the downloaded files directory in a terminal.
 4. Visit `localhost/` using your internet browser.
@@ -40,7 +40,7 @@ It is possible to set the tool's initial state using URL query parameters.
 
 You can combine these parameters using `&`, in any order, e.g.:
 
-`https://josiasmat.github.io/PitchCircles/?mask=diatonic&rotate=-2&hidecontrols=1&lang=es`
+`https://josiasmat.github.io/pitch-circles/?mask=diatonic&rotate=-2&hidecontrols=1&lang=es`
 
 This will start the tool in spanish, with the diatonic mask, rotated to B flat and with controls hidden.
 
