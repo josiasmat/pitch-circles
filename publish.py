@@ -3,7 +3,7 @@
 # This script requires the following packages:
 #   minify-html, rjsmin, scour, wand
 #
-# To install them, on a console type:
+# To install them, type on a console:
 #   > pip install minify-html rjsmin scour wand
 #
 # You'll also need ImageMagick from:
@@ -70,7 +70,7 @@ def minifyHtml(src, dst):
             data = read_stream.read()
             read_stream.close()
             write_stream.write(minify_html.minify(data, \
-                minify_js=True, remove_processing_instructions=True))
+                minify_js=True, minify_css=True))
             write_stream.close()
             print(f"File '{Path(src).name}' file minified and saved to '{dst}'.")
 
@@ -100,7 +100,6 @@ def svgToPng(src, dst):
 abspath = Path(__file__).absolute()
 thisdir = Path(abspath).parent
 os.chdir(thisdir)
-
 
 
 # create {publish_folder} folder
@@ -185,4 +184,3 @@ if isFileModified(svg_src, svg_dst):
     print(f"File '{svg_name}' file minified and saved to '{svg_dst}'.")
 else:
     print(f"File '{svg_name}' skipped.")
-
