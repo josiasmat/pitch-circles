@@ -975,32 +975,6 @@
              y="-4.8726277"
              id="tspan425">MELODIC MINOR</tspan></text>
       </g>
-      <g
-         id="BtnMaskProgrammable"
-         class="button mask-button"
-         transform="matrix(0.98989775,0,0,0.94758362,239.2217,18.198486)"
-         inkscape:label="BtnMaskProgrammable"
-         onclick="changeMask(&quot;Programmable&quot;);"
-         style="display:none;stroke-width:1.03251">
-        <rect
-           style="fill:#ffffdd;fill-opacity:1;stroke:#000000;stroke-width:0.619509;stroke-dasharray:none;paint-order:normal"
-           id="BtnMaskProgrammableBk"
-           width="58.677906"
-           height="12.415286"
-           x="98.809639"
-           y="-18.06234" />
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;stroke-width:0.273186"
-           x="128.00131"
-           y="-10.1286"
-           id="text426"><tspan
-             sodipodi:role="line"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.826px;line-height:1.05;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.273186"
-             x="128.00131"
-             y="-10.1286"
-             id="tspan426">PROGRAMMABLE</tspan></text>
-      </g>
     </g>
   </g>
   <g
