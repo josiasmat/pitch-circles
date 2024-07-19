@@ -8,8 +8,11 @@
 #
 # You'll also need ImageMagick from:
 #   https://imagemagick.org/
+#
+# Use 'publish.py --force-all' to process
+# all files even if they're not modified.
 
-import gzip, os, shutil
+import gzip, os, shutil, sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -22,6 +25,8 @@ from wand.image import Color as WandColor
 source_folder = "./src"
 publish_folder = "./public"
 
+force_all = ('--force-all' in sys.argv[1:])
+
 
 # function to test if source file is newer
 # than destination file
@@ -29,7 +34,7 @@ def isFileModified(filename_src, filename_dest):
     if Path(filename_src).is_file() == False:
         print(f"File '{filename_src}' not found.")
         return False
-    if Path(filename_dest).is_file() == False:
+    if force_all or Path(filename_dest).is_file() == False:
         return True
     dt_src = os.path.getmtime(filename_src)
     dt_dst = os.path.getmtime(filename_dest)
