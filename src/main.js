@@ -1254,7 +1254,7 @@ function adaptForScreen() {
             : `0 0 ${t} ${241.64582 + t - control_panel.getBBox().height - 6}`;
     } else {
         // landscape mode
-        var fifths_circle_transform = "translate(0 0)";
+        var fifths_circle_transform = "none";
         var control_panel_transform = "translate(0 0) scale(1 1)";
         var viewbox = (control_panel_visible)
             ? "0 0 397.15732 241.64582"

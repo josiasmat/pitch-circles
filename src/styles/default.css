@@ -70,3 +70,24 @@
         fill: #f2f2f2;
     };
 }
+
+#ChrPentatonicMask,
+#ChrDiatonicMask,
+#ChrHarmonicMinorMask,
+#ChrMelodicMinorMask,
+#ChrWholeTonesMask,
+#ChrOctatonicMask,
+#ChrMajorThirdsMask,
+#ChrMinorThirdsMask,
+#ChrChromaticMask,
+#FthPentatonicMask,
+#FthDiatonicMask,
+#FthHarmonicMinorMask,
+#FthMelodicMinorMask,
+#FthWholeTonesMask,
+#FthOctatonicMask,
+#FthMajorThirdsMask,
+#FthMinorThirdsMask,
+#FthChromaticMask {
+    will-change: transform;
+}

@@ -126,7 +126,7 @@ for lang_src in locale_files:
 # copy style files
 styles_subfolder = "styles"
 Path(publish_folder, styles_subfolder).mkdir(exist_ok=True)
-style_files = Path(source_folder, locale_subfolder).glob("*.css")
+style_files = Path(source_folder, styles_subfolder).glob("*.css")
 for style_src in style_files:
     style_filename = Path(style_src).name
     style_dest = Path(publish_folder, styles_subfolder, style_filename)
