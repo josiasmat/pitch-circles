@@ -7,10 +7,10 @@ for(const mask_elements of masks.values()){for(const mask of mask_elements[0]){m
 function changeMask(mask_key,animate=true){let delay=false;if(visible_mask!=null){const hiding_mask_data=masks.get(visible_mask);hideMask(hiding_mask_data[0][0],animate);hideMask(hiding_mask_data[0][1],animate);hiding_mask_data[1][0].setAttribute('selected','0');delay=true;}
 if(mask_key==visible_mask||mask_key==null){visible_mask=null;}else{visible_mask=mask_key;const showing_mask_data=masks.get(visible_mask);showMask(showing_mask_data[0][0],chromatic_mask_rotation,animate,delay);showMask(showing_mask_data[0][1],fifths_mask_rotation,animate,delay);showing_mask_data[1][0].setAttribute('selected','1');}
 updateNoteNames();}
-function showMask(mask,rotation_degrees=0,animate,delay){if(animate==true){mask.style.transitionProperty="scale, opacity";mask.style.transitionDelay=((delay==true)?"400ms":"0s");mask.style.transitionDuration="200ms";mask.style.transitionTimingFunction="ease-out";}else{mask.style.transition="none";}
+function showMask(mask,rotation_degrees=0,animate,delay){mask.style.willChange="transform, rotate";if(animate==true){mask.style.transitionProperty="scale, opacity";mask.style.transitionDelay=((delay==true)?"400ms":"0s");mask.style.transitionDuration="200ms";mask.style.transitionTimingFunction="ease-out";}else{mask.style.transition="none";}
 mask.style.scale="100%";mask.style.opacity="1";mask.style.visibility="visible";mask.style.rotate=`${rotation_degrees}deg`;}
 function hideMask(mask,animate){if(animate==true){mask.style.transitionProperty="scale, opacity, visibility";mask.style.transitionDelay="0s";mask.style.transitionDuration="200ms";mask.style.transitionTimingFunction="ease-in";}else{mask.style.transition="none";}
-mask.style.scale="120%";mask.style.opacity="0";mask.style.visibility="hidden";}
+mask.style.scale="120%";mask.style.opacity="0";mask.style.visibility="hidden";mask.style.willChange="auto";}
 function setMasksRotations(chr_steps,fth_steps,animate){chromatic_mask_rotation=Math.round(clampAngle(chr_steps*ANGLE_SEMITONE,chromatic_mask_rotation,ANGLE_FIFTH));fifths_mask_rotation=Math.round(clampAngle(fth_steps*ANGLE_SEMITONE,fifths_mask_rotation,ANGLE_FIFTH));if(visible_mask!=null){applyMaskRotation(getVisibleChrMask(),chromatic_mask_rotation,animate);applyMaskRotation(getVisibleFthMask(),fifths_mask_rotation,animate);}
 updateNoteNames(250);updateNotesBackgrounds(750);}
 function rotateMasks(semitones,animate=true){transposeSemitones(semitones);setMasksRotations(chromatic_transposition,fifths_transposition,animate);}

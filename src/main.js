@@ -377,6 +377,7 @@ function changeMask(mask_key, animate = true) {
 }
 
 function showMask(mask, rotation_degrees = 0, animate, delay) {
+    mask.style.willChange = "transform, rotate";
     if (animate == true) {
         mask.style.transitionProperty = "scale, opacity";
         mask.style.transitionDelay = ( (delay == true) ? "400ms" : "0s" );
@@ -403,6 +404,7 @@ function hideMask(mask, animate) {
     mask.style.scale = "120%";
     mask.style.opacity = "0";
     mask.style.visibility = "hidden";
+    mask.style.willChange = "auto";
 }
 
 
