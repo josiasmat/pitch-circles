@@ -55,7 +55,7 @@ var chromatic_mask_rotation = 0;
 var fifths_mask_rotation = 0;
 
 var black_keys_visible = true;
-var dark_background = false;
+var dark_background = true;
 
 var note_names_key = "auto";
 var automatic_names = true;
@@ -111,9 +111,9 @@ const note_names_diatonic = new Map([
     // D# Major/Minor
     [9, [["s","s","ss","s","n","s","s","ss","s","ss","s","n"], [ 4, 2], [11, 7], [10, 8], -3]],
     // A# Major/Minor
-    [10, [["s","s","ss","s","ss","s","s","ss","s","ss","s","n"], [ 5, 3], [12, 8], [11, 9], -2]],
+    [10, [["s","s","ss","s","ss","s","s","ss","s","ss","s","n"], [ 5, 3], [12, 8], [11, 9], -14]],
     // E# Major/Minor
-    [11, [["s","s","ss","s","ss","s","s","ss","s","ss","s","ss"], [ 6, 4], [13, 9], [12,10], -1]],
+    [11, [["s","s","ss","s","ss","s","s","ss","s","ss","s","ss"], [ 6, 4], [13, 9], [12,10], -13]],
     // B# Major/Minor
     [12, [["s","s","ss","s","ss","s","ss","ss","s","ss","s","ss"], [ 7, 5], [14,10], [13,11], -12]],
     // F## Major/Minor
@@ -141,9 +141,13 @@ const note_names_diatonic = new Map([
     // Ebb Major/Minor
     [-10, [["ff","f","ff","f","f","ff","f","ff","f","ff","ff","f"],  [-3, -4], [-8,-12], [-9,-11], 2]],
     // Abb Major/Minor
-    [-11, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-4, -5], [-9, 0], [-10,-12], 1]],
+    [-11, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-4, -5], [-9, -13], [-10,-12], 1]],
     // Dbb Major
-    [-12, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-5, -6], [-10,-2], [-11,-1], 0]]
+    [-12, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-5, -6], [-10,-4], [-11,-13], 0]],
+    // Gbb Major
+    [-13, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-6, -7], [-11,-3], [-12,-14], -1]],
+    // Cbb Major
+    [-14, [["ff","f","ff","ff","f","ff","f","ff","f","ff","ff","f"],  [-7, -8], [-12,-4], [-13,-3], -2]]
 ]);
 
 const note_names_major_thirds = new Map([
@@ -780,7 +784,7 @@ function updateNoteNames(delay_ms = 0, override_names_type = null) {
         switch ( visible_mask ) {
             case "Pentatonic":
             case "Diatonic":
-                override_names_type = clampPitch(override_names_type, -12, 14);
+                override_names_type = clampPitch(override_names_type, -14, 14);
                 showHideNoteNames(note_names_diatonic.get(override_names_type)[0], delay_ms);
                 break;
             case "HarmonicMinor":
