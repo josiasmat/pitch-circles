@@ -9,11 +9,16 @@ Visit https://josiasmat.github.io/pitch-circles/
 ## Offline usage[^1]
 
 1. [Download the files](../../archive/refs/heads/main.zip) from the repository, and unzip them.
-2. Go to the folder where the files were downloaded/unzipped, and (according to your operating system):
-    - Windows: double-click on `run-local-windows.cmd`.
-    - Linux/macOS: double-click on `run-local.sh`.
+2. Go to the folder where the files were downloaded/unzipped.
+3. If you are using **Windows**: simply double-click on `run-local-windows.cmd`.
+4. If you are using **macOS**:
+    - First you'll need to mark the file `run-local-macos.command` as executable. [Follow these instructions](https://support.apple.com/en-me/guide/terminal/apdd100908f-06b3-4e63-8a87-32e71241bab4/mac) to do it.
+    - After that, double-click on `run-local-macos.command` to run the script.
+5. If you are using **Linux**:
+    - First you'll need to mark the file `run-local-linux.sh` as executable. In some distributions you can do this by right-clicking the file and going to _Properties_. In others, you'll need to go to the terminal. [Google it](https://www.google.com/search?q=linux+mark+file+as+executable) if you don't know how to do this.
+    - After that, double-click on `run-local-linux.sh` to run the script.
 
-[^1]: Uses [Mongoose](https://mongoose.ws/) as local web server on Windows and macOS. Linux uses Python, which is included in almost all current distributions.
+[^1]: Uses [Mongoose](https://mongoose.ws/) as local web server on Windows and macOS. On Linux, Python is used as it's included in almost all current distributions.
 
 ## Keyboard shortcuts
 
