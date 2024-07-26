@@ -12,7 +12,7 @@ Visit https://josiasmat.github.io/pitch-circles/
 2. Go to the folder where the files were downloaded/unzipped.
 3. If you are using **Windows**: simply double-click on `run-local-windows.cmd`.
 4. If you are using **macOS**:
-    - First you'll need to mark the file `run-local-macos.command` as executable. [Follow these instructions](https://support.apple.com/en-me/guide/terminal/apdd100908f-06b3-4e63-8a87-32e71241bab4/mac) to do it.
+    - First you'll need to mark the file `run-local-macos.command` as executable. [Follow these instructions](https://support.apple.com/en-me/guide/terminal/apdd100908f-06b3-4e63-8a87-32e71241bab4/mac).
     - After that, double-click on `run-local-macos.command` to run the script.
 5. If you are using **Linux**:
     - First you'll need to mark the file `run-local-linux.sh` as executable. In some distributions you can do this by right-clicking on the file and going to _Properties_. In others, you'll need to go to the terminal. [Google it](https://www.google.com/search?q=linux+mark+file+as+executable) if you don't know how to do this.
