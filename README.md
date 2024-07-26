@@ -11,7 +11,7 @@ Visit https://josiasmat.github.io/pitch-circles/
 1. [Download the files](../../archive/refs/heads/main.zip) from the repository, and unzip them.
 2. Go to the folder where the files were downloaded/unzipped, and (according to your operating system):
     - Windows: double-click on `run-local-windows.cmd`.
-    - Linux/macOS: double-click on `run-local-macos.sh`.
+    - Linux/macOS: double-click on `run-local.sh`.
 
 [^1]: Uses [Mongoose](https://mongoose.ws/) as local web server on Windows and macOS. Linux uses Python, which is included in almost all current distributions.
 
