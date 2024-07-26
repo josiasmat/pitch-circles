@@ -6,12 +6,14 @@ A tool for visualizing scales and their transpositions on the chromatic circle a
 
 Visit https://josiasmat.github.io/pitch-circles/
 
-## Offline usage
+## Offline usage[^1]
 
-1. Download and install [Python](https://www.python.org/) (if you don't have it installed yet). Important: make sure to enable "Add Python to environment variables" or "Add Python to %PATH%".
-2. [Download the files](../../archive/refs/heads/main.zip) from the repository, and unzip them.
-3. On Windows: go to the folder where the files were downloaded/unzipped, and double-click the `run-local-server.cmd` file; on other systems, run `python3 -m http.server 80` from the downloaded files directory in a terminal.
-4. Visit `localhost/` using your internet browser.
+1. [Download the files](../../archive/refs/heads/main.zip) from the repository, and unzip them.
+2. Go to the folder where the files were downloaded/unzipped, and (according to your operating system):
+    - Windows: double-click on `run-local-windows.cmd`.
+    - Linux/macOS: double-click on `run-local-macos.sh`.
+
+[^1]: Uses [Mongoose](https://mongoose.ws/) as local web server on Windows and macOS. Linux uses Python, which is included in almost all current distributions.
 
 ## Keyboard shortcuts
 
