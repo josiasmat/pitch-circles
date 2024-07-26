@@ -1154,8 +1154,8 @@ function initializeThisSvg() {
     initializeNoteNames();
 
     // Read stored preferences
-    dark_background = readBoolFromLocalStorage("dark_background", false);
-    black_keys_visible = readBoolFromLocalStorage("black_keys_visible", true);
+    dark_background = readBoolFromLocalStorage("dark_background", dark_background);
+    black_keys_visible = readBoolFromLocalStorage("black_keys_visible", black_keys_visible);
     updateBackground();
     updateNotesBackgrounds();
     changeNoteNames(readStringFromLocalStorage("note_names", "auto"), 1000);
