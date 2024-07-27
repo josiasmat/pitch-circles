@@ -462,7 +462,7 @@ function doMaskRotation(elm, angle_deg, animation_ms = 0) {
     elm.style.rotate = `${angle_deg}deg`;
 }
 
-function transposeNoteNamesKey(fifths) {
+function transposeNoteNamesKey(fifths, avoid_double_accidentals = false) {
     if ( typeof(note_names_key) == "number" ) {
         let names_map;
         switch ( visible_mask ) {
@@ -483,20 +483,22 @@ function transposeNoteNamesKey(fifths) {
                     note_names_key += (note_names_key < 0) ? 12 : -12;
             }
         }
+        if ( avoid_double_accidentals ) 
+            note_names_key = clampPitch(note_names_key, -7, 7);
     }
 }
 
-function transposeFifths(fifths) {
+function transposeFifths(fifths, avoid_double_accidentals = false) {
     fifths_transposition += fifths;
-    chromatic_transposition += clampPitch(fifths*7, -12, 12);
-    transposeNoteNamesKey(fifths);
+    chromatic_transposition += (fifths*7) % 12; //clampPitch(fifths*7, -12, 12);
+    transposeNoteNamesKey(fifths, avoid_double_accidentals);
 }
 
 function transposeSemitones(steps) {
-    const fifths = clampPitch(steps*7, -12, 12);
+    const fifths = (steps*7) % 12; //clampPitch(steps*7, -12, 12);
     chromatic_transposition += steps;
     fifths_transposition += fifths;
-    transposeNoteNamesKey(fifths);
+    transposeNoteNamesKey(fifths, true);
 }
 
 
@@ -540,17 +542,20 @@ var mask_drag_rotation = {
     },
     amount: 0,
     offset: 0,
+    ptr_offset: 0,
     begun_rotating: false,
     // methods
     rad() { return this.amount + this.offset; },
     deg() { return radToDeg(this.amount + this.offset); },
+    steps() { return Math.round(radToDeg(this.amount - this.ptr_offset) / ANGLE_SEMITONE); },
     set_angle(angle_rad) {
-        this.amount = angle_rad;
+        this.amount = clampAngleRad(angle_rad, this.amount);
         this.begun_rotating = true;
     },
     reset_angle(mask_angle_rad, pointer_angle_rad) { 
-        this.amount_rad = 0; 
+        this.amount = 0; 
         this.offset = mask_angle_rad - pointer_angle_rad;
+        this.ptr_offset = pointer_angle_rad;
         this.begun_rotating = false;
     },
     set_params(dev_type, dev_id, mask, elm) {
@@ -651,24 +656,13 @@ function maskDragBegin(px, py) {
 
 function maskDragEnd() {
     if ( mask_drag_rotation.begun_rotating == true ) {
+        const steps = clampPitch(mask_drag_rotation.steps(), -14, 14);
         if ( mask_drag_rotation.target.mask.id.startsWith("Chr") ) {
-            const steps = clampPitch(Math.round(mask_drag_rotation.deg() / ANGLE_SEMITONE), -5, 6);
-            // set transpositions
-            chromatic_transposition = steps;
-            fifths_transposition = clampPitch(steps * 7, -5, 6);
-            if ( typeof(note_names_key) == "number" )
-                note_names_key = fifths_transposition;
-            // set rotations
+            transposeSemitones(steps);
             chromatic_mask_rotation = clampAngle(chromatic_transposition*ANGLE_SEMITONE, mask_drag_rotation.deg());
             fifths_mask_rotation = clampAngle(fifths_transposition*ANGLE_SEMITONE, fifths_mask_rotation);
         } else {
-            const steps = clampPitch(Math.round(mask_drag_rotation.deg() / ANGLE_SEMITONE), -5, 6);
-            // set transpositions
-            fifths_transposition = steps;
-            chromatic_transposition = clampPitch(steps * 7, -5, 6);
-            if ( typeof(note_names_key) == "number" )
-                note_names_key = fifths_transposition;
-            // set rotations
+            transposeFifths(steps, true);
             fifths_mask_rotation = clampAngle(fifths_transposition*ANGLE_SEMITONE, mask_drag_rotation.deg());
             chromatic_mask_rotation = clampAngle(chromatic_transposition*ANGLE_SEMITONE, chromatic_mask_rotation);
         }
@@ -683,7 +677,7 @@ function maskDragEnd() {
 
 function maskDragMove(px, py) {
     if ( mask_drag_rotation.begun_rotating == false && typeof(note_names_key) == "number" )
-        updateNoteNames(0, "enharmonics1");
+        updateNoteNames(0, "enharmonics2");
     const rect = mask_drag_rotation.target.mask.getBoundingClientRect();
     mask_drag_rotation.set_angle(computePointerAngle(rect, px, py));
     doMaskRotation(mask_drag_rotation.target.mask, mask_drag_rotation.deg(), 0);
@@ -1284,12 +1278,21 @@ function clampPitch(value, min, max) {
     return value;
 }
 
-function clampAngle(deg, center = 0, half_window = 180) {
+function clampAngle(deg, center = 0, half_window = ANGLE_FIFTH) {
     const min = center - half_window;
     const max = center + half_window;
     while (deg > max) deg -= 360;
     while (deg < min) deg += 360;
     return deg;
+}
+
+function clampAngleRad(rad, center = 0, half_window = Math.PI) {
+    const DOUBLE_PI = 2*Math.PI;
+    const min = center - half_window;
+    const max = center + half_window;
+    while (rad > max) rad -= DOUBLE_PI;
+    while (rad < min) rad += DOUBLE_PI;
+    return rad;
 }
 
 function radToDeg(rad) {
