@@ -366,7 +366,7 @@ function changeMask(mask_key, animate = true) {
         hideMask(hiding_mask_data[0][0], animate);
         hideMask(hiding_mask_data[0][1], animate);
         hiding_mask_data[1][0].setAttribute('selected', '0');
-        delay = true;
+        //delay = true;
     }
     if (mask_key == visible_mask || mask_key == null) {
         visible_mask = null;
@@ -380,13 +380,13 @@ function changeMask(mask_key, animate = true) {
     updateNoteNames();
 }
 
-function showMask(mask, rotation_degrees = 0, animate, delay) {
+function showMask(mask, rotation_degrees = 0, animate = true, delay = false) {
     mask.style.willChange = "transform, rotate";
     if (animate == true) {
         mask.style.transitionProperty = "scale, opacity";
         mask.style.transitionDelay = ( (delay == true) ? "400ms" : "0s" );
         mask.style.transitionDuration = "200ms";
-        mask.style.transitionTimingFunction = "ease-out";
+        mask.style.transitionTimingFunction = "ease-in-out";
     } else {
         mask.style.transition = "none";
     }
@@ -401,7 +401,7 @@ function hideMask(mask, animate) {
         mask.style.transitionProperty = "scale, opacity, visibility";
         mask.style.transitionDelay = "0s";
         mask.style.transitionDuration = "200ms";
-        mask.style.transitionTimingFunction = "ease-in";
+        mask.style.transitionTimingFunction = "ease-in-out";
     } else {
         mask.style.transition = "none";
     }
