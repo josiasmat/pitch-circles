@@ -6,20 +6,6 @@ A tool for visualizing scales and their transpositions on the chromatic circle a
 
 Visit https://josiasmat.github.io/pitch-circles/
 
-## Offline usage[^1]
-
-1. [Download the files](../../archive/refs/heads/main.zip) from the repository, and unzip them.
-2. Go to the folder where the files were downloaded/unzipped.
-3. If you are using **Windows**: simply double-click on `run-local-windows.cmd`.
-4. If you are using **macOS**:
-    - First you'll need to mark the file `run-local-macos.command` as executable. [Follow these instructions](https://support.apple.com/en-me/guide/terminal/apdd100908f-06b3-4e63-8a87-32e71241bab4/mac).
-    - After that, double-click on `run-local-macos.command` to run the script.
-5. If you are using **Linux**:
-    - First you'll need to mark the file `run-local-linux.sh` as executable. In some distributions you can do this by right-clicking on the file and going to _Properties_. In others, you'll need to go to the terminal. [Google it](https://www.google.com/search?q=linux+mark+file+as+executable) if you don't know how to do this.
-    - After that, double-click on `run-local-linux.sh` to run the script.
-
-[^1]: Uses [Mongoose](https://mongoose.ws/) as local web server on Windows and macOS. On Linux, Python is used as it's included in almost all current distributions.
-
 ## Keyboard shortcuts
 
 |Keys|Function||Keys|Function|
@@ -45,7 +31,7 @@ It is possible to set the tool's initial state using URL query parameters.
 - Use `?hidecontrols=1` to hide the control panel.
 - Use `?lang=` to change the language.
 
-You can combine these parameters using `&`, in any order, e.g.:
+Combine parameters using `&`, in any order, e.g.:
 
 `https://josiasmat.github.io/pitch-circles/?mask=diatonic&rotate=-2&hidecontrols=1&lang=es`
 
@@ -57,7 +43,7 @@ Currently available in english (`en`), spanish (`es`) and portuguese (`pt`).
 
 It tries to automatically detect the user's preferred language. If you want to use a specific language, append `?lang=` followed by the language code to the URL.
 
-If you want to contribute with a new translation, copy one of the files inside the `locale` folder and change the strings accordingly. After that, send me an e-mail (see below) with your translation file. Also feel free to ask for help.
+If you want to contribute with a new translation, copy one of the files inside the `locale` folder and change the strings accordingly. After that, send me an e-mail (see below) with your translation file. Feel free to ask for help.
 
 ## MIDI input
 
