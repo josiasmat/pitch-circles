@@ -55,5 +55,5 @@
     "midi-invalid-port": "Disculpe, usted digitó un numero de puerto invalido!",
     "midi-ask-channel": "Por favor, digite los canales MIDI (1 to 16) a los que usted desea conectarse. Puede digitar numeros separados por comas o en rangos.",
     "midi-ask-sound": "Usted desea sonido al tocar?",
-    "midi-ask-auto-rotate": "Usted desea que los discos roten autonamicamente al tocar una nota oculta?"
+    "midi-ask-auto-rotate": "Usted desea que los discos roten automáticamente al tocar una nota oculta?"
 }
