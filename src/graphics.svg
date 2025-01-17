@@ -76,6 +76,8 @@
   <script
      xlink:href="main.js"
      id="script_main" />
+  <script
+     xlink:href="audio.js"/>
   <defs
      id="defs1">
     <linearGradient
