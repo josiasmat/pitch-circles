@@ -83,7 +83,7 @@ setAllNotesOff();}}}}
 function setNoteOn(key){const note=clampPitch(key,0,11);played_notes[note]+=1;if(enable_sound)PitchPlayer.playPitch(note);if(enable_auto_rotate){if(auto_rotate_timer_id)
 clearTimeout(auto_rotate_timer_id);auto_rotate_timer_id=setTimeout(doMidiAutoRotate,100);}
 updateNotesBackgrounds();}
-function setNoteOff(key){const note=clampPitch(key,0,11);played_notes[note]=Math.max(played_notes[note]-1,0);PitchPlayer.stopPitch(note);updateNotesBackgrounds();}
+function setNoteOff(key){const note=clampPitch(key,0,11);played_notes[note]=Math.max(played_notes[note]-1,0);if(played_notes[note]==0)PitchPlayer.stopPitch(note);updateNotesBackgrounds();}
 function setAllNotesOff(){played_notes=Array(12).fill(0);for(let i=0;i<12;i++)PitchPlayer.stopPitch(i);updateNotesBackgrounds();}
 function allNotesOffOrRemoveMask(){if(played_notes.some((x)=>x>0))
 setAllNotesOff();else

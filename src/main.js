@@ -1004,7 +1004,7 @@ function setNoteOn(key) {
 function setNoteOff(key) {
     const note = clampPitch(key, 0, 11);
     played_notes[note] = Math.max(played_notes[note]-1, 0);
-    PitchPlayer.stopPitch(note);
+    if ( played_notes[note] == 0 ) PitchPlayer.stopPitch(note);
     updateNotesBackgrounds();
 }
 
