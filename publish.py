@@ -140,11 +140,12 @@ html_dst = Path(publish_folder, html_name)
 doIfFileModified(html_src, html_dst, minifyHtml)
 
 
-# minify javascript file
-js_name = "main.js"
-js_src = Path(source_folder, js_name)
-js_dst = Path(publish_folder, js_name)
-doIfFileModified(js_src, js_dst, minifyJs)
+# minify javascript files
+js_names = ["main.js", "audio.js"]
+for js_name in js_names:
+    js_src = Path(source_folder, js_name)
+    js_dst = Path(publish_folder, js_name)
+    doIfFileModified(js_src, js_dst, minifyJs)
 
 
 # convert favicon.svg to favicon.png
