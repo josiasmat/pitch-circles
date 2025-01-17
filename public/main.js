@@ -36,10 +36,10 @@ function handleMaskDragPointerMove(ev){if(mask_drag_rotation.dev.type=="pointer"
 maskDragMove(ev.clientX,ev.clientY);}
 function handleMaskDragTouchMove(ev){if(mask_drag_rotation.dev.type=="touch"){ev.preventDefault();for(const touchObj of ev.changedTouches){if(touchObj.identifier==mask_drag_rotation.dev.id){maskDragMove(touchObj.clientX,touchObj.clientY);break;}}}}
 function maskDragBegin(px,py){if(mask_drag_rotation.target.mask.id.startsWith("Chr")){mask_drag_rotation.reset_angle(degToRad(clampAngle(chromatic_mask_rotation)),computePointerAngle(mask_drag_rotation.target.mask.getBoundingClientRect(),px,py));}else{mask_drag_rotation.reset_angle(degToRad(clampAngle(fifths_mask_rotation)),computePointerAngle(mask_drag_rotation.target.mask.getBoundingClientRect(),px,py));}
-mask_drag_rotation.target.mask.style.cursor="grabbing";}
+mask_drag_rotation.target.mask.style.cursor="grabbing";mask_drag_rotation.target.mask.style.opacity="92%";}
 function maskDragEnd(){if(mask_drag_rotation.begun_rotating==true){const steps=clampPitch(mask_drag_rotation.steps(),-14,14);if(mask_drag_rotation.target.mask.id.startsWith("Chr")){transposeSemitones(steps);chromatic_mask_rotation=clampAngle(chromatic_transposition*ANGLE_SEMITONE,mask_drag_rotation.deg());fifths_mask_rotation=clampAngle(fifths_transposition*ANGLE_SEMITONE,fifths_mask_rotation);}else{transposeFifths(steps,true);fifths_mask_rotation=clampAngle(fifths_transposition*ANGLE_SEMITONE,mask_drag_rotation.deg());chromatic_mask_rotation=clampAngle(chromatic_transposition*ANGLE_SEMITONE,chromatic_mask_rotation);}
 updateNoteNames(0);updateNotesBackgrounds(750);applyMaskRotation(getVisibleChrMask(),chromatic_mask_rotation,true);applyMaskRotation(getVisibleFthMask(),fifths_mask_rotation,true);}
-mask_drag_rotation.target.mask.style.cursor="grab";mask_drag_rotation.clear();}
+mask_drag_rotation.target.mask.style.cursor="grab";mask_drag_rotation.target.mask.style.opacity="100%";mask_drag_rotation.clear();}
 function maskDragMove(px,py){if(mask_drag_rotation.begun_rotating==false&&typeof(note_names_key)=="number")
 updateNoteNames(0,"enharmonics2");const rect=mask_drag_rotation.target.mask.getBoundingClientRect();mask_drag_rotation.set_angle(computePointerAngle(rect,px,py));doMaskRotation(mask_drag_rotation.target.mask,mask_drag_rotation.deg(),0);}
 function computePointerAngle(rect,px,py){const cx=(rect.width/2.0)+rect.left;const cy=(rect.height/2.0)+rect.top;return Math.atan2(py-cy,px-cx);}

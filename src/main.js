@@ -1,6 +1,6 @@
 /*
 Pitch Circles
-Copyright (C) 2024 Josias Matschulat
+Copyright (C) 2025 Josias Matschulat
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -605,7 +605,6 @@ function handleMaskDragTouchBegin(ev) {
     );
     maskDragBegin(touchObj.clientX, touchObj.clientY);
     mask_drag_rotation.target.elm.addEventListener("touchmove", handleMaskDragTouchMove, { capture: true, passive: false });
-    
 }
 
 function handleMaskDragPointerEnd(ev) {
@@ -657,6 +656,7 @@ function maskDragBegin(px, py) {
         );
     }
     mask_drag_rotation.target.mask.style.cursor = "grabbing";
+    mask_drag_rotation.target.mask.style.opacity = "92%";
 }
 
 function maskDragEnd() {
@@ -677,6 +677,7 @@ function maskDragEnd() {
         applyMaskRotation(getVisibleFthMask(), fifths_mask_rotation, true);
     }
     mask_drag_rotation.target.mask.style.cursor = "grab";
+    mask_drag_rotation.target.mask.style.opacity = "100%";
     mask_drag_rotation.clear();
 }
 
