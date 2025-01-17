@@ -36,7 +36,9 @@ const translatable_strings = new Map([
     ["midi-ask-port", "Please, type the number of the port to use:"],
     ["midi-granted", "Access to MIDI input port \"%s\" granted."],
     ["midi-invalid-port", "Sorry, you typed an invalid port number!"],
-    ["midi-ask-channel", "Please type the MIDI channels (1 to 16) you wish to listen to.\nYou can use comma-separated numbers and ranges."]
+    ["midi-ask-channel", "Please type the MIDI channels (1 to 16) you wish to listen to.\nYou can use comma-separated numbers and ranges."],
+    ["midi-ask-sound", "Do you want sound when playing?"],
+    ["midi-ask-auto-rotate", "Do you want masks to rotate automatically when you play hidden notes?"],
 ]);
 
 
@@ -61,6 +63,9 @@ var note_names_key = "auto";
 var automatic_names = true;
 
 var played_notes = Array(12).fill(0);
+var enable_sound = false;
+var enable_auto_rotate = false;
+var auto_rotate_timer_id = null;
 
 var control_panel_visible = true;
 
@@ -953,6 +958,9 @@ function requestMIDI() {
                         } else {
                             midi_channels = Array(16).fill(true);
                         }
+                        enable_sound = confirm(translatable_strings.get("midi-ask-sound"));
+                        if ( enable_sound ) PitchPlayer.initialize();
+                        enable_auto_rotate = confirm(translatable_strings.get("midi-ask-auto-rotate"));
                         return;
                     }
                 }
@@ -984,17 +992,25 @@ function handleMIDIEvent(ev) {
 function setNoteOn(key) {
     const note = clampPitch(key, 0, 11);
     played_notes[note] += 1;
+    if ( enable_sound ) PitchPlayer.playPitch(note);
+    if ( enable_auto_rotate ) {
+        if ( auto_rotate_timer_id )
+            clearTimeout(auto_rotate_timer_id);
+        auto_rotate_timer_id = setTimeout(doMidiAutoRotate, 100);
+    }
     updateNotesBackgrounds();
 }
 
 function setNoteOff(key) {
     const note = clampPitch(key, 0, 11);
     played_notes[note] = Math.max(played_notes[note]-1, 0);
+    PitchPlayer.stopPitch(note);
     updateNotesBackgrounds();
 }
 
 function setAllNotesOff() {
     played_notes = Array(12).fill(0);
+    for ( let i = 0; i < 12; i++ ) PitchPlayer.stopPitch(i);
     updateNotesBackgrounds();
 }
 
@@ -1003,6 +1019,35 @@ function allNotesOffOrRemoveMask() {
         setAllNotesOff();
     else
         changeMask(null, true);
+}
+
+function doMidiAutoRotate() {
+    const set = {
+        "Pentatonic": [0,2,4,7,9],
+        "Diatonic": [0,2,4,5,7,9,11],
+        "HarmonicMinor": [0,2,3,5,7,8,11],
+        "MelodicMinor": [0,2,3,5,7,9,11],
+        "WholeTones": [0,2,4,6,8,10],
+        "Octatonic": [0,2,3,5,6,8,9,11],
+        "MajorThirds": [0,4,8],
+        "MinorThirds": [0,3,6,9],
+    }[visible_mask];
+    if ( !set ) return;
+    const notes = set.map((x)=>clampPitch(x+chromatic_transposition),0,11);
+    const transpositions = 
+        [0,7,-7,2,-2,9,-9,4,-4,11,-11,(chromatic_transposition > 0 ? -6 : 6)];
+    const transposed_notes = transpositions.map(
+        (t) => notes.map((x) => clampPitch(x+t,0,11) ));
+    const correspondences = transposed_notes.map(
+        (arr) => arr.reduce( 
+            (sum,x) => (played_notes[x] ? sum+1 : sum), 0
+        ) 
+    );
+    const best = correspondences.reduce( (best,x,i) =>
+        ( x > best[1] ) ? [transpositions[i],x] : best, [0,0]
+    );
+    rotateMasks(best[0]);
+    auto_rotate_timer_id = null;
 }
 
 
