@@ -53,5 +53,7 @@
     "midi-ask-port": "Por favor, informe o número da porta a ser utilizada:",
     "midi-granted": "O acesso à porta de entrada MIDI \"%s\" foi autorizado.",
     "midi-invalid-port": "Desculpe, você informou um número de porta inválido!",
-    "midi-ask-channel": "Por favor, informe os canais MIDI (1 a 16) aos quais você deseja conectar. Você pode digitar números separados por vírgulas ou extensões de números."
+    "midi-ask-channel": "Por favor, informe os canais MIDI (1 a 16) aos quais você deseja conectar. Você pode digitar números separados por vírgulas ou extensões de números.",
+    "midi-ask-sound": "Você deseja sons ao tocar?",
+    "midi-ask-auto-rotate": "Você deseja que as máscaras rotacionem automaticamente ao tocar uma nota oculta?"
 }

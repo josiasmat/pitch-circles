@@ -41,7 +41,7 @@
     "interval-major-second": "2M",
     "interval-major-third": "3M",
     "interval-diminished-fourth-parentheses": "(4D)",
-    "tab-masks": "MÁSCARAS",
+    "tab-masks": "DISCOS",
     "tab-transpose": "TRANSPONER",
     "tab-options": "MÁS OPCIONES",
     "transpose-half-step": "SEMITONO",
@@ -53,5 +53,7 @@
     "midi-ask-port": "Por favor, digite el numero de puerto a usar:",
     "midi-granted": "Acceso al puerto de entrada MIDI \"%s\" concedido.",
     "midi-invalid-port": "Disculpe, usted digitó un numero de puerto invalido!",
-    "midi-ask-channel": "Por favor, digite los canales MIDI (1 to 16) a los que usted desea conectarse. Puede digitar numeros separados por comas o en rangos."
+    "midi-ask-channel": "Por favor, digite los canales MIDI (1 to 16) a los que usted desea conectarse. Puede digitar numeros separados por comas o en rangos.",
+    "midi-ask-sound": "Usted desea sonido al tocar?",
+    "midi-ask-auto-rotate": "Usted desea que los discos roten autonamicamente al tocar una nota oculta?"
 }
