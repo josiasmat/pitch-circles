@@ -386,7 +386,7 @@ function changeMask(mask_key, animate = true) {
 }
 
 function showMask(mask, rotation_degrees = 0, animate = true, delay = false) {
-    mask.style.willChange = "transform, rotate";
+    mask.style.willChange = "transform, rotate, opacity";
     if (animate == true) {
         mask.style.transitionProperty = "scale, opacity";
         mask.style.transitionDelay = ( (delay == true) ? "400ms" : "0s" );
@@ -656,7 +656,6 @@ function maskDragBegin(px, py) {
         );
     }
     mask_drag_rotation.target.mask.style.cursor = "grabbing";
-    mask_drag_rotation.target.mask.style.opacity = "92%";
 }
 
 function maskDragEnd() {
@@ -682,8 +681,10 @@ function maskDragEnd() {
 }
 
 function maskDragMove(px, py) {
-    if ( mask_drag_rotation.begun_rotating == false && typeof(note_names_key) == "number" )
+    if ( mask_drag_rotation.begun_rotating == false && typeof(note_names_key) == "number" ) {
         updateNoteNames(0, "enharmonics2");
+        mask_drag_rotation.target.mask.style.opacity = "92%";
+    }
     const rect = mask_drag_rotation.target.mask.getBoundingClientRect();
     mask_drag_rotation.set_angle(computePointerAngle(rect, px, py));
     doMaskRotation(mask_drag_rotation.target.mask, mask_drag_rotation.deg(), 0);

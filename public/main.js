@@ -7,7 +7,7 @@ for(const mask_elements of masks.values()){for(const mask of mask_elements[0]){m
 function changeMask(mask_key,animate=true){let delay=false;if(visible_mask!=null){const hiding_mask_data=masks.get(visible_mask);hideMask(hiding_mask_data[0][0],animate);hideMask(hiding_mask_data[0][1],animate);hiding_mask_data[1][0].setAttribute('selected','0');}
 if(mask_key==visible_mask||mask_key==null){visible_mask=null;}else{visible_mask=mask_key;const showing_mask_data=masks.get(visible_mask);showMask(showing_mask_data[0][0],chromatic_mask_rotation,animate,delay);showMask(showing_mask_data[0][1],fifths_mask_rotation,animate,delay);showing_mask_data[1][0].setAttribute('selected','1');}
 updateNoteNames();}
-function showMask(mask,rotation_degrees=0,animate=true,delay=false){mask.style.willChange="transform, rotate";if(animate==true){mask.style.transitionProperty="scale, opacity";mask.style.transitionDelay=((delay==true)?"400ms":"0s");mask.style.transitionDuration="200ms";mask.style.transitionTimingFunction="ease-in-out";}else{mask.style.transition="none";}
+function showMask(mask,rotation_degrees=0,animate=true,delay=false){mask.style.willChange="transform, rotate, opacity";if(animate==true){mask.style.transitionProperty="scale, opacity";mask.style.transitionDelay=((delay==true)?"400ms":"0s");mask.style.transitionDuration="200ms";mask.style.transitionTimingFunction="ease-in-out";}else{mask.style.transition="none";}
 mask.style.scale="100%";mask.style.opacity="1";mask.style.visibility="visible";mask.style.rotate=`${rotation_degrees}deg`;}
 function hideMask(mask,animate){if(animate==true){mask.style.transitionProperty="scale, opacity, visibility";mask.style.transitionDelay="0s";mask.style.transitionDuration="200ms";mask.style.transitionTimingFunction="ease-in-out";}else{mask.style.transition="none";}
 mask.style.scale="120%";mask.style.opacity="0";mask.style.visibility="hidden";mask.style.willChange="auto";}
@@ -36,12 +36,12 @@ function handleMaskDragPointerMove(ev){if(mask_drag_rotation.dev.type=="pointer"
 maskDragMove(ev.clientX,ev.clientY);}
 function handleMaskDragTouchMove(ev){if(mask_drag_rotation.dev.type=="touch"){ev.preventDefault();for(const touchObj of ev.changedTouches){if(touchObj.identifier==mask_drag_rotation.dev.id){maskDragMove(touchObj.clientX,touchObj.clientY);break;}}}}
 function maskDragBegin(px,py){if(mask_drag_rotation.target.mask.id.startsWith("Chr")){mask_drag_rotation.reset_angle(degToRad(clampAngle(chromatic_mask_rotation)),computePointerAngle(mask_drag_rotation.target.mask.getBoundingClientRect(),px,py));}else{mask_drag_rotation.reset_angle(degToRad(clampAngle(fifths_mask_rotation)),computePointerAngle(mask_drag_rotation.target.mask.getBoundingClientRect(),px,py));}
-mask_drag_rotation.target.mask.style.cursor="grabbing";mask_drag_rotation.target.mask.style.opacity="92%";}
+mask_drag_rotation.target.mask.style.cursor="grabbing";}
 function maskDragEnd(){if(mask_drag_rotation.begun_rotating==true){const steps=clampPitch(mask_drag_rotation.steps(),-14,14);if(mask_drag_rotation.target.mask.id.startsWith("Chr")){transposeSemitones(steps);chromatic_mask_rotation=clampAngle(chromatic_transposition*ANGLE_SEMITONE,mask_drag_rotation.deg());fifths_mask_rotation=clampAngle(fifths_transposition*ANGLE_SEMITONE,fifths_mask_rotation);}else{transposeFifths(steps,true);fifths_mask_rotation=clampAngle(fifths_transposition*ANGLE_SEMITONE,mask_drag_rotation.deg());chromatic_mask_rotation=clampAngle(chromatic_transposition*ANGLE_SEMITONE,chromatic_mask_rotation);}
 updateNoteNames(0);updateNotesBackgrounds(750);applyMaskRotation(getVisibleChrMask(),chromatic_mask_rotation,true);applyMaskRotation(getVisibleFthMask(),fifths_mask_rotation,true);}
 mask_drag_rotation.target.mask.style.cursor="grab";mask_drag_rotation.target.mask.style.opacity="100%";mask_drag_rotation.clear();}
-function maskDragMove(px,py){if(mask_drag_rotation.begun_rotating==false&&typeof(note_names_key)=="number")
-updateNoteNames(0,"enharmonics2");const rect=mask_drag_rotation.target.mask.getBoundingClientRect();mask_drag_rotation.set_angle(computePointerAngle(rect,px,py));doMaskRotation(mask_drag_rotation.target.mask,mask_drag_rotation.deg(),0);}
+function maskDragMove(px,py){if(mask_drag_rotation.begun_rotating==false&&typeof(note_names_key)=="number"){updateNoteNames(0,"enharmonics2");mask_drag_rotation.target.mask.style.opacity="92%";}
+const rect=mask_drag_rotation.target.mask.getBoundingClientRect();mask_drag_rotation.set_angle(computePointerAngle(rect,px,py));doMaskRotation(mask_drag_rotation.target.mask,mask_drag_rotation.deg(),0);}
 function computePointerAngle(rect,px,py){const cx=(rect.width/2.0)+rect.left;const cy=(rect.height/2.0)+rect.top;return Math.atan2(py-cy,px-cx);}
 function getVisibleChrMask(){return masks.get(visible_mask)[0][0];}
 function getVisibleFthMask(){return masks.get(visible_mask)[0][1];}
